@@ -1,0 +1,74 @@
+project:
+  type: book
+  output-dir: output
+
+book:
+  title: "Efeitos do pertencimento do município à Faixa de Fronteira Brasileira sobre a violência"
+  author: "Victor Batista"
+  date: today
+  chapters:
+    - index.qmd
+    - src/arco_norte.qmd
+    - src/arco_central.qmd
+    - src/arco_sul.qmd
+
+# references
+## caminho para os seus estilos de citação e bibliografia.
+## inseri alguns CSL: ipea (meu favorito), abnt, ufjf e ufmg_face. Mais em https://www.zotero.org/styles
+## usando Zotero: botão direito na sua coleção > Export Collection... Escolha um formato (recomendo Better CSL Json).
+### use "keep updated" e ele alegadamente vai atualizando seu arquivo. Salve na pasta do seu projeto, ex.: 
+### c://usuarios/eu/projetos/meu_projeto/src/yaml
+bibliography: src/yaml/References.json
+csl: src/yaml/ipea.csl
+
+format:
+  html:
+    theme: cosmo
+    embed-resources: true # para criar um arquivo self-contained.
+    toc: true
+    toc-depth: 3
+    number-sections: true
+  pdf:
+    # layout
+    documentclass: scrbook # classe de artigo do KOMA-script.
+    papersize: a4
+    margin-top: "3cm"
+    margin-bottom: "2cm"
+    margin-left: "3cm"
+    margin-right: "2cm"
+    cap-location: top # localização das legendas
+    indent: true # adicionar recuo nos parágrafos
+    include-in-header: src/yaml/in-header.tex
+    
+    # toc (table of contents)
+    toc: true
+    #toc-title: "Sumário" -> o nome da toc vai automático com a língua que você selecionar, mas pode especificar um nome também.
+    toc-depth: 5 # limitando a seções quinárias (mas tenha dó do leitor, não faça isso!).
+    lot: true # lista de tabelas
+    lof: true # lista de siglas
+    number-sections: true
+
+    # font
+    mainfont: "Times New Roman" # aceita qualquer fonte instalada no seu sistema.
+    #fontfamily: mathptmx # se usar essa opção, tem que dar o nome de uma fonte LaTeX. mathpmx é a mais próxima da Times New Roman.
+    fontsize: "12"
+    linestretch: 1.5 # espaçamento
+
+# execution
+## opções para não mostrar código e mensagens, apenas os resultados (ex.: gráficos)
+execute: 
+  echo: false
+  message: false
+  warning: false
+  error: false
+  
+# figures
+fig-align: center
+fig-width: 5.5 # está em polegadas
+fig-format: png # recomendado svg, cairo, png ou pdf
+fig-dpi: 300 # resolução da imagem. recomendo entre 300 e 700.
+
+# tables
+df-print: kable # formato padrão das tabelas geradas pelos blocos de código
+
+editor: source
