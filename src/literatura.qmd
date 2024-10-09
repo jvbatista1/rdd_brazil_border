@@ -8,4 +8,43 @@ editor: source
 
 # Fundamentação Teórica
 
+## Contexto geopolítico da Faixa de Fronteira
 
+A faixa de até 150 quilômetros de largura ao longo das fronteiras terrestres, conforme descrito no art. 20 da Constituição Federal de 1988, é uma região de interesse especial para o Estado brasileiro, sendo objeto de muitas regulamentações ao longo dos anos. A Lei 601, de 18 de setembro de 1850, é considerada a primeira regulamentação da região, estabelecendo a largura em dez léguas ao longo dos limites fronteiriços, o que equivale a 66 quilômetros.
+
+Na Constituição, a primeira vez que a faixa de fronteira é objeto de regulamentação ocorre em 1934, na seção de Segurança Nacional, estabelecida com 100 quilômetros de largura ao longo dos limites terrestres. No artigo 166, determina-se que todas as concessões de terras e aberturas de vias de comunicação dentro dessa faixa não poderiam ser efetivadas sem audiência do Conselho Superior de Segurança Nacional. Essa norma demonstra a preocupação do legislador com a expansão populacional, especialmente na Região Norte. Em seguida, na Constituição de 1937, as exigências para a região são basicamente repetidas, porém, com um acréscimo: a faixa de fronteira passa a ter 150 quilômetros de largura, medida atualmente utilizada para sua demarcação.
+
+A Constituição Federal de 1988 trata da faixa de fronteira em três pontos distintos. Primeiramente, no art. 20, que trata dos bens da União, ela é definida como a faixa de até cento e cinquenta quilômetros de largura ao longo das fronteiras terrestres, descrita como fundamental para a defesa do território nacional, sendo sua ocupação e utilização reguladas por lei. Depois, no art. 91, que trata do Conselho de Defesa Nacional, é descrito que é de competência do órgão propor os critérios e condições de utilização de áreas indispensáveis à segurança do território nacional e opinar sobre seu efetivo uso, especialmente na faixa de fronteira. Por último, no art. 176, ao descrever as condições de pesquisa e lavra de recursos minerais e o aproveitamento de potenciais de energia hidráulica, determina que tais atividades só poderão ser efetuadas mediante autorização ou concessão da União, com condições específicas quando essas atividades se desenvolverem na faixa de fronteira ou em terras indígenas.
+
+A fim de corresponder à atenção devida à faixa de fronteira conforme a Constituição, a atuação das Forças Armadas na região está também descrita em diferentes leis ao longo da história. @safira_maria_de_figueredo_operacao_2017 destaca quatro marcos normativos fundamentais que regulamentam a atuação das Forças Armadas na faixa de fronteira brasileira: a Constituição Federal, o Programa Nacional de Defesa, a Lei Complementar nº 97/1999 e o Programa de Proteção Integrada das Fronteiras, que inclui a Operação Ágata. A Constituição Federal estabelece a importância estratégica da faixa de fronteira e o papel das Forças Armadas na defesa do território nacional. O Programa Nacional de Defesa é o documento orientador do planejamento de ações destinadas à defesa nacional, coordenadas pelo Ministério da Defesa, e tem entre suas prioridades a vigilância das fronteiras, a proteção do meio ambiente e o uso sustentável dos recursos, aspectos essenciais para o desenvolvimento e a integração da Amazônia. A Lei Complementar nº 97/1999 regulamenta o emprego das Forças Armadas, permitindo sua atuação em regiões fronteiriças quando necessário. Por fim, o Programa de Proteção Integrada das Fronteiras, por meio da Operação Ágata, promove a cooperação entre diferentes agências governamentais para o controle das fronteiras e o combate a atividades ilícitas transnacionais.
+
+O terceiro marco normativo, a Lei Complementar nº 97/1999, dispõe sobre as normas gerais para a organização, o preparo e o emprego das Forças Armadas. O artigo 16 estabelece sua atuação como subsidiária, cooperando com o desenvolvimento nacional e a defesa civil. Com as inclusões trazidas pela Lei Complementar nº 136/2010, atribui-se às Forças Armadas a atuação, por meio de ações preventivas e repressivas, na faixa de fronteira terrestre, no mar e nas águas interiores, independentemente da posse, da propriedade, da finalidade ou de qualquer gravame que sobre ela recaia, contra delitos transfronteiriços e ambientais, isoladamente ou em coordenação com outros órgãos do Poder Executivo, executando, dentre outras, as ações de:
+
+1. patrulhamento;
+2. revista de pessoas, veículos terrestres, embarcações e aeronaves; e 
+3. prisões em flagrante delito.
+
+Levando em consideração a interpretação constitucional do papel das Forças Armadas na Garantia da Lei e da Ordem (GLO) e das seis possibilidades constitucionalmente legítimas (intervenção federal, estado de defesa, estado de sítio, segurança em eventos oficiais públicos, policiamento ostensivo por solicitação do governo do estado e realização de diligências determinadas em inquérito policial militar), @safira_maria_de_figueredo_operacao_2017 considera que, a partir da Lei Complementar nº 97/1999, surgiu a sétima atividade de segurança pública para Garantia da Lei e da Ordem atribuída às Forças Armadas: a atuação na faixa de fronteira, com poder de polícia explícito, nas ações de patrulhamento, revista de pessoas, veículos, embarcações e aeronaves, apreensão de objetos de crime e prisão em flagrante delito.
+
+@safira_maria_de_figueredo_operacao_2017 também explora o fato de que a atuação das Forças Armadas na faixa de fronteira difere das situações comuns para atuar na Garantia da Lei e da Ordem. O procedimento normal deve cumprir três princípios: a decisão do Presidente da República, o esgotamento dos instrumentos destinados à preservação da ordem pública e a formalização, reconhecendo tais instrumentos como indisponíveis, inexistentes ou insuficientes. Distintamente do que ocorre com as atividades de Garantia da Lei e da Ordem elencadas no artigo 15 da Lei Complementar nº 97/99, nas atividades contra o crime na faixa de fronteira não há a exigência de declaração de esgotamento dos órgãos ou instrumentos de preservação da segurança pública, mas, como se trata de atividade subsidiária, está implícito que as Forças Armadas só podem atuar no combate aos crimes na ausência das instituições incumbidas constitucionalmente de tais atribuições.
+
+A materialização da atuação das Forças Armadas na faixa de fronteira se dá no combate ao crime transfronteiriço. A Portaria nº 061/2005 do Exército Brasileiro considera como crimes transfronteiriços:
+
+-   A entrada (e/ou tentativa de saída) ilegal no território nacional de armas, munições, explosivos e demais produtos afins;
+-   Tráfico ilícito de entorpecentes e/ou substâncias que determinam dependência física ou psíquica, ou matéria-prima destinada à sua preparação;
+-   O contrabando e o descaminho (Código Penal Brasileiro, art. 334);
+-   O tráfico de plantas e de animais, conforme a Lei de Crimes Ambientais (Lei 9.605/98) e o Código de Proteção à Fauna (Lei 5.197/67);
+-   A entrada (e/ou tentativa de saída) no território nacional de vetores em desacordo com as normas de vigilância epidemiológica;
+-   A prática de atos lesivos ao meio ambiente, conforme definido na Lei de Crimes Ambientais (Lei nº 9.605/98);
+-   A exploração predatória ou ilegal de recursos naturais; e
+-   A prática de atos lesivos à diversidade e à integridade do patrimônio genético do país, conforme a Medida Provisória nº 2.186-16, de 23 de agosto de 2001 (revogada pela Lei nº 13.123, de 20 de maio de 2015). 
+
+Como explorado anteriormente, as Forças Armadas possuem capacidade para organizar operações de combate a esses crimes na faixa de fronteira. Exemplos recentes incluem a Operação Ágata e o Programa VIGIA, atualmente Guardiões da Fronteira. @safira_maria_de_figueredo_operacao_2017 considera a Operação Ágata um marco importante para o desenvolvimento da segurança pública na região.
+
+## Dinâmica de segurança pública nas regiões de fronteira
+
+## Impacto da presença militar e segurança pública
+
+## Aplicação do RDD para avaliação do impacto na faixa de fronteira
+
+## Contriubições do estudo

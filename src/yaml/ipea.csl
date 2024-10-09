@@ -465,17 +465,27 @@
             <!--Data-->
           </group>
         </else-if>
-        <!--Tese-->
+       <!--Tese-->
         <else-if type="thesis">
           <group>
+            <!-- Autor -->
             <text macro="author" suffix=". "/>
-            <!--Autor-->
+            <!-- Título -->
             <text macro="title" suffix=". "/>
-            <!--Titulo-->
-            <text macro="edition" suffix=". "/>
-            <!--Edicao-->
-            <text macro="publisher" suffix="."/>
-            <!--Local, data, etc-->
+            <!-- Ano de Depósito -->
+            <date variable="issued">
+              <date-part name="year" suffix=". "/>
+            </date>
+            <!-- Tipo e Grau (Exemplo: Thesis (Mestrado em Economia)) -->
+            <text value="Dissertação" suffix=" "/>
+            <text variable="genre" prefix="(" suffix=") – "/>
+            <!-- Instituição e Local -->
+            <text variable="publisher" suffix=", "/>
+            <text variable="publisher-place" suffix=", "/>
+            <!-- Ano da Defesa -->
+            <date variable="issued">
+              <date-part name="year" suffix=". "/>
+            </date>
           </group>
         </else-if>
         <!-- Nao ha norma ABNT para manuscritos -->

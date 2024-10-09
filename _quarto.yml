@@ -8,6 +8,7 @@ book:
   date: today
   chapters:
     - index.qmd
+    - src/literatura.qmd
     - src/arco_norte.qmd
     - src/arco_central.qmd
     - src/arco_sul.qmd
@@ -18,7 +19,7 @@ book:
 ## usando Zotero: botão direito na sua coleção > Export Collection... Escolha um formato (recomendo Better CSL Json).
 ### use "keep updated" e ele alegadamente vai atualizando seu arquivo. Salve na pasta do seu projeto, ex.: 
 ### c://usuarios/eu/projetos/meu_projeto/src/yaml
-bibliography: src/yaml/References.json
+bibliography: src/yaml/references.bib
 csl: src/yaml/ipea.csl
 
 format:
@@ -63,6 +64,7 @@ execute:
   error: false
   
 # figures
+fig-env: "figure*"
 fig-align: center
 fig-width: 5.5 # está em polegadas
 fig-format: png # recomendado svg, cairo, png ou pdf

@@ -9,7 +9,7 @@ editor: source
 # Arco Sul
 
 ```{r message=FALSE, include=FALSE}
-dropbox <- "c:/Users/victo/dropbox/DISSERTACAO"
+dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
 library(sf)
 library(tmap)
 library(tidyverse)
