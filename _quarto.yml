@@ -9,6 +9,7 @@ book:
   chapters:
     - index.qmd
     - src/literatura.qmd
+    - src/metodologia.qmd
     - src/arco_norte.qmd
     - src/arco_central.qmd
     - src/arco_sul.qmd
