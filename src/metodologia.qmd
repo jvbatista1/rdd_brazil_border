@@ -43,7 +43,7 @@ A escolha do modelo de regressão descontínua é particularmente adequada para 
 ### Critérios de seleção
 
 ```{r}
-dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
+dropbox <- "c:/Users/victo/dropbox/DISSERTACAO"
 
 #### Meu exemplo
 library(sf)
@@ -114,7 +114,70 @@ ggplot() +
         legend.position = "right")
 
 ```
+```{r}
+library(tidyverse)
+espaciais <- read_rds(file.path(dropbox, "dados_espaciais.rds"))
+```
 
+```{r}
+library(geobr)
+sede_municipios <- read_municipal_seat(year=2010, showProgress = F) %>%
+  st_transform("WGS84") |> 
+  rename("id_municipio" = "code_muni",
+         "nome" = "name_muni",
+         "id_uf" = "code_state",
+         'sigla_uf' = "abbrev_state",
+         "nome_regiao" = "name_region",
+         "id_regiao" = "code_region",
+         "ano" = "year") |> 
+  mutate(id_municipio = as.character(id_municipio))
+
+t <- select(espaciais, id_municipio)
+st_geometry(t) <- NULL
+
+sede_municipios <- sede_municipios |> 
+  semi_join(t, by="id_municipio")
+
+rm(t)
+
+
+```
+
+```{r}
+library(sf)
+
+# Filtrar os municípios de tratamento e controle
+tratamento <- espaciais %>% filter(groups == "treatment")
+controle <- espaciais %>% filter(groups == "control")
+
+# Unir as geometrias de cada grupo
+tratamento_union <- st_union(tratamento)
+controle_union <- st_union(controle)
+
+# Calcular a fronteira entre tratamento e controle
+linha_divisoria <- st_intersection(st_boundary(tratamento_union), st_boundary(controle_union))
+```
+
+```{r}
+ggplot() +
+  # Diferenciação entre Tratamento e Controle
+  geom_sf(data = espaciais, aes(fill = groups), color = "darkgreen", size = 0.3) +
+  # Adição das Sedes Municipais
+  geom_sf(data = sede_municipios, color = "black", size = 1.5, shape = 21, fill = "white", stroke = 0.5) +
+  # Adição da Linha Divisória com a legenda
+  geom_sf(data = linha_divisoria, aes(color = "Divisão Tratamento/Controle"), size = 0.3, linetype = "solid") +
+  # Ajuste das escalas e rótulos para a legenda
+  scale_fill_manual(name = "Classificação", values = c("treatment" = "lightgreen", "control" = "lightblue"),
+                    labels = c("Controle", "Tratamento")) +
+  scale_color_manual(name = "", values = c("Divisão Tratamento/Controle" = "red")) +
+  # Tema e título
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5),
+        legend.position = "right") +
+  guides(color = guide_legend(override.aes = list(linetype = "solid", size = 0.5)))
+
+
+```
 
 ### Tamanho da amostra
 
