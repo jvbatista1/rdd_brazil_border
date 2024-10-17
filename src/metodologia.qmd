@@ -42,6 +42,80 @@ A escolha do modelo de regressão descontínua é particularmente adequada para 
 
 ### Critérios de seleção
 
+```{r}
+dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
+
+#### Meu exemplo
+library(sf)
+library(dplyr)
+library(ggplot2)
+
+fronteira <- read_sf(file.path(dropbox,"Fronteira/Faixa_de_Fronteira_por_UF_2022.shp")) %>%
+  st_transform("WGS84") |> 
+  rename("id_uf" = "CD_UF",
+         "nome_uf" = "NM_UF",
+         'sigla_uf' = "SIGLA_UF",
+         "nome_regiao" = "NM_REGIAO",
+         "area_uf" = "AREA_KM2",
+         "area_integrada" = "AREA_INT",
+         "porcentagem_integrada" = "PORC_INT")
+
+municipios_fronteira <- read_sf(file.path(dropbox,"Municipios_Fronteira/Municipios_Faixa_Fronteira_2022.shp")) %>%
+  st_transform("WGS84") |> 
+  rename("id_municipio" = "CD_MUN",
+         "nome" = "NM_MUN",
+         "id_uf" = "CD_UF",
+         "nome_uf" = "NM_UF",
+         'sigla_uf' = "SIGLA_UF",
+         "nome_regiao" = "NM_REGIAO",
+         "area_municipio" = "AREA_TOT",
+         "area_integrada" = "AREA_INT",
+         "porcentagem_integrada" = "PORC_INT") |> 
+  mutate(gemea = !(is.na(CID_GEMEA)), .keep = "unused", .after = "porcentagem_integrada")
+
+library(geobr)
+sede_municipios <- read_municipal_seat(year=2010, showProgress = F) %>%
+  st_transform("WGS84") |> 
+  rename("id_municipio" = "code_muni",
+         "nome" = "name_muni",
+         "id_uf" = "code_state",
+         'sigla_uf' = "abbrev_state",
+         "nome_regiao" = "name_region",
+         "id_regiao" = "code_region",
+         "ano" = "year") |> 
+  mutate(id_municipio = as.character(id_municipio))
+
+t <- select(municipios_fronteira, id_municipio)
+st_geometry(t) <- NULL
+
+sede_municipios <- sede_municipios |> 
+  semi_join(t, by="id_municipio")
+
+rm(t)
+
+```
+
+```{r fig.width=5}
+library(ggplot2)
+
+ggplot() +
+  # Plot dos Municípios na Faixa de Fronteira com cores diferenciadas
+  geom_sf(data = municipios_fronteira, aes(fill = "Municípios"), color = "darkgreen", size = 0.3) +
+  # Personalização da Faixa de Fronteira
+  geom_sf(data = fronteira, aes(fill = "Faixa de Fronteira"), color = "darkblue", size = 0.5, alpha = 0.5) +
+  # Adição das Sedes Municipais
+  geom_sf(data = sede_municipios, aes(color = "Sedes Municipais"), size = 1.5, shape = 21, fill = "white", stroke = 0.5) +
+  # Ajuste das escalas e rótulos para a legenda
+  scale_fill_manual(name = " ", values = c("Faixa de Fronteira" = "lightblue", "Municípios" = "lightgreen")) +
+  scale_color_manual(name = " ", values = c("Sedes Municipais" = "black")) +
+  # Tema e título
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5),
+        legend.position = "right")
+
+```
+
+
 ### Tamanho da amostra
 
 ## Bases de dados utilizadas
