@@ -30,6 +30,7 @@ format:
     toc: true
     toc-depth: 3
     number-sections: true
+    lang: pt
   pdf:
     # layout
     documentclass: scrbook # classe de artigo do KOMA-script.
@@ -41,6 +42,7 @@ format:
     cap-location: top # localização das legendas
     indent: true # adicionar recuo nos parágrafos
     include-in-header: src/yaml/in-header.tex
+    lang: pt
     
     # toc (table of contents)
     toc: true
@@ -65,7 +67,6 @@ execute:
   error: false
   
 # figures
-fig-env: "figure*"
 fig-align: center
 fig-width: 5.5 # está em polegadas
 fig-format: png # recomendado svg, cairo, png ou pdf

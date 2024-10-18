@@ -43,7 +43,9 @@ A escolha do modelo de regressão descontínua é particularmente adequada para 
 ### Critérios de seleção
 
 ```{r}
-dropbox <- "c:/Users/victo/dropbox/DISSERTACAO"
+#| label: carrega bases
+
+dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
 
 #### Meu exemplo
 library(sf)
@@ -95,7 +97,22 @@ rm(t)
 
 ```
 
-```{r fig.width=5}
+```{r}
+#| label: figura-faixa
+#| fig-cap: "Teste de legenda"
+
+library(ggplot2)
+
+ggplot(mpg, aes(x = displ, y = hwy)) + 
+  geom_point()
+
+```
+
+
+```{r}
+#| label: figura faixa
+#| fig-cap: "Faixa de fronteira e sedes municipais da região"
+
 library(ggplot2)
 
 ggplot() +
@@ -115,11 +132,15 @@ ggplot() +
 
 ```
 ```{r}
+#| label: carrega bases 2
+
 library(tidyverse)
 espaciais <- read_rds(file.path(dropbox, "dados_espaciais.rds"))
 ```
 
 ```{r}
+#| label: carrega sedes
+
 library(geobr)
 sede_municipios <- read_municipal_seat(year=2010, showProgress = F) %>%
   st_transform("WGS84") |> 
@@ -144,6 +165,8 @@ rm(t)
 ```
 
 ```{r}
+#| label: desenha linha divisória
+
 library(sf)
 
 # Filtrar os municípios de tratamento e controle
@@ -159,6 +182,9 @@ linha_divisoria <- st_intersection(st_boundary(tratamento_union), st_boundary(co
 ```
 
 ```{r}
+#| label: desenha controle e tratamento
+#| fig-cap: "Municípios atuais da faixa de fronteira, municípios de controle e sedes municipais"
+
 ggplot() +
   # Diferenciação entre Tratamento e Controle
   geom_sf(data = espaciais, aes(fill = groups), color = "darkgreen", size = 0.3) +
