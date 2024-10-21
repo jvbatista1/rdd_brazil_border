@@ -36,7 +36,7 @@ df
 
 ## Contexto
 
-O Arco Norte da faixa de fronteira brasileira é constituído de 69 municípios, classificados aqui como tratamento. Com a proposta de expansão 22 municípios passariam a fazer parte da faixa de fronteira e são classificados aqui como grupo de controle. Utilizando o método de **Regressão Descontínua (RDD)**, buscamos identificar se a presença militar próximo à fronteira está associada a variações significativas nos indicadores de violência, especificamente o número de mortes violentas por 100 mil habitantes.
+O Arco Norte da faixa de fronteira brasileira é constituído de 69 municípios, classificados aqui como tratamento. Com a proposta de expansão 22 municípios passariam a fazer parte da faixa de fronteira e são classificados aqui como grupo de controle. Utilizando o método de **Regressão Descontínua (RD)**, buscamos identificar se a presença militar próximo à fronteira está associada a variações significativas nos indicadores de violência, especificamente o número de mortes violentas por 100 mil habitantes.
 
 ```{r echo=FALSE, fig.width=5}
 library(ggplot2)

@@ -1,0 +1,14 @@
+---
+format: pdf
+
+# misc
+lang: pt-BR # siga o padrão: pt-BR, es-AR, en-US etc.
+editor: source
+---
+# Discussão
+
+## A Faixa de Fronteira e a diminuição das mortes violentas
+
+## Segurança pública e epidemiologia
+
+## Limitações do estudo

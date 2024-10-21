@@ -13,6 +13,7 @@ book:
     - src/arco_norte.qmd
     - src/arco_central.qmd
     - src/arco_sul.qmd
+    - src/discussao.qmd
 
 # references
 ## caminho para os seus estilos de citação e bibliografia.
