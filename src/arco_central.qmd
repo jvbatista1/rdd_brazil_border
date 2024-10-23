@@ -10,7 +10,7 @@ editor: source
 # Arco Central
 
 ```{r message=FALSE, include=FALSE}
-dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
+dropbox <- "c:/Users/victo/dropbox/DISSERTACAO"
 library(sf)
 library(tmap)
 library(tidyverse)
@@ -83,17 +83,23 @@ rdd_central <- rdrobust(y = df_central$mortes_violentas,
                                             x = df_central$distancias_fronteira_interior,
                                             c = 0)
 
+```
+
+\tiny
+```{r}
 # Resumo dos resultados
 summary(rdd_central)
 
 ```
 
+\normalsize
 O coeficiente estimado sugere que a presença das Forças Armadas no Arco Central está associada a um aumento no número de mortes violentas por 100 mil habitantes no grupo de tratamento, mas esse efeito não é estatisticamente significativo. A incerteza no efeito (erro padrão relativamente grande e intervalo de confiança abrangente) indica que não podemos afirmar com segurança que há um efeito real da atuação militar nessa região. Essa conclusão se baseia na interpretação de Huntington-Klein (2021), que recomenda a inversão da interpretação do coeficiente em cenários onde o tratamento está à esquerda do cutoff.
 
 ### Controles
 
 Apesar do modelo de RDD ser capaz de determinar o efeito do tratamento com relativa segurança sem aplicar outras variáveis de controle, existe a possibilidade de o fazer para verificar a heterogeneidade de efeitos. Apresenta-se aqui a interação da variável de distância entre tratamento/controle com variáveis socioeconômicas. A análise mostra que o impacto da atuação militar varia conforme características socioeconômicas dos municípios:
 
+\tiny
 ```{r,echo=FALSE}
 # Filtrar dados do arco central
 df_central <- df |> filter(arcos == "Arco Central")
@@ -117,10 +123,12 @@ rdd_central_multiplos_moderadores <- rdrobust(y = df_central$mortes_violentas,
 summary(rdd_central_multiplos_moderadores)
 ```
 
-No modelo, observando a mesma estratégia do Arco Norte, inclui-se as variáveis moderadoras (a saber: taxa de analfabetismo, PIB per capita, taxa de desemprego, índice de Gini, e percentuais de baixa renda, homens jovens e trabalho infantil). O coeficiente de 137.16 mortes a mais por 100 mil habitantes no grupo de tratamento foi altamente significativo (p = 0.006). Isso sugere que, no Arco Central, a presença das Forças Armadas está associada a um aumento significativo nas mortes violentas. Este resultado é alarmante e vai de encontro à expectativa de que a atuação militar poderia reduzir a violência.
+\normalsize
+No modelo, observando a mesma estratégia do Arco Norte, inclui-se as variáveis moderadoras (a saber: taxa de analfabetismo, PIB per capita, taxa de desemprego, índice de Gini, e percentuais de baixa renda, homens jovens e trabalho infantil). O coeficiente de 137.16 mortes a mais por 100 mil habitantes no grupo de tratamento foi altamente significativo (p = 0.006). Isso sugere que, no Arco Central, a presença das Forças Armadas está associada a um aumento significativo nas mortes violentas. Este resultado vai de encontro à expectativa de que a presença na faixa de fronteira poderia reduzir a violência.
 
 Entretanto, o pacote `rdrobust` nesse caso calculou uma largura de banda que incluiu somente 6 municípios do grupo de tratamento. O modelo a seguir teve configuração manual para aumentar o número de observações.
 
+\tiny
 ```{r,echo=FALSE}
 # Filtrar dados do arco central
 df_central <- df |> filter(arcos == "Arco Central")
@@ -145,12 +153,14 @@ rdd_central_multiplos_moderadores <- rdrobust(y = df_central$mortes_violentas,
 summary(rdd_central_multiplos_moderadores)
 ```
 
+\normalsize
 O principal problema ao comparar os resultados com o bandwidth original (calculado automaticamente pelo pacote) e os resultados com o bandwidth ajustado manualmente está na sensibilidade dos estimadores ao tamanho da janela de análise. O bandwidth, que define a faixa ao redor do cutoff utilizada para estimar os efeitos do tratamento, influencia diretamente a precisão e a validade dos resultados. Quando o bandwidth é maior, como no caso do ajustado manualmente, mais observações são incluídas, o que pode reduzir a variância do estimador, mas ao custo de incluir municípios mais distantes do cutoff, o que pode enfraquecer a validade local da análise e levar a resultados enviesados. Por outro lado, um bandwidth mais estreito, como o calculado pelo pacote, foca em observações mais próximas do cutoff, assegurando uma estimativa mais precisa do efeito causal, porém com maior variância devido ao número reduzido de observações. Essa diferença pode explicar por que os resultados com o bandwidth manual indicam coeficientes menos significativos, sugerindo uma menor confiança na robustez dos efeitos observados.
 
 ### Falsificação
 
 Os testes de placebo têm como objetivo verificar se há um efeito significativo em cutoffs falsos, isto é, cutoffs em pontos onde você não espera encontrar um efeito real. Se os resultados para esses cutoffs falsos forem insignificantes, isso reforça a validade do cutoff original (zero) utilizado na análise.
 
+\tiny
 ```{r echo=FALSE}
 
 # Filtrar dados do arco central
@@ -176,14 +186,16 @@ summary(rdd_central_falso2)
 
 ```
 
+\normalsize
 Os testes de placebo, com cutoffs falsos à esquerda e à direita, não mostraram efeitos significativos, sugerindo que o efeito observado para mortes violentas no cutoff original é robusto e não ocorre ao acaso. Isso fortalece a validade interna da análise e a confiança no efeito identificado para mortes violentas.
 
-A análise revelou que a atuação das Forças Armadas no Arco Central está associada a um aumento significativa no número de mortes violentas por 100 mil habitantes em municípios próximos à fronteira, apesar de não se poder afirmar com precisão a causalidade dessa relação
+A análise revelou que a atuação das Forças Armadas no Arco Central está associada a um aumento significativa no número de mortes violentas por 100 mil habitantes em municípios próximos à fronteira, apesar de não se poder afirmar com precisão a causalidade dessa relação.
 
 ## Homicídios
 
 Ao analisar o efeito sobre a quantidade de homicídios por 100 mil habitantes, apenas os anos de 2013 e 2016 mostram resultados significativos, com efeitos inversos. Em 2013, reduziram os homicídios, mas em 2016, houve aumento na região de tratamento.
 
+\tiny
 ```{r,echo=FALSE}
 df_central <- df |> filter(arcos=="Arco Central")
 # Definir o ponto de corte
@@ -203,6 +215,8 @@ for (var in seguranca_vars2) {
 ```
 
 ## Outros crimes
+
+\normalsize
 
 Ao analisar o efeito estatisticamente significante nenhum outro crime apresenta resultados.
 

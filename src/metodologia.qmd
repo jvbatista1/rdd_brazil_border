@@ -45,7 +45,7 @@ A escolha do modelo de regressão descontínua é particularmente adequada para 
 ```{r}
 #| label: carrega bases
 
-dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
+dropbox <- "c:/Users/victo/dropbox/DISSERTACAO"
 
 #### Meu exemplo
 library(sf)
@@ -96,18 +96,6 @@ sede_municipios <- sede_municipios |>
 rm(t)
 
 ```
-
-```{r}
-#| label: figura-faixa
-#| fig-cap: "Teste de legenda"
-
-library(ggplot2)
-
-ggplot(mpg, aes(x = displ, y = hwy)) + 
-  geom_point()
-
-```
-
 
 ```{r}
 #| label: figura faixa

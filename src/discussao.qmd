@@ -2,12 +2,18 @@
 format: pdf
 
 # misc
-lang: pt-BR # siga o padrão: pt-BR, es-AR, en-US etc.
 editor: source
 ---
 # Discussão
 
 ## A Faixa de Fronteira e a diminuição das mortes violentas
+As evidências conseguidas a partir de modelos de Regressão Descontínua para os diferentes arcos da feixa de fronteira indicam um efeito redutor do número de mortes violentas em relação à população, efeitos que se mantém ao controlar por indicadores socioeconômicos. Elas corroboram com a intuição de que a faixa de fronteira é uma região especial do ponto de vista político, onde existem a atuação de diversos atores da segurança pública e do desenvolvimento social.
+
+As evidências apresentadas para os três arcos da faixa de fronteira brasileira indicam uma redução consistente nas mortes violentas nas áreas de presença das Forças Armadas. No Arco Norte, a análise revela uma redução de 12,3 mortes violentas por 100 mil habitantes, efeito que persiste mesmo com a inclusão de variáveis socioeconômicas. No Arco Central, os resultados são inconclusivos por limitações na metodologia utilizada. No Arco Sul, o modelo controlado por variáveis socioeconômicas aponta uma redução de 10,4 mortes violentas por 100 mil habitantes, reforçando que a presença militar contribui para a diminuição da violência letal em todas as regiões estudadas.
+
+Esses resultados corroboram a ideia de que a faixa de fronteira é uma região de interesse especial para o Brasil, não apenas por sua relevância geopolítica, mas também como área de foco de políticas específicas de segurança e desenvolvimento socioeconômico. A presença das Forças Armadas, regulamentada por legislações e programas como a Operação Ágata e o Programa de Proteção Integrada das Fronteiras, visa conter o tráfico de drogas, armas e outros crimes transnacionais que afetam diretamente a segurança local. Além disso, políticas de desenvolvimento voltadas para a infraestrutura e melhoria das condições socioeconômicas na região podem estar contribuindo para a criação de um ambiente menos propenso à violência.
+
+A atuação de outros atores, além das Forças Armadas, também pode estar desempenhando um papel crucial na redução das mortes violentas. Forças de segurança locais, como as polícias civil e militar, bem como iniciativas de segurança pública e desenvolvimento regional promovidas por governos estaduais e municipais, podem estar complementando os esforços das Forças Armadas. Além disso, ações de integração econômica, melhoria da educação e fortalecimento das instituições locais podem estar criando condições que contribuem para a diminuição da violência na faixa de fronteira. Esse conjunto de políticas, envolvendo múltiplos agentes e áreas de atuação, parece ser essencial para sustentar os efeitos positivos observados.
 
 ## Segurança pública e epidemiologia
 
