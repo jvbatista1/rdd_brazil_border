@@ -98,18 +98,6 @@ rm(t)
 ```
 
 ```{r}
-#| label: figura-faixa
-#| fig-cap: "Teste de legenda"
-
-library(ggplot2)
-
-ggplot(mpg, aes(x = displ, y = hwy)) + 
-  geom_point()
-
-```
-
-
-```{r}
 #| label: figura faixa
 #| fig-cap: "Faixa de fronteira e sedes municipais da região"
 

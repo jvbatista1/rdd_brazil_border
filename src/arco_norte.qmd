@@ -31,7 +31,6 @@ df <- df |>
   mutate(taxa_homens_jovens = as.numeric(taxa_homens_jovens))
 
 df
-
 ```
 
 ## Contexto
@@ -89,17 +88,23 @@ rdd_norte <- rdrobust(y = df_norte$mortes_violentas,
                                             x = df_norte$distancias_fronteira_interior,
                                             c = 0)
 
+```
+
+\tiny
+```{r}
 # Resumo dos resultados
 summary(rdd_norte)
 
 ```
 
+\normalsize
 A análise revelou que o grupo de tratamento está associada a uma redução significativa no número de mortes violentas por 100 mil habitantes em municípios próximos à fronteira. O coeficiente estimado é de 15.35 mortes violentas a menos no grupo de tratamento (municípios com presença militar) em comparação com o grupo de controle. Essa conclusão se baseia na interpretação de Huntington-Klein (2021), que recomenda a inversão da interpretação do coeficiente em cenários onde o tratamento está à esquerda do cutoff.
 
 ### Falsificação
 
 Os testes de placebo têm como objetivo verificar se há um efeito significativo em cutoffs falsos, isto é, cutoffs em pontos onde você não espera encontrar um efeito real. Se os resultados para esses cutoffs falsos forem insignificantes, isso reforça a validade do cutoff original (zero) utilizado na análise.
 
+\tiny
 ```{r echo=FALSE}
 
 # Filtrar dados do arco norte
@@ -123,6 +128,7 @@ summary(rdd_norte_falso2)
 
 ```
 
+\normalsize
 Para o cutoff falso de -50 km, o p-valor indica que esse coeficiente não é estatisticamente significativo. O intervalo de confiança \[−53.416, 105.682\] é amplo e inclui zero, sugerindo que não há um efeito claro nesse ponto. Já para o cutoff falso de 50 km, o p-valor também é muito alto, indicando nenhum efeito significativo. O intervalo de confiança \[−14.949, 7.430\] também inclui zero, reforçando a falta de evidência para um efeito neste ponto. Ambos os cutoffs falsos (-50 km e 50 km) apresentaram coeficientes insignificantes, com p-valores muito altos. Isso sugere que não há efeitos significativos fora do cutoff real (zero), corroborando a validade da escolha do cutoff correto no modelo original. Isso fortalece a confiança de que o efeito observado no cutoff verdadeiro (zero) é real e não um artefato do modelo.
 
 A análise revelou que o pertencimento à Faixa de Fronteira está associado a uma redução significativa no número de mortes violentas por 100 mil habitantes em municípios próximos à fronteira. O coeficiente estimado é de 12,29 mortes violentas a menos no grupo de tratamento (municípios com presença militar) em comparação com o grupo de controle. Essa conclusão se baseia na interpretação de Huntington-Klein (2021), que recomenda a inversão da interpretação do coeficiente em cenários onde o tratamento está à esquerda do cutoff.
@@ -131,6 +137,7 @@ A análise revelou que o pertencimento à Faixa de Fronteira está associado a u
 
 Apesar do modelo de RD ser capaz de determinar o efeito do tratamento com relativa segurança sem aplicar outras variáveis de controle, existe a possibilidade de o fazer para verificar a heterogeneidade de efeitos. Apresenta-se aqui a interação da variável de distância entre tratamento/controle com variáveis socioeconômicas. A análise mostra que o impacto da atuação militar varia conforme características socioeconômicas dos municípios:
 
+\tiny
 ```{r,echo=FALSE}
 # Filtrar dados do arco norte
 df_norte <- df |> filter(arcos == "Arco Norte")
@@ -154,6 +161,7 @@ rdd_norte_multiplos_moderadores <- rdrobust(y = df_norte$mortes_violentas,
 summary(rdd_norte_multiplos_moderadores)
 ```
 
+\normalsize
 Ao incluir as variáveis moderadoras (a saber: taxa de analfabetismo, PIB per capita, taxa de desemprego, índice de Gini, e percentuais de baixa renda, homens jovens e trabalho infantil), a magnitude do efeito diminui de 15.357 para 12.290 mortes violentas a menos por 100 mil habitantes. Isso sugere que parte do efeito inicial observado no modelo sem moderadores era explicado por diferenças socioeconômicas entre os municípios. Mesmo após o controle por essas variáveis, o efeito do pertencimento à Faixa de Fronteira na redução das mortes violentas permanece significativo e robusto, o que indica que a atuação de forças de segurança na região tem um impacto independente.
 
 Pode-se afirmar, portanto que estar na Feixa de Fronteira contribui para a redução nas mortes violentas. Parte dessa redução está relacionada com características socioeconômicas dos municípios, sugerindo que os municípios mais vulneráveis podem estar se beneficiando de maneira mais significativa da presença das forças de segurança que atuam na região. Mesmo após o controle por vulnerabilidades socioeconômicas, o efeito continua significativo, o que sugere um impacto robusto na redução da violência.
@@ -162,6 +170,7 @@ Pode-se afirmar, portanto que estar na Feixa de Fronteira contribui para a redu�
 
 Ao analisar o efeito sobre a quantidade de homicídios por 100 mil habitantes, somente os anos de 2011, 2012 e 2017 não apresentaram efeito significativo. Nos anos de 2010 e 2015, os efeitos são marginalmente significativos, sugerindo uma tendência de redução, embora não robusta e em todos os outros houveram efeitos significativos. Estes estimadores apontam efeitos de 33,4, 34,6, 56,2, 52,1 e 32,5 homicícios por 100 mil habitantes a menos no grupo de tratamento na Região Norte. Esses resultados sugerem que, em determinados anos, compor da faixa de fronteira resultou em uma redução significativa nos homicídios, com maior robustez nos últimos anos da série analisada (2018 e 2019).
 
+\tiny
 ```{r,echo=FALSE}
 df_norte <- df |> filter(arcos=="Arco Norte")
 # Definir o ponto de corte
@@ -180,12 +189,14 @@ for (var in seguranca_vars2) {
 
 ```
 
+\normalsize
 ## Outros crimes
 
 Ao analisar o efeito estatisticamente significante foi verificado somente nas mortes no trânsito e em crimes e nas mortes a esclarecer.
 
 Em relação às mortes no transito, o estimadores aponta efeitos de 21,9 mortes no trânsito por 100 mil habitantes a menos no grupo de tratamento na Região Norte. Já para mortes a esclarecer, o efeito é de 1,9 a menos. Todas as outras variáveis são rejeitadas a um nível de 5%
 
+\tiny
 ```{r,echo=FALSE}
 df_norte <- df |> filter(arcos=="Arco Norte")
 # Definir o ponto de corte
@@ -204,6 +215,8 @@ for (var in seguranca_vars) {
 }
 
 ```
+
+\normalsize
 
 ## Discussão dos Resultados
 
