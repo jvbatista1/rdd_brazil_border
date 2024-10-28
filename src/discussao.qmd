@@ -3,6 +3,7 @@ format: pdf
 
 # misc
 editor: source
+lang: pt-BR
 ---
 # Discussão
 
