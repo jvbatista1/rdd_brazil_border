@@ -8,6 +8,15 @@ book:
   date: today
   chapters:
     - index.qmd
+    - src/folha_rosto.qmd
+    - src/errata.qmd
+    # - src/folha_aprovacao.qmd
+    - src/dedicatoria.qmd
+    - src/agradecimentos.qmd
+    - src/epigrafe.qmd
+    - src/resumo.qmd
+    - src/abstract.qmd
+    - src/sumario.qmd
     - src/literatura.qmd
     - src/metodologia.qmd
     - src/arco_norte.qmd
@@ -28,7 +37,7 @@ format:
   html:
     theme: cosmo
     embed-resources: true # para criar um arquivo self-contained.
-    toc: true
+    toc: false
     toc-depth: 3
     number-sections: true
     lang: pt
@@ -46,12 +55,12 @@ format:
     lang: pt
     
     # toc (table of contents)
-    toc: true
-    #toc-title: "Sumário" -> o nome da toc vai automático com a língua que você selecionar, mas pode especificar um nome também.
-    toc-depth: 5 # limitando a seções quinárias (mas tenha dó do leitor, não faça isso!).
-    lot: true # lista de tabelas
-    lof: true # lista de siglas
-    number-sections: true
+    toc: false
+    #toc-title: "Sumário" #-> o nome da toc vai automático com a língua que você selecionar, mas pode especificar um nome também.
+    #toc-depth: 5 # limitando a seções quinárias (mas tenha dó do leitor, não faça isso!).
+    #lot: true # lista de tabelas
+    #lof: true # lista de siglas
+    #number-sections: true
 
     # font
     mainfont: "Times New Roman" # aceita qualquer fonte instalada no seu sistema.

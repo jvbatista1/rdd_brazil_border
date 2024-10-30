@@ -1,0 +1,4 @@
+# Resumo {.unnumbered}
+
+O resumo deve conter as informações principais do seu trabalho, objetivos, metodologia e principais resultados. Limite de 250 palavras.
+

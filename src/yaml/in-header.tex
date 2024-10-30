@@ -30,3 +30,97 @@
 % - \usepackage[normalem]{ulem}
 % - \usepackage{makecell}
 % - \usepackage{xcolor}
+
+\usepackage{setspace}  % Para espaçamento
+\usepackage{geometry}  % Para controlar o layout da página
+\usepackage{lipsum}
+\usepackage{fancyhdr}
+
+\geometry{
+    a4paper,
+    left=3cm,
+    right=2cm,
+    top=3cm,
+    bottom=2cm
+}
+
+% Definições para o conteúdo da folha de rosto
+\newcommand{\folhaderosto}{
+    \thispagestyle{empty}
+    \begin{center}
+    \vspace*{-5cm}  
+        {\uppercase{\textbf{JOÃO VICTOR BATISTA LOPES}}}
+
+        \vspace{7cm}
+        
+        {\uppercase{\textbf{EFEITOS DO PERTENCIMENTO DO MUNICÍPIO À FAIXA DE FRONTEIRA BRASILEIRA SOBRE A VIOLÊNCIA}}}
+        
+        
+        \vspace{4cm}
+        \end{center}
+
+        \hspace{8cm}
+        \parbox{7cm}{
+        \setstretch{1.0} % Define o espaçamento simples
+        Dissertação apresentada ao Programa de Pós-Graduação em Economia da Faculdade de Economia, Administração, Atuária e Contabilidade da Universidade Federal do Ceará, como requisito parcial para obtenção do título de Mestre em Economia.
+        
+        \vspace{0.5cm}
+        
+        Orientador: Prof. Dr. José Raimundo de Araújo Carvalho Junior
+        }
+        
+        \vfill
+        \begin{center}
+        
+        Fortaleza – CE \\
+        2024
+    \end{center}
+}
+
+% Definições para o conteúdo da folha de aprovação
+\newcommand{\folhadeaprovacao}{
+    \thispagestyle{empty}
+    
+    \begin{center}
+        \uppercase{\textbf{JOÃO VICTOR BATISTA LOPES}}
+        
+        \vspace{1.5cm}
+        
+        \uppercase{\textbf{EFEITOS DO PERTENCIMENTO DO MUNICÍPIO À FAIXA DE FRONTEIRA BRASILEIRA SOBRE A VIOLÊNCIA}}
+
+        \vspace{2cm}
+    \end{center}
+    
+    \hspace{8cm}
+    \parbox{8cm}{
+        Dissertação apresentada ao Programa de Pós-Graduação em Economia da Universidade Federal do Ceará.
+    }
+    
+    \vspace{1cm}
+    
+    \noindent Fortaleza, CE, \underline{\hspace{3cm}} de \underline{\hspace{3cm}} de 2024.
+    
+    \vspace{1.5cm}
+    
+    \begin{center}
+        \textbf{Banca Examinadora} \\
+        
+        \vspace{1cm}
+        
+        \underline{\hspace{10cm}} \\
+        Prof. Dr. Nome do Presidente da Banca \\
+        [Instituição]
+        
+        \vspace{1.5cm}
+        
+        \underline{\hspace{10cm}} \\
+        Prof. Dr. Nome do Membro 1 \\
+        [Instituição]
+        
+        \vspace{1.5cm}
+        
+        \underline{\hspace{10cm}} \\
+        Prof. Dr. Nome do Membro 2 \\
+        [Instituição]
+    \end{center}
+}
