@@ -13,6 +13,9 @@
     
     %% remove hyphenization
     \usepackage[none]{hyphenat}
+    
+    %% Text justifiying
+    \usepackage{ragged2e}
 
 
 % tables
@@ -51,12 +54,12 @@
     \vspace*{-5cm}  
         {\uppercase{\textbf{JOÃO VICTOR BATISTA LOPES}}}
 
-        \vspace{7cm}
+        \vspace{5cm}
         
         {\uppercase{\textbf{EFEITOS DO PERTENCIMENTO DO MUNICÍPIO À FAIXA DE FRONTEIRA BRASILEIRA SOBRE A VIOLÊNCIA}}}
         
         
-        \vspace{4cm}
+        \vspace{3cm}
         \end{center}
 
         \hspace{8cm}
@@ -80,27 +83,26 @@
 % Definições para o conteúdo da folha de aprovação
 \newcommand{\folhadeaprovacao}{
     \thispagestyle{empty}
-    
     \begin{center}
+    \vspace*{-5cm}
         \uppercase{\textbf{JOÃO VICTOR BATISTA LOPES}}
         
-        \vspace{1.5cm}
+        \vspace{5cm}
         
         \uppercase{\textbf{EFEITOS DO PERTENCIMENTO DO MUNICÍPIO À FAIXA DE FRONTEIRA BRASILEIRA SOBRE A VIOLÊNCIA}}
 
-        \vspace{2cm}
+        \vspace{3cm}
     \end{center}
     
     \hspace{8cm}
-    \parbox{8cm}{
-        Dissertação apresentada ao Programa de Pós-Graduação em Economia da Universidade Federal do Ceará.
+    \parbox{7cm}{
+        \setstretch{1.0} % Define o espaçamento simples
+        Dissertação apresentada ao Programa de Pós-Graduação em Economia da Faculdade de Economia, Administração, Atuária e Contabilidade da Universidade Federal do Ceará, como requisito parcial para obtenção do título de Mestre em Economia.
     }
     
-    \vspace{1cm}
+    \vspace{0.5cm}
     
-    \noindent Fortaleza, CE, \underline{\hspace{3cm}} de \underline{\hspace{3cm}} de 2024.
-    
-    \vspace{1.5cm}
+    \noindent Aprovada em \today.
     
     \begin{center}
         \textbf{Banca Examinadora} \\
@@ -109,18 +111,105 @@
         
         \underline{\hspace{10cm}} \\
         Prof. Dr. Nome do Presidente da Banca \\
-        [Instituição]
-        
-        \vspace{1.5cm}
+        Instituição
         
         \underline{\hspace{10cm}} \\
         Prof. Dr. Nome do Membro 1 \\
-        [Instituição]
-        
-        \vspace{1.5cm}
+        Instituição
         
         \underline{\hspace{10cm}} \\
         Prof. Dr. Nome do Membro 2 \\
-        [Instituição]
+        Instituição
     \end{center}
 }
+
+% Definições para o conteúdo da dedicatória
+\newcommand{\dedicatoria}{
+    \thispagestyle{empty}
+    \vspace*{10cm} % Ajusta a posição para começar abaixo do meio da folha
+    
+    \hspace{8cm} % Recuo de 8 cm da margem esquerda
+    \parbox{7cm}{
+        \setstretch{1.5} % Espaçamento de 1,5 entre linhas
+        % Texto da dedicatória
+        A todos que me apoiaram nesta jornada, com carinho e dedicação.
+    }
+}
+
+% Definições para o conteúdo dos agradecimentos
+\newcommand{\agradecimentos}{
+    \thispagestyle{empty}
+    
+    % Título "AGRADECIMENTOS" centralizado
+    
+    \vspace*{-5cm}
+    \begin{center}
+        \uppercase{\textbf{AGRADECIMENTOS}}
+    \end{center}
+    
+    \vspace{1cm} % Espaçamento entre o título e o início do texto
+    
+    % Texto dos agradecimentos com fonte tamanho 12 e espaçamento de 1,5 entre linhas
+    \setstretch{1.5} % Define o espaçamento de 1,5
+    \noindent % Início do texto justificado
+    O presente trabalho foi realizado com apoio da Coordenação de Aperfeiçoamento de Pessoal de Nível Superior – Brasil (CAPES) – Código de Financiamento 001.
+    
+    \vspace{0.5cm}
+    
+    Gostaria de agradecer a todos que contribuíram para a realização deste trabalho, em especial...
+}
+
+% Definições para epígrafe curta (até 3 linhas)
+\newcommand{\epigrafeCurta}{
+    \thispagestyle{empty}
+    \vspace*{10cm} % Ajuste para começar abaixo do meio da página
+    
+    \hspace{8cm} % Recuo de 8 cm da margem esquerda
+    \parbox{7cm}{
+        \setstretch{1.5} % Espaçamento de 1,5 entre linhas
+        “Texto da epígrafe, entre aspas” % Texto da epígrafe em itálico e entre aspas
+    }
+    
+    \vspace{0.5cm}
+    \hfill — Autor, Ano, p. XX
+}
+
+% Definições para epígrafe longa (mais de 3 linhas)
+\newcommand{\epigrafeLonga}{
+    \thispagestyle{empty}
+    \vspace*{10cm} % Ajuste para começar abaixo do meio da página
+    
+    \hspace{4cm} % Recuo de 4 cm da margem esquerda
+    \parbox{11cm}{
+        \setstretch{1.0} % Espaçamento simples entre linhas
+        \fontsize{10}
+        Texto da epígrafe, sem aspas % Texto da epígrafe (sem aspas)
+    }
+    
+    \vspace{0.5cm}
+    \hfill — Autor, Ano, p. XX
+}
+
+% Definições para o conteúdo do resumo
+\newcommand{\resumo}{ 
+    \thispagestyle{empty}
+    
+    % Título "RESUMO" centralizado
+    \vspace*{-5cm}
+    \begin{center}
+        \uppercase{\textbf{RESUMO}}
+    \end{center}
+    
+    \vspace{0.5cm} % Espaçamento entre o título e o texto do resumo
+    
+    % Texto do resumo justificado, sem recuo e com espaçamento de 1,5
+    \noindent % Remove recuo do primeiro parágrafo
+    \justifying
+    Texto do resumo objetivos, metodologia, resultados e conclusões
+    
+    \vspace{0.5cm} % Espaço entre o resumo e as palavras-chave
+    
+    % Palavras-chave
+    \noindent \textbf{Palavras-chave:}  Inclua suas palavras-chave separadas por ponto e vírgula, terminando com ponto
+}
+

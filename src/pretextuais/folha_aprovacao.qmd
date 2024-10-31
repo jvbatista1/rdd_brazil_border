@@ -1,0 +1,10 @@
+---
+format: pdf
+
+# misc
+lang: pt-BR # siga o padrão: pt-BR, es-AR, en-US etc.
+editor: source
+---
+
+# {.unnumbered}
+\folhadeaprovacao

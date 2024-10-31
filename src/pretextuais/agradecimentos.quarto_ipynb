@@ -1,0 +1,47 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "#  {.unnumbered}\n",
+        "\n",
+        "\n",
+        "\n",
+        "\n",
+        "\n",
+        "\n",
+        "\n",
+        "\n",
+        "```{latex}\n",
+        "\\thispagestyle{empty}\n",
+        "%Título \"AGRADECIMENTOS\" centralizado\n",
+        "\\begin{center}\n",
+        "    \\uppercase{\\textbf{AGRADECIMENTOS}}\n",
+        "\\end{center}\n",
+        "\n",
+        "\\vspace{1cm} % Espaçamento entre o título e o início do texto\n",
+        "\n",
+        "% Texto dos agradecimentos com fonte tamanho 12 e espaçamento de 1,5 entre linhas\n",
+        "\\setstretch{1.5} % Define o espaçamento de 1,5\n",
+        "\\noindent % Início do texto justificado\n",
+        "O presente trabalho foi realizado com apoio da Coordenação de Aperfeiçoamento de Pessoal de Nível Superior – Brasil (CAPES) – Código de Financiamento 001.\n",
+        "\n",
+        "\\vspace{0.5cm}\n",
+        "\n",
+        "Gostaria de agradecer a todos que contribuíram para a realização deste trabalho, em especial...\n",
+        "```"
+      ],
+      "id": "42467020"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "display_name": "Python 3",
+      "language": "python",
+      "name": "python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}
