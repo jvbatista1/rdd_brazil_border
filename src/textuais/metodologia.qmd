@@ -45,7 +45,7 @@ A escolha do modelo de regressão descontínua é particularmente adequada para 
 ```{r}
 #| label: carrega bases
 
-dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
+dropbox <- "c:/Users/victo/dropbox/DISSERTACAO"
 
 #### Meu exemplo
 library(sf)
