@@ -19,6 +19,7 @@ book:
     - src/pretextuais/sumario.qmd
     - src/textuais/literatura.qmd
     - src/textuais/metodologia.qmd
+    - src/textuais/modelo_sedes.qmd
     - src/textuais/arco_norte.qmd
     - src/textuais/arco_central.qmd
     - src/textuais/arco_sul.qmd

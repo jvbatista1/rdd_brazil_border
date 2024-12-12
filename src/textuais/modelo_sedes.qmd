@@ -1,0 +1,104 @@
+---
+format: pdf
+
+# misc
+lang: pt-BR # siga o padrão: pt-BR, es-AR, en-US etc.
+editor: source
+---
+
+# Existe efeito nas sedes fora da faixa de fronteira?
+
+```{r}
+dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
+library(sf)
+library(tmap)
+library(tidyverse)
+library(readr)
+library(skimr)
+library(modelsummary)
+library(rdrobust)
+library(viridis)
+```
+
+
+```{r}
+espaciais <- read_rds(file.path(dropbox, "dados_espaciais.rds"))
+violencia <- read_rds(file.path(dropbox, "municipal.rds"))
+violencia <- violencia |> 
+  filter(!is.na(id_municipio))
+
+df <- left_join(espaciais, violencia)
+df <- df |> 
+  mutate(taxa_homens_jovens = as.numeric(taxa_homens_jovens))
+
+df
+
+# Filtrar dados dos municipios da faixa de fronteira
+df_ff <- df |> filter(groups == "treatment")
+```
+
+## Análise Descritiva dos Municípios de Tratamento
+
+Nesta seção, apresentamos uma visão geral dos municípios classificados como pertencentes ao grupo de tratamento, ou seja, aqueles localizados na faixa de fronteira. As tabelas a seguir mostram o percentual do município que está dentro da faixa de fronteira e localização da sede do município em relação à faixa de fronteira (dentro ou fora).
+
+```{r}
+# Criar colunas auxiliares para localização da sede
+df_ff <- df_ff |> 
+  mutate(
+    sede_na_fronteira = ifelse(distancia_fronteira_terrestre<150000, "Dentro", "Fora")
+  )
+
+# Gerar tabelas para cada arco
+arco_norte <- df_ff |> 
+  filter(arcos == "Arco Norte") |> 
+  select(nome, porcentagem_integrada, sede_na_fronteira) |> 
+  count(sede_na_fronteira)
+
+arco_central <- df_ff |> 
+  filter(arcos == "Arco Central") |> 
+  select(nome, porcentagem_integrada, sede_na_fronteira)|> 
+  count(sede_na_fronteira)
+
+arco_sul <- df_ff |> 
+  filter(arcos == "Arco Sul") |> 
+  select(nome, porcentagem_integrada, sede_na_fronteira)|> 
+  count(sede_na_fronteira)
+
+st_geometry(arco_norte) <- NULL
+st_geometry(arco_central) <- NULL
+st_geometry(arco_sul) <- NULL
+
+```
+
+```{r}
+library(knitr)
+
+# Exportar como tabelas Markdown
+kable(arco_norte, format = "markdown", col.names = c("Sede na Faixa de Fronteira", "Quantidade"), caption = "Arco Norte") 
+kable(arco_central, format = "markdown", col.names = c("Sede na Faixa de Fronteira", "Quantidade"), caption = "Arco Central") 
+kable(arco_sul, format = "markdown", col.names = c("Sede na Faixa de Fronteira", "Quantidade"), caption = "Arco Sul") 
+
+```
+
+## Regressão Descontínua (RD)
+
+```{r}
+library(ggplot2)
+library(sf)
+
+
+rdplot(df_ff$mortes_violentas, (df_ff$distancia_fronteira_terrestre)/1000, c = 150, nbins = 50,
+       title = "", 
+       y.label = "Mortes violentas por 100 mil hab.", 
+       x.label = "Distância (km)")
+```
+
+```{r}
+rdd_ff <- rdrobust(y = df_ff$mortes_violentas, 
+                                            x = df_ff$distancia_fronteira_terrestre,
+                                            c = 150000)
+
+summary(rdd_ff)
+```
+
+O modelo estimou o efeito em 276 municípios ao longo da faixa de fronteira (de um total de 588) após a remoção dos valores faltantes da variável de mortes violentas. Desses 237 observações estavam dentro dos 150km e 39 fora. A estimativa de -8,867 sugere que, imediatamente após o ponto de corte há em média 8,867 mortes violentas a menos em comparação com municípios imediatamente antes do ponto de corte. Entretanto o p-valor e o intervalo de confiança não apontam pra significancia estatística do efeito.
