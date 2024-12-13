@@ -84,8 +84,8 @@ tabela_geral <- bind_rows(arco_norte, arco_central, arco_sul) |>
 ```{r}
 # Gerar a tabela final em Markdown
 kable(tabela_geral, 
-      format = "markdown", 
-      caption = "Tabela Consolidada: Quantidade e Percentual por Arco")
+      format = "latex", 
+      caption = "Quantidade e Percentual por Arco")
 
 ```
 

@@ -30,26 +30,78 @@ df <- left_join(espaciais, violencia)
 df <- df |> 
   mutate(taxa_homens_jovens = as.numeric(taxa_homens_jovens))
 
-df
+df_sul <- df |> filter(arcos == "Arco Sul")
 
+espaciais <- espaciais |> 
+  filter(arcos == "Arco Sul")
 ```
 
 ## Contexto
 
 O Arco sul da faixa de fronteira brasileira é constituído de 418 municípios, classificados aqui como tratamento. Com a proposta de expansão, 436 municípios passariam a fazer parte da faixa de fronteira e são classificados aqui como grupo de controle. Utilizando o método de **Regressão Descontínua (RDD)**, buscamos identificar se a presença militar próximo à fronteira está associada a variações significativas nos indicadores de violência, especificamente o número de mortes violentas por 100 mil habitantes.
 
-```{r echo=FALSE, fig.width=5}
-library(ggplot2)
-library(sf)
-# Filtrar dados do arco sul
-df_sul <- df |> filter(arcos == "Arco Sul")
+```{r}
+#| label: carrega sedes
 
-ggplot(data = df_sul) +
-  geom_sf(aes(fill = distancias_fronteira_interior/1000, colour = groups)) +
-  scale_fill_viridis_c() +  # Escala de cores para a distância
-  scale_color_viridis(option = "C", discrete=T, alpha = .3)+
-  labs(fill = "Distância (km)",
-       colour = "Grupo")
+library(geobr)
+sede_municipios <- read_municipal_seat(year=2010, showProgress = F) %>%
+  st_transform("WGS84") |> 
+  rename("id_municipio" = "code_muni",
+         "nome" = "name_muni",
+         "id_uf" = "code_state",
+         'sigla_uf' = "abbrev_state",
+         "nome_regiao" = "name_region",
+         "id_regiao" = "code_region",
+         "ano" = "year") |> 
+  mutate(id_municipio = as.character(id_municipio))
+
+t <- select(espaciais, id_municipio)
+st_geometry(t) <- NULL
+
+sede_municipios <- sede_municipios |> 
+  semi_join(t, by="id_municipio")
+
+rm(t)
+```
+
+```{r}
+#| label: desenha linha divisória
+
+library(sf)
+
+# Filtrar os municípios de tratamento e controle
+tratamento <- espaciais %>% filter(groups == "treatment")
+controle <- espaciais %>% filter(groups == "control")
+
+# Unir as geometrias de cada grupo
+tratamento_union <- st_union(tratamento)
+controle_union <- st_union(controle)
+
+# Calcular a fronteira entre tratamento e controle
+linha_divisoria <- st_intersection(st_boundary(tratamento_union), st_boundary(controle_union))
+```
+
+```{r}
+#| label: desenha controle e tratamento
+#| fig-cap: "Municípios atuais da faixa de fronteira, municípios de controle e sedes municipais"
+
+ggplot() +
+  # Diferenciação entre Tratamento e Controle
+  geom_sf(data = espaciais, aes(fill = groups), color = "darkgreen", size = 0.3) +
+  # Adição das Sedes Municipais
+  geom_sf(data = sede_municipios, color = "black", size = 1.5, shape = 21, fill = "white", stroke = 0.5) +
+  # Adição da Linha Divisória com a legenda
+  geom_sf(data = linha_divisoria, aes(color = "Divisão Tratamento/Controle"), size = 0.3, linetype = "solid") +
+  # Ajuste das escalas e rótulos para a legenda
+  scale_fill_manual(name = "Classificação", values = c("treatment" = "lightgreen", "control" = "lightblue"),
+                    labels = c("Controle", "Tratamento")) +
+  scale_color_manual(name = "", values = c("Divisão Tratamento/Controle" = "red")) +
+  # Tema e título
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5),
+        legend.position = "right") +
+  guides(color = guide_legend(override.aes = list(linetype = "solid", size = 0.5)))
+
 
 ```
 

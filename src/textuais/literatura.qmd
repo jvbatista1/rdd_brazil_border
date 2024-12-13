@@ -47,20 +47,83 @@ Como explorado anteriormente, as Forças Armadas possuem capacidade para organiz
 
 Analisar o problema da segurança pública na faixa de fronteira exige considerar primeiramente a grande extensão da região. Na configuração atual, a faixa de fronteira ocupa 27% do território brasileiro, correndo ao largo de 16.886 quilômetros de fronteira terrestre. Há 588 municípios na faixa de fronteira, pertencentes a 11 estados.
 
-| Arco                        | Número de municípios |
-|-----------------------------|----------------------|
-| Norte (AC, AM, AP, PA e RR) | 71                   |
-| Central (MS, MT e RO)       | 99                   |
-| Sul (PR, RS e SC)           | 418                  |
-| **Total**                   | **588**              |
+```{r}
+library(readr)
+library(sf)
+library(dplyr)
+library(knitr)
 
-: Municípios na Faixa de Fronteira por Arco
+dropbox <- "c:/Users/victo/dropbox/DISSERTACAO"
+
+```
+
+
+```{r}
+espaciais <- read_rds(file.path(dropbox, "dados_espaciais.rds"))
+violencia <- read_rds(file.path(dropbox, "municipal.rds"))
+violencia <- violencia |> 
+  filter(!is.na(id_municipio))
+
+df <- left_join(espaciais, violencia)
+df <- df |> 
+  mutate(taxa_homens_jovens = as.numeric(taxa_homens_jovens))
+
+# Filtrar dados dos municipios da faixa de fronteira
+df_ff <- df |>
+  filter(groups == "treatment") |> 
+  mutate(sede_na_fronteira = ifelse(distancia_fronteira_terrestre<150000, "Dentro", "Fora"))
+```
+
+
+```{r}
+# Filtrar somente os municípios de tratamento (se necessário)
+df_treatment <- df |> filter(groups == "treatment")
+st_geometry(df_treatment) <- NULL
+
+# Calcular os agregados por arco
+tabela_arcos <- df_treatment |> 
+  group_by(arcos) |> 
+  summarise(
+    num_municipios = n(),
+    populacao_total = sum(populacao, na.rm = TRUE), # População absoluta
+    area_total = sum(area_municipio, na.rm = TRUE) # Área total
+  ) |> 
+  mutate(
+    perc_populacao = (populacao_total / sum(populacao_total)) * 100, # População proporcional
+    perc_area = (area_total / sum(area_total)) * 100                # Área proporcional
+  ) |> 
+  rename("Arco" = arcos) |> 
+  relocate(Arco, num_municipios, populacao_total, perc_populacao, area_total, perc_area)
+
+# Adicionar uma linha de total
+tabela_arcos <- tabela_arcos |> 
+  bind_rows(
+    summarise(
+      tabela_arcos, 
+      Arco = "Total",
+      num_municipios = sum(num_municipios),
+      populacao_total = sum(populacao_total),
+      area_total = sum(area_total),
+      perc_populacao = 100,
+      perc_area = 100
+    )
+  )
+
+# Gerar a tabela formatada
+kable(tabela_arcos, 
+      format = "latex", # Use "markdown" se estiver em Markdown puro
+      digits = 1, # Arredondar valores decimais
+      col.names = c("Arco", "Municípios", "População (2019)", "População (%)", "Área Total", "Área (%)"),
+      caption = "Municípios na Faixa de Fronteira por Arco")
+
+```
+
 
 Essa grande extensão geográfica naturalmente carrega uma significativa heterogeneidade. As diferentes partes da faixa de fronteira, portanto, têm características próprias que influenciam o tipo de problema que enfrentam na segurança pública. Para cada arco, a literatura aponta crimes específicos favorecidos pelas condições geográficas e socioeconômicas do lugar, apesar de concordar que o tráfico de drogas, o contrabando e a exploração ambiental são comuns em todas as regiões.
 
-No arco Norte, o trabalho de @dias_dinamica_2024 analisa a dinâmica de violência e o papel das facções criminais na macrorregião. O artigo detalha como a expansão e o confronto entre facções, como o PCC e o Comando Vermelho (CV), moldaram a criminalidade e a violência na região Norte e discute o impacto direto dessas facções em áreas específicas, relacionando sua presença ao aumento da violência. O texto explora como facções se associam a atividades ilegais típicas da região, como o tráfico de drogas e os crimes ambientais, incluindo extração ilegal de madeira e mineração. As diferentes facções estabelecem alianças e rivalidades com grupos locais e regionais, contribuindo para uma instabilidade crescente.
+No arco Norte, @dias_dinamica_2024 analisa a dinâmica de violência e o papel das facções criminais na macrorregião. O artigo detalha como a expansão e o confronto entre facções, como o PCC (Primeiro Comando da Capital) e o Comando Vermelho (CV), moldaram a criminalidade e a violência na região Norte e discute o impacto direto dessas facções em áreas específicas, relacionando sua presença ao aumento da violência. O texto explora como facções se associam a atividades ilegais típicas da região, como o tráfico de drogas e os crimes ambientais, incluindo extração ilegal de madeira e mineração. As diferentes facções estabelecem alianças e rivalidades com grupos locais e regionais, contribuindo para uma instabilidade crescente.
 
-Ainda na esfera da atuação das organizações criminosas, o trabalho de @couto_relacoes_2024 foca nas relações transfronteiriças do narcotráfico na Amazônia, destacando como as redes de tráfico de drogas e outras atividades, como o garimpo ilegal, se entrelaçam e impactam diretamente a segurança da região. Couto enfatiza que o narcotráfico não só utiliza o território amazônico como rota de passagem, mas também se integra à economia local, explorando recursos naturais e contribuindo para o aumento da violência e da criminalidade.
+Ainda na esfera da atuação das organizações criminosas, @couto_relacoes_2024 foca nas relações transfronteiriças do narcotráfico na Amazônia, destacando como as redes de tráfico de drogas e outras atividades, como o garimpo ilegal, se entrelaçam e impactam diretamente a segurança da região. Couto enfatiza que o narcotráfico não só utiliza o território amazônico como rota de passagem, mas também se integra à economia local, explorando recursos naturais e contribuindo para o aumento da violência e da criminalidade na região.
 
 Esse entendimento é relevante para a segurança pública no arco Norte, pois demonstra como a região se torna vulnerável devido à presença de facções criminosas que competem pelo controle de rotas de tráfico e áreas de exploração. Também aborda a necessidade de uma cooperação pan-amazônica, envolvendo o Brasil e países vizinhos, para implementar uma estratégia de segurança integrada e coordenada, capaz de responder às ameaças transnacionais que afetam diretamente a soberania e o desenvolvimento local.
 
@@ -82,10 +145,10 @@ Vale notar que, apesar da segurança jurídica que rege a situação da seguran�
 
 A literatura que aborda a relação entre violência e desenvolvimento social na faixa de fronteira brasileira destaca a complexidade e os desafios enfrentados por essa região em termos de segurança pública e progresso socioeconômico. Estudos como os de @kruger_analysis_2017 e @castro_influencia_2011 são fundamentais para compreender as dinâmicas que moldam o cenário da violência e seu impacto no desenvolvimento humano nas áreas de fronteira.
 
-@kruger_analysis_2017 focam-se nas políticas públicas implementadas para promover o desenvolvimento sustentável na faixa de fronteira. O estudo ressalta que a faixa de fronteira, uma região marcada por vulnerabilidades socioeconômicas e ambientais, carece de políticas bem integradas e eficazes. As iniciativas voltadas para o desenvolvimento, como o Programa de Desenvolvimento da Faixa de Fronteira (PDFF) e o Programa Calha Norte, foram, em grande parte, concentradas na melhoria de aspectos socioeconômicos, como emprego, saúde e educação, mas negligenciaram a dimensão ambiental, crucial para a sustentabilidade da região. No entanto, apesar de algumas melhorias em indicadores de educação e saúde, Krüger et al. observam que os indicadores de emprego e renda caíram em algumas áreas, apontando para uma desarticulação e falta de continuidade nas políticas públicas implementadas.
+@kruger_analysis_2017 focam-se nas políticas públicas implementadas para promover o desenvolvimento sustentável na faixa de fronteira. O estudo ressalta que a faixa de fronteira, uma região marcada por vulnerabilidades socioeconômicas e ambientais, carece de políticas bem integradas e eficazes. As iniciativas voltadas para o desenvolvimento, como o Programa de Desenvolvimento da Faixa de Fronteira (PDFF) e o Programa Calha Norte, foram, em grande parte, concentradas na melhoria de aspectos socioeconômicos, como emprego, saúde e educação, mas negligenciaram a dimensão ambiental, crucial para a sustentabilidade da região. No entanto, apesar de algumas melhorias em indicadores de educação e saúde, @kruger_analysis_2017 observam que os indicadores de emprego e renda caíram em algumas áreas, apontando para uma desarticulação e falta de continuidade nas políticas públicas implementadas.
 
-Complementando essa análise, o estudo de @castro_influencia_2011 aprofunda a discussão ao explorar o impacto da mortalidade por causas externas, como homicídios e acidentes de trânsito, no desenvolvimento humano nas áreas de fronteira. Utilizando uma abordagem quantitativa para analisar dados de mortalidade entre 2000 e 2005, Castro revela que a violência e os acidentes são responsáveis por uma grande parcela das mortes nessas regiões, com impactos particularmente severos na região Norte. Homens jovens entre 20 e 49 anos são as principais vítimas, o que gera uma perda significativa de anos potenciais de vida e produtividade. Embora o impacto direto da mortalidade por causas externas sobre o Índice de Desenvolvimento Humano (IDH) seja limitado, o estudo mostra que as perdas econômicas e sociais resultantes são substanciais, especialmente em termos de produção bruta e desenvolvimento social.
+Complementando essa análise, o estudo de @castro_influencia_2011 aprofunda a discussão ao explorar o impacto da mortalidade por causas externas, como homicídios e acidentes de trânsito, no desenvolvimento humano nas áreas de fronteira. Utilizando uma abordagem quantitativa para analisar dados de mortalidade entre 2000 e 2005, @castro_influencia_2011 revela que a violência e os acidentes são responsáveis por uma grande parcela das mortes nessas regiões, com impactos particularmente severos na região Norte. Homens jovens entre 20 e 49 anos são as principais vítimas, o que gera uma perda significativa de anos potenciais de vida e produtividade. Embora o impacto direto da mortalidade por causas externas sobre o Índice de Desenvolvimento Humano (IDH) seja limitado, o estudo mostra que as perdas econômicas e sociais resultantes são substanciais, especialmente em termos de produção bruta e desenvolvimento social.
 
-Esses estudos revelam uma interdependência entre violência, segurança pública e desenvolvimento socioeconômico nas regiões de fronteira. A falta de continuidade nas políticas públicas, como apontado por Krüger et al., e a alta mortalidade por causas externas descrita por Castro evidenciam a necessidade de estratégias mais integradas e sustentáveis. A violência nessas regiões não apenas compromete a segurança, mas também afeta diretamente o desenvolvimento social, ressaltando a urgência de políticas que combinem segurança, desenvolvimento social e proteção ambiental para promover uma mudança significativa nessas áreas.
+Esses estudos revelam uma interdependência entre violência, segurança pública e desenvolvimento socioeconômico nas regiões de fronteira. A falta de continuidade nas políticas públicas, como apontado por @kruger_analysis_2017, e a alta mortalidade por causas externas descrita por @castro_influencia_2011 evidenciam a necessidade de estratégias mais integradas e sustentáveis. A violência nessas regiões não apenas compromete a segurança, mas também afeta diretamente o desenvolvimento social, ressaltando a urgência de políticas que combinem segurança, desenvolvimento social e proteção ambiental para promover uma mudança significativa nessas áreas.
 
 ## Contriubições do estudo
