@@ -216,7 +216,9 @@ O sistema permite que o Ministério da Justiça e Segurança Pública (MJSP) ten
 
 ### Mortes violentas
 
-Violências como e acidentes que redundam em óbitos precoces, rompem com o ciclo de vida natural do indivíduo. O CID-106 reúne no Capítulo XX os acidentes e as violências sob a nomenclatura genérica de “Causas Externas”, distribuídos entre os códigos V01 ao Y98.
+O CID-106 reúne no Capítulo XX os acidentes e as violências sob a nomenclatura genérica de “Causas Externas”, distribuídos entre os códigos V01 ao Y98. São as causas que redundam em óbitos precoces, rompem com o ciclo de vida natural do indivíduo.
+
+Para o objetico desse trabalho, serão desconsiderados os acidentes e entram as categorias listadas na @tbl-cid.
 
 ```{r}
 dicionario_cid <- read.csv("C:/Users/victo/git/rdd_brazil_border/data/dicionario_cid.csv")
@@ -224,7 +226,10 @@ dicionario_cid <- read.csv("C:/Users/victo/git/rdd_brazil_border/data/dicionario
 library(knitr)
 ```
 
+\tiny
 ```{r}
+#| label: tbl-cid
+
 dicionario_cid <- dicionario_cid |> 
   filter(causa_violencia == 1) |> 
   distinct(categoria, descricao_categoria)
@@ -234,6 +239,7 @@ kable(dicionario_cid,
       caption = "Categorias no capítulo XX do CID")
 ```
 
+\normalsize
 
 ### Homicídios
 
