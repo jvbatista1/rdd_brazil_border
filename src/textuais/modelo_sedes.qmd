@@ -9,7 +9,7 @@ editor: source
 # Existe efeito nas sedes fora da faixa de fronteira?
 
 ```{r}
-dropbox <- "c:/Users/victo/dropbox/DISSERTACAO"
+dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
 library(sf)
 library(tmap)
 library(tidyverse)

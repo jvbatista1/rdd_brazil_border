@@ -53,7 +53,7 @@ library(sf)
 library(dplyr)
 library(knitr)
 
-dropbox <- "c:/Users/victo/dropbox/DISSERTACAO"
+dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
 
 ```
 

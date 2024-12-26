@@ -56,17 +56,17 @@ format:
     lang: pt
     
     # toc (table of contents)
-    toc: false
+    toc: true
     #toc-title: "Sumário" #-> o nome da toc vai automático com a língua que você selecionar, mas pode especificar um nome também.
-    #toc-depth: 5 # limitando a seções quinárias (mas tenha dó do leitor, não faça isso!).
+    toc-depth: 5 # limitando a seções quinárias (mas tenha dó do leitor, não faça isso!).
     #lot: true # lista de tabelas
     #lof: true # lista de siglas
-    #number-sections: true
+    number-sections: true
 
     # font
     mainfont: "Times New Roman" # aceita qualquer fonte instalada no seu sistema.
     #fontfamily: mathptmx # se usar essa opção, tem que dar o nome de uma fonte LaTeX. mathpmx é a mais próxima da Times New Roman.
-    fontsize: "12"
+    fontsize: "12pt"
     linestretch: 1.5 # espaçamento
 
 # execution
