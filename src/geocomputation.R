@@ -145,6 +145,22 @@ sede_municipios <- read_municipal_seat(year=2010, showProgress = T) %>%
          "ano" = "year") |> 
   mutate(id_municipio = as.character(id_municipio))
 
+library(sf)
+library(dplyr)
+
+# Supondo que a base esteja carregada como um data frame
+# Converte a base para um objeto sf, assumindo que GEOM contém geometria WKT
+sede_municipios_sf <- st_as_sf(sede_municipios, wkt = "GEOM", crs = 4326)
+
+# Extrai latitude e longitude
+sede_municipios <- sede_municipios_sf %>%
+  mutate(
+    longitude = st_coordinates(.)[, 1],
+    latitude = st_coordinates(.)[, 2]
+  ) %>%
+  st_drop_geometry()  # Remove a coluna de geometria, se não for mais necessária
+
+
 t <- select(df, id_municipio)
 st_geometry(t) <- NULL
 

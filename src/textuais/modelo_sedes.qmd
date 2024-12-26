@@ -96,6 +96,8 @@ kable(tabela_geral,
 library(ggplot2)
 library(sf)
 
+df_ff <- df |> 
+  filter(groups == "control" | (groups == "treatment" & distancia_fronteira_terrestre<150000))
 
 rdplot(df_ff$mortes_violentas, (df_ff$distancia_fronteira_terrestre)/1000, c = 150, nbins = 50,
        title = "", 
@@ -106,9 +108,30 @@ rdplot(df_ff$mortes_violentas, (df_ff$distancia_fronteira_terrestre)/1000, c = 1
 \newpage
 \tiny
 ```{r}
-rdd_ff <- rdrobust(y = df_ff$mortes_violentas, 
-                                            x = df_ff$distancia_fronteira_terrestre,
-                                            c = 150000)
+df_ff <- df_ff %>%
+  mutate(
+    dummy_arco_central = if_else(arcos == "Arco Central", 1, 0),
+    dummy_arco_norte = if_else(arcos == "Arco Norte", 1, 0),
+    dummy_arco_sul = if_else(arcos == "Arco Sul", 1, 0)
+  )
+
+sede_municipios <- sede_municipios |> 
+  select(id_municipio, latitude, longitude)
+
+df_ff <- df_ff |> 
+  inner_join(sede_municipios, by="id_municipio")
+
+rdd_ff <- rdrobust(y = df_ff$mortes_violentas,
+                   x = df_ff$distancia_fronteira_terrestre,
+                   covs = cbind(df_ff$dummy_arco_central, df_ff$dummy_arco_norte ,df_ff$dummy_arco_sul),
+                   c = 150000)
+
+summary(rdd_ff)
+
+rdd_ff <- rdrobust(y = df_ff$mortes_violentas,
+                   x = df_ff$distancia_fronteira_terrestre,
+                   covs = cbind(df_ff$dummy_arco_central, df_ff$dummy_arco_norte ,df_ff$dummy_arco_sul, df_ff$latitude, df_ff$longitude),
+                   c = 150000)
 
 summary(rdd_ff)
 ```
