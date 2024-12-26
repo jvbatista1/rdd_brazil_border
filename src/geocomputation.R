@@ -145,9 +145,6 @@ sede_municipios <- read_municipal_seat(year=2010, showProgress = T) %>%
          "ano" = "year") |> 
   mutate(id_municipio = as.character(id_municipio))
 
-library(sf)
-library(dplyr)
-
 # Supondo que a base esteja carregada como um data frame
 # Converte a base para um objeto sf, assumindo que GEOM contém geometria WKT
 sede_municipios_sf <- st_as_sf(sede_municipios, wkt = "GEOM", crs = 4326)
@@ -157,8 +154,8 @@ sede_municipios <- sede_municipios_sf %>%
   mutate(
     longitude = st_coordinates(.)[, 1],
     latitude = st_coordinates(.)[, 2]
-  ) %>%
-  st_drop_geometry()  # Remove a coluna de geometria, se não for mais necessária
+  )
+  #st_drop_geometry()  # Remove a coluna de geometria, se não for mais necessária
 
 
 t <- select(df, id_municipio)
@@ -208,18 +205,18 @@ faixa_interior <- st_difference(faixa_linha, buffer_fronteira)
 distancias_interior <- st_distance(sede_municipios, faixa_interior)
 
 # Adicionar a distância calculada ao dataframe de sede_municipio
-sede_municipios$distancias_fronteira_interior <- as.numeric(distancias_interior)
+sede_municipios$distancia_fronteira_interior <- as.numeric(distancias_interior)
 
 t <- sede_municipios |> 
-  select(id_municipio, distancia_fronteira_terrestre, distancias_fronteira_interior)
+  select(id_municipio, distancia_fronteira_terrestre, distancia_fronteira_interior, latitude, longitude)
 st_geometry(t) <- NULL
 
 df <- df |> 
   left_join(t, by = "id_municipio") |> 
   #torna as distâncias da faixa de fronteira original negativas
-  mutate(distancias_fronteira_interior = ifelse(groups == "treatment", 
-                                                -distancias_fronteira_interior, 
-                                                distancias_fronteira_interior))
+  mutate(distancia_fronteira_interior = ifelse(groups == "treatment", 
+                                                -distancia_fronteira_interior, 
+                                                distancia_fronteira_interior))
 
 
 rm(t)
