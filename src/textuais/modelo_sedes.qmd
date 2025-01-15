@@ -6,7 +6,7 @@ lang: pt-BR # siga o padrão: pt-BR, es-AR, en-US etc.
 editor: source
 ---
 
-# Existe efeito nas sedes fora da faixa de fronteira?
+# Exclusão das sedes municipais do grupo de tratamento fora da faixa de fronteira
 
 ```{r}
 dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
@@ -35,10 +35,7 @@ df_ff <- df |>
   filter(groups == "treatment") |> 
   mutate(sede_na_fronteira = ifelse(distancia_fronteira_terrestre<150000, "Dentro", "Fora"))
 ```
-
-## Análise Descritiva dos Municípios de Tratamento
-
-Nesta seção, apresentamos uma visão geral dos municípios classificados como pertencentes ao grupo de tratamento, ou seja, aqueles localizados na faixa de fronteira. As tabelas a seguir mostram o percentual do município que está dentro da faixa de fronteira e localização da sede do município em relação à faixa de fronteira (dentro ou fora).
+Os municípios do grupo de tratamento são aqueles que possuem alguma porção do seu território dentro da Faixa de Fronteira. Nessa condição, é possível que sua sede municipal esteja fora da faixa, o que, conforme discutimos na seção acima, pode acarretar problemas de seleção com sedes municipais do gurpo de controle que possam estar à uma distânica menor da faixa, violando portanto o princípio da regressão descontínua utilizada nesta anáilise. A tabela mostra quantas sedes em cada arco estão dentro ou fora da faixa. Importante notar a comparação que, proporcionalmente, o arco Sul apresenta muito menos sedes municipais fora da faixa, enquanto no arco Norte esse número chega a mais de um terço da amostra.
 
 ```{r}
 library(dplyr)
@@ -56,39 +53,26 @@ calcular_arco <- function(df, arco_nome) {
     ) |> 
     select(sede_na_fronteira, info)
 }
-```
 
-```{r}
 # Aplicar a função para cada arco
 arco_norte <- calcular_arco(df_ff, "Arco Norte") |> mutate(arco = "Arco Norte")
 arco_central <- calcular_arco(df_ff, "Arco Central") |> mutate(arco = "Arco Central")
 arco_sul <- calcular_arco(df_ff, "Arco Sul") |> mutate(arco = "Arco Sul")
-```
-
-```{r}
 
 st_geometry(arco_norte) <- NULL
 st_geometry(arco_central) <- NULL
 st_geometry(arco_sul) <- NULL
 
-```
-
-```{r}
 # Combinar os resultados em um único dataframe e reorganizar em formato wide
 tabela_geral <- bind_rows(arco_norte, arco_central, arco_sul) |> 
   pivot_wider(names_from = arco, values_from = info) |> 
   rename("Sede do Município" = sede_na_fronteira)
 
-```
-
-```{r}
-# Gerar a tabela final em Markdown
 kable(tabela_geral, 
       format = "latex", 
       caption = "Quantidade e Percentual por Arco")
 
 ```
-
 
 ## Regressão Descontínua (RD)
 
@@ -99,15 +83,18 @@ library(sf)
 df_ff <- df |> 
   filter(groups == "control" | (groups == "treatment" & distancia_fronteira_terrestre<150000))
 
-rdplot(df_ff$mortes_violentas, (df_ff$distancia_fronteira_terrestre)/1000, c = 150, nbins = 50,
+grafico <- rdplot(df_ff$mortes_violentas, (df_ff$distancia_fronteira_terrestre)/1000, c = 150, nbins = 50,
        title = "", 
        y.label = "Mortes violentas por 100 mil hab.", 
        x.label = "Distância (km)")
+
+ggsave("grafico.png",height = 8, width = 12, units = "cm")
 ```
 
 \newpage
 \tiny
-```{r}
+
+```{r, include=FALSE}
 df_ff <- df_ff %>%
   mutate(
     dummy_arco_central = if_else(arcos == "Arco Central", 1, 0),
@@ -115,15 +102,8 @@ df_ff <- df_ff %>%
     dummy_arco_sul = if_else(arcos == "Arco Sul", 1, 0)
   )
 
-sede_municipios <- sede_municipios |> 
-  select(id_municipio, latitude, longitude)
-
-df_ff <- df_ff |> 
-  inner_join(sede_municipios, by="id_municipio")
-
 rdd_ff <- rdrobust(y = df_ff$mortes_violentas,
                    x = df_ff$distancia_fronteira_terrestre,
-                   covs = cbind(df_ff$dummy_arco_central, df_ff$dummy_arco_norte ,df_ff$dummy_arco_sul),
                    c = 150000)
 
 summary(rdd_ff)
@@ -134,7 +114,31 @@ rdd_ff <- rdrobust(y = df_ff$mortes_violentas,
                    c = 150000)
 
 summary(rdd_ff)
+
+rdd_ff <- rdrobust(y = df_ff$mortes_violentas,
+                   x = df_ff$distancia_fronteira_terrestre,
+                   covs = cbind(df_ff$taxa_analfabetismo, df_ff$taxa_desemprego, df_ff$gini, df_ff$pibpc,df_ff$taxa_renda_pobre, df_ff$taxa_trab_infantil, df_ff$taxa_homens_jovens), 
+                   c = 150000)
+
+summary(rdd_ff)
+
+rdd_ff <- rdrobust(y = df_ff$mortes_violentas,
+                   x = df_ff$distancia_fronteira_terrestre,
+                   covs = cbind(df_ff$taxa_analfabetismo, df_ff$taxa_desemprego, df_ff$gini, df_ff$pibpc,df_ff$taxa_renda_pobre, df_ff$taxa_trab_infantil, df_ff$taxa_homens_jovens,df_ff$dummy_arco_central, df_ff$dummy_arco_norte ,df_ff$dummy_arco_sul, df_ff$latitude, df_ff$longitude), 
+                   c = 150000)
+
+summary(rdd_ff)
 ```
 
 \normalsize
+
+| Modelo | Estimador | Erro Padrão | p-valor | Covariáveis Incluídas |
+|---|---|---|---|---|
+| (1) | 8.177 | 7.300 | 0.263 | Distância da Fronteira |
+| (2) | 11.162 | 6.488 | 0.085 | Distância da Fronteira, Dummies de Região, Latitude, Longitude |
+| (3) | 13.265 | 8.211 | 0.106 | Distância da Fronteira, Variáveis Socioeconômicas |
+| (4) | 11.948 | 8.194 | 0.145 | Todas as Covariáveis |
+
+: Modelos com exclusão de sedes fora da Faixa de Fronteira no grupo de tratamento
+
 O modelo estimou o efeito em 276 municípios ao longo da faixa de fronteira (de um total de 588) após a remoção dos valores faltantes da variável de mortes violentas. Desses 237 observações estavam dentro dos 150km e 39 fora. A estimativa de -8,867 sugere que, imediatamente após o ponto de corte há em média 8,867 mortes violentas a menos em comparação com municípios imediatamente antes do ponto de corte. Entretanto o p-valor e o intervalo de confiança não apontam pra significancia estatística do efeito.

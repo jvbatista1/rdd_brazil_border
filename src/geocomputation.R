@@ -221,5 +221,19 @@ df <- df |>
 
 rm(t)
 
+##### CRIAÇÃO DAS LABELS #####
+# 
+# Criando a coluna m_ff
+df$m_ff <- df$groups == "treatment"
+
+# Criando a coluna m_fronteira
+df$m_fronteira <- rowSums(df[, c("Argentina", "Bolivia", "Colombia", "French_Guiana",
+                                 "Guyana", "Suriname", "Paraguay", "Peru", 
+                                 "Uruguay", "Venezuela")]) > 0
+
+# Criando a coluna m_sedeff
+df$m_sedeff <- df$groups == "treatment"
+
+
 library(readr)
 write_rds(df, file.path(dropbox, "dados_espaciais.rds"))

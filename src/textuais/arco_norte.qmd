@@ -99,10 +99,11 @@ ggplot() +
   scale_color_manual(name = "", values = c("Divisão Tratamento/Controle" = "red")) +
   # Tema e título
   theme_minimal() +
-  theme(plot.title = element_text(hjust = 0.5),
+  theme(plot.title = element_text(hjust = 0.1),
         legend.position = "right") +
   guides(color = guide_legend(override.aes = list(linetype = "solid", size = 0.5)))
 
+ggsave("arconorte.png",height = 16, width = 24, units = "cm")
 
 ```
 
@@ -114,10 +115,12 @@ A **variável de cutoff** utilizada é a distância em relação ao limite entre
 ### Mortes violentas
 
 ```{r echo=FALSE, fig.width=5}
-rdplot(df_norte$mortes_violentas, (df_norte$distancias_fronteira_interior)/1000, c = 0, nbins = 50,
+rdplot(df_norte$mortes_violentas, (df_norte$distancia_fronteira_interior)/1000, c = 0, nbins = 50,
        title = "", 
        y.label = "Mortes violentas por 100 mil hab.", 
        x.label = "Distância (km)")
+
+ggsave("plotarconorte.png",height = 8, width = 12, units = "cm")
 
 ```
 
@@ -130,17 +133,17 @@ library(tidyverse)
 df_norte <- df |> filter(arcos == "Arco Norte")
 
 # Criando variáveis moderadoras
-moderadores <- cbind(df_norte$taxa_analfabetismo, df_norte$distancias_fronteira_interior * df_norte$taxa_analfabetismo,
-                     df_norte$taxa_desemprego, df_norte$distancias_fronteira_interior * df_norte$taxa_desemprego,
-                     df_norte$gini, df_norte$distancias_fronteira_interior * df_norte$gini,
-                     df_norte$pibpc, df_norte$distancias_fronteira_interior * df_norte$pibpc,
-                     df_norte$taxa_renda_pobre, df_norte$distancias_fronteira_interior * df_norte$taxa_renda_pobre,
-                     df_norte$taxa_trab_infantil, df_norte$distancias_fronteira_interior * df_norte$taxa_trab_infantil,
-                     df_norte$taxa_homens_jovens, df_norte$distancias_fronteira_interior * df_norte$taxa_homens_jovens)
+moderadores <- cbind(df_norte$taxa_analfabetismo, df_norte$distancia_fronteira_interior * df_norte$taxa_analfabetismo,
+                     df_norte$taxa_desemprego, df_norte$distancia_fronteira_interior * df_norte$taxa_desemprego,
+                     df_norte$gini, df_norte$distancia_fronteira_interior * df_norte$gini,
+                     df_norte$pibpc, df_norte$distancia_fronteira_interior * df_norte$pibpc,
+                     df_norte$taxa_renda_pobre, df_norte$distancia_fronteira_interior * df_norte$taxa_renda_pobre,
+                     df_norte$taxa_trab_infantil, df_norte$distancia_fronteira_interior * df_norte$taxa_trab_infantil,
+                     df_norte$taxa_homens_jovens, df_norte$distancia_fronteira_interior * df_norte$taxa_homens_jovens)
 
 # Rodando o modelo RDD com múltiplos moderadores
 rdd_norte <- rdrobust(y = df_norte$mortes_violentas, 
-                                            x = df_norte$distancias_fronteira_interior,
+                                            x = df_norte$distancia_fronteira_interior,
                                             c = 0)
 
 ```
@@ -167,12 +170,12 @@ df_norte <- df |> filter(arcos == "Arco Norte")
 
 # Rodando o modelo RDD com múltiplos moderadores
 rdd_norte_falso1<- rdrobust(y = df_norte$mortes_violentas, 
-                                            x = df_norte$distancias_fronteira_interior,
+                                            x = df_norte$distancia_fronteira_interior,
                                             c = -50000)
 
 rdd_norte_falso2<- rdrobust(y = df_norte$mortes_violentas, 
-                                            x = df_norte$distancias_fronteira_interior,
-                                            c = 50000)
+                                            x = df_norte$distancia_fronteira_interior,
+                            c = 50000)
 
 # Resumo dos resultados
 print("Resultados para o teste com limiar mais à esquerda")
@@ -198,17 +201,17 @@ Apesar do modelo de RD ser capaz de determinar o efeito do tratamento com relati
 df_norte <- df |> filter(arcos == "Arco Norte")
 
 # Criando variáveis moderadoras
-moderadores <- cbind(df_norte$taxa_analfabetismo, df_norte$distancias_fronteira_interior * df_norte$taxa_analfabetismo,
-                     df_norte$taxa_desemprego, df_norte$distancias_fronteira_interior * df_norte$taxa_desemprego,
-                     df_norte$gini, df_norte$distancias_fronteira_interior * df_norte$gini,
-                     df_norte$pibpc, df_norte$distancias_fronteira_interior * df_norte$pibpc,
-                     df_norte$taxa_renda_pobre, df_norte$distancias_fronteira_interior * df_norte$taxa_renda_pobre,
-                     df_norte$taxa_trab_infantil, df_norte$distancias_fronteira_interior * df_norte$taxa_trab_infantil,
-                     df_norte$taxa_homens_jovens, df_norte$distancias_fronteira_interior * df_norte$taxa_homens_jovens)
+moderadores <- cbind(df_norte$taxa_analfabetismo, df_norte$distancia_fronteira_interior * df_norte$taxa_analfabetismo,
+                     df_norte$taxa_desemprego, df_norte$distancia_fronteira_interior * df_norte$taxa_desemprego,
+                     df_norte$gini, df_norte$distancia_fronteira_interior * df_norte$gini,
+                     df_norte$pibpc, df_norte$distancia_fronteira_interior * df_norte$pibpc,
+                     df_norte$taxa_renda_pobre, df_norte$distancia_fronteira_interior * df_norte$taxa_renda_pobre,
+                     df_norte$taxa_trab_infantil, df_norte$distancia_fronteira_interior * df_norte$taxa_trab_infantil,
+                     df_norte$taxa_homens_jovens, df_norte$distancia_fronteira_interior * df_norte$taxa_homens_jovens)
 # Rodando o modelo RDD com múltiplos moderadores
 
 rdd_norte_multiplos_moderadores <- rdrobust(y = df_norte$mortes_violentas, 
-                                            x = df_norte$distancias_fronteira_interior, 
+                                            x = df_norte$distancia_fronteira_interior, 
                                             covs = moderadores, 
                                             c = 0)
 
@@ -231,14 +234,14 @@ df_norte <- df |> filter(arcos=="Arco Norte")
 # Definir o ponto de corte
 cutoff <- 0
 
-seguranca_vars2 <- c("valor_2010", "valor_2013", "valor_2014", "valor_2015", "valor_2016", "valor_2018", "valor_2019")
+seguranca_vars2 <- c("valor_2010", "valor_2011", "valor_2012", "valor_2013", "valor_2014", "valor_2015", "valor_2016", "valor_2017", "valor_2018", "valor_2019")
 
 # Loop para rodar o modelo com cada variável de segurança
 for (var in seguranca_vars2) {
   cat("\n\n### Resultados para a variável:", var, "\n")
   
   # Executar o modelo com bandwidth padrão
-  rd_est <- rdrobust(y = df_norte[[var]], x = df_norte$distancias_fronteira_interior, c = cutoff, covs = moderadores)
+  rd_est <- rdrobust(y = df_norte[[var]], x = df_norte$distancia_fronteira_interior, c = cutoff, covs = moderadores)
   print(summary(rd_est))
 }
 
@@ -258,14 +261,14 @@ df_norte <- df |> filter(arcos=="Arco Norte")
 cutoff <- 0
 
 # Lista de variáveis de segurança
-seguranca_vars <- c("transito", "esclarecer")
+seguranca_vars <- c("feminicidio", "hom_doloso", "lesao", "mandado", "transito", "esclarecer", "latrocinio", "tentativa_hom")
 
 # Loop para rodar o modelo com cada variável de segurança
 for (var in seguranca_vars) {
   cat("\n\n### Resultados para a variável:", var, "\n")
   
   # Executar o modelo com bandwidth padrão
-  rd_est <- rdrobust(y = df_norte[[var]], x = df_norte$distancias_fronteira_interior, c = cutoff, covs = moderadores)
+  rd_est <- rdrobust(y = df_norte[[var]], x = df_norte$distancia_fronteira_interior, c = cutoff, covs = moderadores)
   print(summary(rd_est))
 }
 

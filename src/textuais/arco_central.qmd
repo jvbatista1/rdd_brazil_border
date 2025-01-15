@@ -104,6 +104,7 @@ ggplot() +
         legend.position = "right") +
   guides(color = guide_legend(override.aes = list(linetype = "solid", size = 0.5)))
 
+ggsave("arcocentral.png",height = 16, width = 24, units = "cm")
 
 ```
 
@@ -114,10 +115,12 @@ A **variável de cutoff** utilizada é a distância em relação ao limite entre
 ### Mortes violentas
 
 ```{r echo=FALSE, fig.width=5}
-rdplot(df_central$mortes_violentas, (df_central$distancias_fronteira_interior)/1000, c = 0, nbins = 80,
+rdplot(df_central$mortes_violentas, (df_central$distancia_fronteira_interior)/1000, c = 0, nbins = 80,
        title = "", 
        y.label = "Mortes violentas por 100 mil hab.", 
        x.label = "Distância (km)")
+
+ggsave("plotarcocentral.png",height = 8, width = 12, units = "cm")
 
 ```
 
@@ -133,7 +136,7 @@ df_central <- df |> filter(arcos == "Arco Central")
 
 # Rodando o modelo RDD
 rdd_central <- rdrobust(y = df_central$mortes_violentas, 
-                                            x = df_central$distancias_fronteira_interior,
+                                            x = df_central$distancia_fronteira_interior,
                                             c = 0)
 
 ```
@@ -158,17 +161,17 @@ Apesar do modelo de RDD ser capaz de determinar o efeito do tratamento com relat
 df_central <- df |> filter(arcos == "Arco Central")
 
 # Criando variáveis moderadoras
-moderadores <- cbind(df_central$taxa_analfabetismo, df_central$distancias_fronteira_interior * df_central$taxa_analfabetismo,
-                     df_central$taxa_desemprego, df_central$distancias_fronteira_interior * df_central$taxa_desemprego,
-                     df_central$gini, df_central$distancias_fronteira_interior * df_central$gini,
-                     df_central$pibpc, df_central$distancias_fronteira_interior * df_central$pibpc,
-                     df_central$taxa_renda_pobre, df_central$distancias_fronteira_interior * df_central$taxa_renda_pobre,
-                     df_central$taxa_trab_infantil, df_central$distancias_fronteira_interior * df_central$taxa_trab_infantil,
-                     df_central$taxa_homens_jovens, df_central$distancias_fronteira_interior * df_central$taxa_homens_jovens)
+moderadores <- cbind(df_central$taxa_analfabetismo, df_central$distancia_fronteira_interior * df_central$taxa_analfabetismo,
+                     df_central$taxa_desemprego, df_central$distancia_fronteira_interior * df_central$taxa_desemprego,
+                     df_central$gini, df_central$distancia_fronteira_interior * df_central$gini,
+                     df_central$pibpc, df_central$distancia_fronteira_interior * df_central$pibpc,
+                     df_central$taxa_renda_pobre, df_central$distancia_fronteira_interior * df_central$taxa_renda_pobre,
+                     df_central$taxa_trab_infantil, df_central$distancia_fronteira_interior * df_central$taxa_trab_infantil,
+                     df_central$taxa_homens_jovens, df_central$distancia_fronteira_interior * df_central$taxa_homens_jovens)
 # Rodando o modelo RDD com múltiplos moderadores
 
 rdd_central_multiplos_moderadores <- rdrobust(y = df_central$mortes_violentas, 
-                                            x = df_central$distancias_fronteira_interior, 
+                                            x = df_central$distancia_fronteira_interior, 
                                             covs = moderadores, 
                                             c = 0)
 
@@ -187,17 +190,17 @@ Entretanto, o pacote `rdrobust` nesse caso calculou uma largura de banda que inc
 df_central <- df |> filter(arcos == "Arco Central")
 
 # Criando variáveis moderadoras
-moderadores <- cbind(df_central$taxa_analfabetismo, df_central$distancias_fronteira_interior * df_central$taxa_analfabetismo,
-                     df_central$taxa_desemprego, df_central$distancias_fronteira_interior * df_central$taxa_desemprego,
-                     df_central$gini, df_central$distancias_fronteira_interior * df_central$gini,
-                     df_central$pibpc, df_central$distancias_fronteira_interior * df_central$pibpc,
-                     df_central$taxa_renda_pobre, df_central$distancias_fronteira_interior * df_central$taxa_renda_pobre,
-                     df_central$taxa_trab_infantil, df_central$distancias_fronteira_interior * df_central$taxa_trab_infantil,
-                     df_central$taxa_homens_jovens, df_central$distancias_fronteira_interior * df_central$taxa_homens_jovens)
+moderadores <- cbind(df_central$taxa_analfabetismo, df_central$distancia_fronteira_interior * df_central$taxa_analfabetismo,
+                     df_central$taxa_desemprego, df_central$distancia_fronteira_interior * df_central$taxa_desemprego,
+                     df_central$gini, df_central$distancia_fronteira_interior * df_central$gini,
+                     df_central$pibpc, df_central$distancia_fronteira_interior * df_central$pibpc,
+                     df_central$taxa_renda_pobre, df_central$distancia_fronteira_interior * df_central$taxa_renda_pobre,
+                     df_central$taxa_trab_infantil, df_central$distancia_fronteira_interior * df_central$taxa_trab_infantil,
+                     df_central$taxa_homens_jovens, df_central$distancia_fronteira_interior * df_central$taxa_homens_jovens)
 # Rodando o modelo RDD com múltiplos moderadores
 
 rdd_central_multiplos_moderadores <- rdrobust(y = df_central$mortes_violentas, 
-                                            x = df_central$distancias_fronteira_interior, 
+                                            x = df_central$distancia_fronteira_interior, 
                                             covs = moderadores, 
                                             h= 40000,
                                             c = 0)
@@ -221,13 +224,11 @@ df_central <- df |> filter(arcos == "Arco Central")
 
 # Rodando o modelo RDD
 rdd_central_falso1<- rdrobust(y = df_central$mortes_violentas,
-                              x = df_central$distancias_fronteira_interior,
-                              covs = moderadores,
+                              x = df_central$distancia_fronteira_interior,
                               c = -50000)
 
 rdd_central_falso2<- rdrobust(y = df_central$mortes_violentas, 
-                              x = df_central$distancias_fronteira_interior,
-                              covs = moderadores,
+                              x = df_central$distancia_fronteira_interior,
                               c = 50000)
 
 # Resumo dos resultados
@@ -254,20 +255,39 @@ df_central <- df |> filter(arcos=="Arco Central")
 # Definir o ponto de corte
 cutoff <- 0
 
-seguranca_vars2 <- c("valor_2013", "valor_2016")
+seguranca_vars2 <- c("valor_2010", "valor_2011", "valor_2012", "valor_2013", "valor_2014", "valor_2015", "valor_2016", "valor_2017", "valor_2018", "valor_2019")
 
 # Loop para rodar o modelo com cada variável de segurança
 for (var in seguranca_vars2) {
   cat("\n\n### resultados para a variável:", var, "\n")
   
   # Executar o modelo com bandwidth padrão
-  rd_est <- rdrobust(y = df_central[[var]], x = df_central$distancias_fronteira_interior, c = cutoff, covs = moderadores)
+  rd_est <- rdrobust(y = df_central[[var]], x = df_central$distancia_fronteira_interior, c = cutoff, covs = moderadores)
   print(summary(rd_est))
 }
 
 ```
 
 ## Outros crimes
+
+```{r,echo=FALSE}
+df_central <- df |> filter(arcos=="Arco Central")
+# Definir o ponto de corte
+cutoff <- 0
+
+# Lista de variáveis de segurança
+seguranca_vars <- c("feminicidio", "hom_doloso", "lesao", "mandado", "transito", "esclarecer", "latrocinio", "tentativa_hom")
+
+# Loop para rodar o modelo com cada variável de segurança
+for (var in seguranca_vars) {
+  cat("\n\n### Resultados para a variável:", var, "\n")
+  
+  # Executar o modelo com bandwidth padrão
+  rd_est <- rdrobust(y = df_central[[var]], x = df_central$distancia_fronteira_interior, c = cutoff, covs = moderadores)
+  print(summary(rd_est))
+}
+
+```
 
 \normalsize
 
