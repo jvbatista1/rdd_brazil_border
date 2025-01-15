@@ -102,8 +102,8 @@ brasil <- america %>%
 america <- america %>%
   filter(COUNTRY %in% c("French Guiana (France)", "Suriname", "Guyana", "Venezuela", 
                         "Colombia", "Peru", "Bolivia", "Paraguay", "Argentina", "Uruguay")) |> 
-  st_buffer(dist = 50)
-
+  st_buffer(dist=5000)
+  
 # verifica interseções
 a <- st_intersects(df, america, sparse = FALSE)
 
@@ -224,11 +224,6 @@ df <- df |>
          m_sedeff = if_else(m_ff == FALSE, FALSE, m_sedeff),
          label = paste0(as.integer(m_ff), as.integer(m_fronteira), as.integer(m_sedeff)))
 rm(t)
-
-df |>
-  count(label, sort = TRUE)
-
-plot(df[,"label"])
 
 library(readr)
 write_rds(df, file.path(dropbox, "dados_espaciais.rds"))
