@@ -35,6 +35,21 @@ df_ff <- df |>
   filter(groups == "treatment") |> 
   mutate(sede_na_fronteira = ifelse(distancia_fronteira_terrestre<150000, "Dentro", "Fora"))
 ```
+
+```{r}
+ggplot()+
+  geom_sf(data=espaciais, aes(fill = label), color = "black")+
+  labs(fill = "Tipo de município")+
+  # Tema e título
+  theme_minimal()
+  
+  ggsave("municipioslabel.png",height = 16, width = 24, units = "cm")
+```
+```{r}
+df |> 
+  count(label, sort = T)
+```
+
 Os municípios do grupo de tratamento são aqueles que possuem alguma porção do seu território dentro da Faixa de Fronteira. Nessa condição, é possível que sua sede municipal esteja fora da faixa, o que, conforme discutimos na seção acima, pode acarretar problemas de seleção com sedes municipais do gurpo de controle que possam estar à uma distânica menor da faixa, violando portanto o princípio da regressão descontínua utilizada nesta anáilise. A tabela mostra quantas sedes em cada arco estão dentro ou fora da faixa. Importante notar a comparação que, proporcionalmente, o arco Sul apresenta muito menos sedes municipais fora da faixa, enquanto no arco Norte esse número chega a mais de um terço da amostra.
 
 ```{r}
