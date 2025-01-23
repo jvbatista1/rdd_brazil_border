@@ -1,4 +1,4 @@
-dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
+dropbox <- "c:/Users/victo/dropbox/DISSERTACAO"
 
 #### Meu exemplo
 library(sf)
@@ -145,13 +145,6 @@ sede_municipios <- read_municipal_seat(year=2010, showProgress = T) %>%
          "ano" = "year") |> 
   mutate(id_municipio = as.character(id_municipio))
 
-library(sf)
-library(dplyr)
-
-# Supondo que a base esteja carregada como um data frame
-# Converte a base para um objeto sf, assumindo que GEOM contém geometria WKT
-sede_municipios_sf <- st_as_sf(sede_municipios, wkt = "GEOM", crs = 4326)
-
 # Extrai latitude e longitude
 sede_municipios <- sede_municipios_sf %>%
   mutate(
@@ -223,6 +216,20 @@ df <- df |>
 
 
 rm(t)
+
+##### CRIAÇÃO DAS LABELS #####
+
+# criando coluna m_ff
+df$m_ff <- df$groups == "treatment"
+
+# criando coluna m_fronteira
+df$m_fronteira <- rowSums(df[, c("Argentina", "Bolivia", "Colombia", "French_Guiana",
+                                 "Guyana", "Suriname", "Paraguay", "Peru",
+                                 "Uruguay", "Venezuela")]) > 0
+
+# criando coluna m_sede_ff
+df$m_sede_ff <- distancia_fronteira_terrestre < 150000
+
 
 library(readr)
 write_rds(df, file.path(dropbox, "dados_espaciais.rds"))
