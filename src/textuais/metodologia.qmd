@@ -45,7 +45,7 @@ A escolha do modelo de regressão descontínua é particularmente adequada para 
 ```{r}
 #| label: carrega bases
 
-dropbox <- "c:/Users/victo/dropbox/DISSERTACAO"
+dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
 
 #### Meu exemplo
 library(sf)
@@ -221,7 +221,7 @@ O CID-106 reúne no Capítulo XX os acidentes e as violências sob a nomenclatur
 Para o objetico desse trabalho, serão desconsiderados os acidentes e entram as categorias listadas na @tbl-cid.
 
 ```{r}
-dicionario_cid <- read.csv("C:/Users/victo/git/rdd_brazil_border/data/dicionario_cid.csv")
+dicionario_cid <- read.csv("C:/Users/victor/git/rdd_brazil_border/data/dicionario_cid.csv")
 
 library(knitr)
 ```

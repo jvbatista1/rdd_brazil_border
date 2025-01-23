@@ -12,7 +12,6 @@ fronteira <- read_sf(file.path(dropbox,"Fronteira/Faixa_de_Fronteira_por_UF_2022
          "area_uf" = "AREA_KM2",
          "area_integrada" = "AREA_INT",
          "porcentagem_integrada" = "PORC_INT")
-fronteira
 
 #Uniformiza a faixa de fronteira como uma única região
 linha_fronteira <- fronteira %>%
@@ -33,8 +32,6 @@ municipios_fronteira <- read_sf(file.path(dropbox,"Municipios_Fronteira/Municipi
          "area_integrada" = "AREA_INT",
          "porcentagem_integrada" = "PORC_INT") |> 
   mutate(gemea = !(is.na(CID_GEMEA)), .keep = "unused", .after = "porcentagem_integrada")
-
-municipios_fronteira
 
 #Carrega sf dos municípios brasileiros
 library(geobr)
@@ -60,6 +57,11 @@ municipios$inter <- st_intersects(municipios, linha_fronteira_300km, sparse = F)
 municipios <- municipios %>%
   mutate(fronteira = ifelse(id_municipio %in% municipios_fronteira$id_municipio, 1, 0))
 
+# Criar um indicador de qual universo o controle faz parte: 1 é contíguo a um município da FF, 2 está dentro da região de 300 km, que é o original
+municipios_fronteira_union = st_union(municipios_fronteira)
+
+municipios$contiguo <-  st_is_within_distance(municipios, municipios_fronteira_union, dist = 1, sparse = F)
+
 # Cria tratamento e controle
 df <- municipios |>
   #filtra os municípios na nova faixa
@@ -67,6 +69,7 @@ df <- municipios |>
   # cria o grupo de tratamento e controle
   mutate(treated = ifelse(id_municipio %in% municipios_fronteira$id_municipio, 1, 0),
          groups = ifelse(treated == 1, "treatment", "control"),
+         contiguo = ifelse(fronteira==0 & contiguo == TRUE, TRUE, FALSE),
          # cria os arcos
          arcos = case_when(sigla_uf %in% c("AP", "PA", "AM", "AC", "RR") ~ "Arco Norte",
                            sigla_uf %in% c("RO", "MS", "MT") ~ "Arco Central",
@@ -75,6 +78,7 @@ df <- municipios |>
   # exclui a variável classificatória. as recém criadas a substituem
   dplyr::select(-inter, -fronteira, -treated) 
   
+
 
 # prepara a tabela da fronteira para mergir com a df principal (municipios)
 t <- municipios_fronteira |> 
@@ -94,14 +98,18 @@ rm(t)
 america <- st_read(file.path(dropbox,"America/South_America.shp")) %>% 
   st_transform("WGS84")
 
+brasil <- america %>%
+  filter(COUNTRY == "Brazil")
+
 # prepara para juntar demais países da américa do sul na base de municípios
 # Remove regiões sem fronteira com o br
-paises_fronteira <- america %>%
+america <- america %>%
   filter(COUNTRY %in% c("French Guiana (France)", "Suriname", "Guyana", "Venezuela", 
-                        "Colombia", "Peru", "Bolivia", "Paraguay", "Argentina", "Uruguay"))
-
+                        "Colombia", "Peru", "Bolivia", "Paraguay", "Argentina", "Uruguay")) |> 
+  st_buffer(dist = 5000)
+  
 # verifica interseções
-a <- st_intersects(df, paises_fronteira, sparse = FALSE)
+a <- st_intersects(df, america, sparse = FALSE)
 
 # renomeia colunas e cria variáveis dummy
 a <- as.data.frame(a) |> 
@@ -130,10 +138,6 @@ df <- cbind(df, a)
 rm(a)
 
 library(units)
-
-brasil <- america %>%
-  filter(COUNTRY == "Brazil")
-
 sede_municipios <- read_municipal_seat(year=2010, showProgress = T) %>%
   st_transform("WGS84") |> 
   rename("id_municipio" = "code_muni",
@@ -146,13 +150,11 @@ sede_municipios <- read_municipal_seat(year=2010, showProgress = T) %>%
   mutate(id_municipio = as.character(id_municipio))
 
 # Extrai latitude e longitude
-sede_municipios <- sede_municipios_sf %>%
-  mutate(
-    longitude = st_coordinates(.)[, 1],
-    latitude = st_coordinates(.)[, 2]
-  ) %>%
-  st_drop_geometry()  # Remove a coluna de geometria, se não for mais necessária
+sede_municipios <- sede_municipios %>%
+  mutate(longitude = st_coordinates(.)[, 1],
+         latitude = st_coordinates(.)[, 2])
 
+#st_drop_geometry()  # Remove a coluna de geometria, se não for mais necessária
 
 t <- select(df, id_municipio)
 st_geometry(t) <- NULL
@@ -162,11 +164,8 @@ sede_municipios <- sede_municipios |>
 
 rm(t)
 
-# Criar um buffer de 50 metros para dentro do polígono do Brasil na fronteira com esses países
-buffer_fronteira <- st_buffer(paises_fronteira, dist = 50)
-
 # Definir a linha da fronteira terrestre do Brasil com base nesse buffer
-fronteira_terrestre <- st_intersection(brasil, buffer_fronteira)
+fronteira_terrestre <- st_intersection(brasil, america)
 
 # Converter a fronteira terrestre em uma linha (apenas a borda do Brasil que faz fronteira terrestre)
 fronteira_linha <- st_boundary(fronteira_terrestre) |> 
@@ -201,35 +200,34 @@ faixa_interior <- st_difference(faixa_linha, buffer_fronteira)
 distancias_interior <- st_distance(sede_municipios, faixa_interior)
 
 # Adicionar a distância calculada ao dataframe de sede_municipio
-sede_municipios$distancias_fronteira_interior <- as.numeric(distancias_interior)
+sede_municipios$distancia_fronteira_interior <- as.numeric(distancias_interior)
 
 t <- sede_municipios |> 
-  select(id_municipio, distancia_fronteira_terrestre, distancias_fronteira_interior)
+  select(id_municipio, distancia_fronteira_terrestre, distancia_fronteira_interior, latitude, longitude)
 st_geometry(t) <- NULL
 
 df <- df |> 
   left_join(t, by = "id_municipio") |> 
   #torna as distâncias da faixa de fronteira original negativas
-  mutate(distancias_fronteira_interior = ifelse(groups == "treatment", 
-                                                -distancias_fronteira_interior, 
-                                                distancias_fronteira_interior))
+  mutate(distancia_fronteira_interior = ifelse(groups == "treatment", 
+                                                -distancia_fronteira_interior, 
+                                                distancia_fronteira_interior))
 
 
 rm(t)
 
 ##### CRIAÇÃO DAS LABELS #####
+t <- df[, c("Argentina", "Bolivia", "Colombia", "French_Guiana","Guyana", "Suriname", "Paraguay", "Peru", "Uruguay", "Venezuela")]
+st_geometry(t) <- NULL
 
-# criando coluna m_ff
-df$m_ff <- df$groups == "treatment"
-
-# criando coluna m_fronteira
-df$m_fronteira <- rowSums(df[, c("Argentina", "Bolivia", "Colombia", "French_Guiana",
-                                 "Guyana", "Suriname", "Paraguay", "Peru",
-                                 "Uruguay", "Venezuela")]) > 0
-
-# criando coluna m_sede_ff
-df$m_sede_ff <- distancia_fronteira_terrestre < 150000
-
+df <- df |> 
+  mutate(m_ff = groups == "treatment", 
+         m_fronteira = rowSums(t) > 0,
+         m_sedeff = distancia_fronteira_terrestre < 150000,
+         m_ff = if_else(is.na(m_sedeff), FALSE, m_ff),
+         m_sedeff = if_else(m_ff == FALSE, FALSE, m_sedeff),
+         label = paste0(as.integer(m_ff), as.integer(m_fronteira), as.integer(m_sedeff)))
+rm(t)
 
 library(readr)
 write_rds(df, file.path(dropbox, "dados_espaciais.rds"))

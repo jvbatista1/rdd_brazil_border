@@ -47,6 +47,36 @@
     bottom=2cm
 }
 
+% Títulos de seções numerados
+\setkomafont{section}{\bfseries\Large}
+\setkomafont{subsection}{\bfseries\large}
+\setkomafont{subsubsection}{\bfseries\normalsize}
+\setkomafont{paragraph}{\bfseries\normalsize}
+\setkomafont{subparagraph}{\bfseries\normalsize}
+
+% Espaçamento entre títulos e textos
+\RedeclareSectionCommand[
+  beforeskip=1.5\baselineskip,
+  afterskip=0.5\baselineskip]{section}
+\RedeclareSectionCommand[
+  beforeskip=1\baselineskip,
+  afterskip=0.5\baselineskip]{subsection}
+\RedeclareSectionCommand[
+  beforeskip=0.75\baselineskip,
+  afterskip=0.5\baselineskip]{subsubsection}
+  
+\newcommand{\tituloCentralizado}[1]{
+    \begin{center}
+        \uppercase{\textbf{#1}}
+    \end{center}
+}
+
+\newcommand{\inicioCapitulo}{
+    \clearpage
+    \thispagestyle{empty}
+}
+
+
 % Definições para o conteúdo da folha de rosto
 \newcommand{\folhaderosto}{
     \thispagestyle{empty}

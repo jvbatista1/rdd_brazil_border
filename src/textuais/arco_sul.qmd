@@ -9,7 +9,7 @@ editor: source
 # Arco Sul
 
 ```{r message=FALSE, include=FALSE}
-dropbox <- "c:/Users/victo/dropbox/DISSERTACAO"
+dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
 library(sf)
 library(tmap)
 library(tidyverse)
@@ -102,6 +102,7 @@ ggplot() +
         legend.position = "right") +
   guides(color = guide_legend(override.aes = list(linetype = "solid", size = 0.5)))
 
+ggsave("arcosul.png",height = 16, width = 24, units = "cm")
 
 ```
 
@@ -112,10 +113,12 @@ A **variável de cutoff** utilizada é a distância em relação ao limite entre
 ### Mortes violentas
 
 ```{r echo=FALSE, fig.width=5}
-rdplot(df_sul$mortes_violentas, (df_sul$distancias_fronteira_interior)/1000, c = 0, nbins = 50,
+rdplot(df_sul$mortes_violentas, (df_sul$distancia_fronteira_interior)/1000, c = 0, nbins = 50,
        title = "", 
        y.label = "Mortes violentas por 100 mil hab.", 
        x.label = "Distância (km)")
+
+ggsave("plotarcosul.png",height = 8, width = 12, units = "cm")
 
 ```
 
@@ -129,7 +132,7 @@ df_sul <- df |> filter(arcos == "Arco Sul")
 
 # Rodando o modelo RDD
 rdd_sul <- rdrobust(y = df_sul$mortes_violentas, 
-                                            x = df_sul$distancias_fronteira_interior,
+                                            x = df_sul$distancia_fronteira_interior,
                                             c = 0)
 
 ```
@@ -158,11 +161,11 @@ df_sul <- df |> filter(arcos == "Arco Sul")
 
 # Rodando o modelo RDD com múltiplos moderadores
 rdd_sul_falso1<- rdrobust(y = df_sul$mortes_violentas, 
-                                            x = df_sul$distancias_fronteira_interior,
+                                            x = df_sul$distancia_fronteira_interior,
                                             c = -50000)
 
 rdd_sul_falso2<- rdrobust(y = df_sul$mortes_violentas, 
-                                            x = df_sul$distancias_fronteira_interior,
+                                            x = df_sul$distancia_fronteira_interior,
                                             c = 50000)
 
 # Resumo dos resultados
@@ -189,17 +192,17 @@ Os resultados do modelo RDD com múltiplos controles socioeconômicos para o Arc
 df_sul <- df |> filter(arcos == "Arco Sul")
 
 # Criando variáveis moderadoras
-moderadores <- cbind(df_sul$taxa_analfabetismo, df_sul$distancias_fronteira_interior * df_sul$taxa_analfabetismo,
-                     df_sul$taxa_desemprego, df_sul$distancias_fronteira_interior * df_sul$taxa_desemprego,
-                     df_sul$gini, df_sul$distancias_fronteira_interior * df_sul$gini,
-                     df_sul$pibpc, df_sul$distancias_fronteira_interior * df_sul$pibpc,
-                     df_sul$taxa_renda_pobre, df_sul$distancias_fronteira_interior * df_sul$taxa_renda_pobre,
-                     df_sul$taxa_trab_infantil, df_sul$distancias_fronteira_interior * df_sul$taxa_trab_infantil,
-                     df_sul$taxa_homens_jovens, df_sul$distancias_fronteira_interior * df_sul$taxa_homens_jovens)
+moderadores <- cbind(df_sul$taxa_analfabetismo, df_sul$distancia_fronteira_interior * df_sul$taxa_analfabetismo,
+                     df_sul$taxa_desemprego, df_sul$distancia_fronteira_interior * df_sul$taxa_desemprego,
+                     df_sul$gini, df_sul$distancia_fronteira_interior * df_sul$gini,
+                     df_sul$pibpc, df_sul$distancia_fronteira_interior * df_sul$pibpc,
+                     df_sul$taxa_renda_pobre, df_sul$distancia_fronteira_interior * df_sul$taxa_renda_pobre,
+                     df_sul$taxa_trab_infantil, df_sul$distancia_fronteira_interior * df_sul$taxa_trab_infantil,
+                     df_sul$taxa_homens_jovens, df_sul$distancia_fronteira_interior * df_sul$taxa_homens_jovens)
 # Rodando o modelo RDD com múltiplos moderadores
 
 rdd_sul_multiplos_moderadores <- rdrobust(y = df_sul$mortes_violentas, 
-                                            x = df_sul$distancias_fronteira_interior, 
+                                            x = df_sul$distancia_fronteira_interior, 
                                             covs = moderadores, 
                                             c = 0)
 
@@ -220,14 +223,14 @@ df_sul <- df |> filter(arcos=="Arco Sul")
 # Definir o ponto de corte
 cutoff <- 0
 
-seguranca_vars2 <- c("valor_2017")
+seguranca_vars2 <- c("valor_2010", "valor_2011", "valor_2012", "valor_2013", "valor_2014", "valor_2015", "valor_2016", "valor_2017", "valor_2018", "valor_2019")
 
 # Loop para rodar o modelo com cada variável de segurança
 for (var in seguranca_vars2) {
   cat("\n\n### Resultados para a variável:", var, "\n")
   
   # Executar o modelo com bandwidth padrão
-  rd_est <- rdrobust(y = df_sul[[var]], x = df_sul$distancias_fronteira_interior, c = cutoff, covs = moderadores)
+  rd_est <- rdrobust(y = df_sul[[var]], x = df_sul$distancia_fronteira_interior, c = cutoff, covs = moderadores)
   print(summary(rd_est))
 }
 
@@ -253,14 +256,14 @@ df_sul <- df |> filter(arcos=="Arco Sul")
 cutoff <- 0
 
 # Lista de variáveis de segurança
-seguranca_vars <- c("hom_doloso", "esclarecer")
+seguranca_vars <- c("feminicidio", "hom_doloso", "lesao", "mandado", "transito", "esclarecer", "latrocinio", "tentativa_hom")
 
 # Loop para rodar o modelo com cada variável de segurança
 for (var in seguranca_vars) {
   cat("\n\n### Resultados para a variável:", var, "\n")
   
   # Executar o modelo com bandwidth padrão
-  rd_est <- rdrobust(y = df_sul[[var]], x = df_sul$distancias_fronteira_interior, c = cutoff, covs = moderadores)
+  rd_est <- rdrobust(y = df_sul[[var]], x = df_sul$distancia_fronteira_interior, c = cutoff, covs = moderadores)
   print(summary(rd_est))
 }
 
