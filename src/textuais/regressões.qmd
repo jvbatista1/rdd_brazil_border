@@ -4,7 +4,7 @@ format: html
 ---
 
 ```{r}
-dropbox <- "c:/Users/victo/dropbox/DISSERTACAO"
+dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
 library(tidyverse)
 library(sf)
 library(rdrobust)
@@ -27,7 +27,10 @@ rm(espaciais, violencia)
 ```
 
 ```{r}
-
+df |> 
+  ggplot()+
+  geom_sf(aes(fill=label))+
+  theme_minimal()
 
 ```
 
@@ -44,6 +47,14 @@ geograficas <- cbind(df1$dummy_arco_central, df1$dummy_arco_norte ,df1$dummy_arc
 
 all <- cbind(df1$taxa_analfabetismo, df1$taxa_desemprego, df1$gini, df1$pibpc,df1$taxa_renda_pobre, df1$taxa_trab_infantil, df1$taxa_homens_jovens, df1$dummy_arco_central, df1$dummy_arco_norte ,df1$dummy_arco_sul, df1$latitude, df1$longitude)
 
+rdplot(df1$mortes_violentas, (df1$distancia_fronteira_terrestre)/1000, c = 150, nbins = 50,
+       title = "", 
+       y.label = "Mortes violentas por 100 mil hab.", 
+       x.label = "Distância (km)")
+
+```
+
+```{r}
 rdd1 <- rdrobust(y = df1$mortes_violentas,
                  x = df1$distancia_fronteira_terrestre,
                  c = 150000)
@@ -67,6 +78,34 @@ rdd1 <- rdrobust(y = df1$mortes_violentas,
                  covs = all,  
                  c = 150000)
 summary(rdd1)
+
+```
+
+```{r}
+seguranca_vars2 <- c("valor_2010", "valor_2011", "valor_2012", "valor_2013", "valor_2014", "valor_2015", "valor_2016", "valor_2017", "valor_2018", "valor_2019")
+
+# Loop para rodar o modelo com cada variável de segurança
+for (var in seguranca_vars2) {
+  cat("\n\n### Resultados para a variável:", var, "\n")
+  
+  # Executar o modelo com bandwidth padrão
+  rd_est <- rdrobust(y = df1[[var]], x = df1$distancia_fronteira_terrestre, c = 150000, covs = all)
+  print(summary(rd_est))
+}
+```
+
+```{r}
+# Lista de variáveis de segurança
+seguranca_vars <- c("feminicidio", "hom_doloso", "lesao", "mandado", "transito", "esclarecer", "latrocinio", "tentativa_hom")
+
+# Loop para rodar o modelo com cada variável de segurança
+for (var in seguranca_vars) {
+  cat("\n\n### Resultados para a variável:", var, "\n")
+  
+  # Executar o modelo com bandwidth padrão
+  rd_est <- rdrobust(y = df1[[var]], x = df1$distancia_fronteira_terrestre, c = 150000, covs = all)
+  print(summary(rd_est))
+}
 
 ```
 
@@ -84,6 +123,15 @@ geograficas <- cbind(df2$dummy_arco_central, df2$dummy_arco_norte ,df2$dummy_arc
 
 all <- cbind(df2$taxa_analfabetismo, df2$taxa_desemprego, df2$gini, df2$pibpc,df2$taxa_renda_pobre, df2$taxa_trab_infantil, df2$taxa_homens_jovens, df2$dummy_arco_central, df2$dummy_arco_norte ,df2$dummy_arco_sul, df2$latitude, df2$longitude)
 
+rdplot(df2$mortes_violentas, (df2$distancia_fronteira_terrestre)/1000, c = 150, nbins = 50,
+       title = "", 
+       y.label = "Mortes violentas por 100 mil hab.", 
+       x.label = "Distância (km)")
+
+```
+
+```{r}
+
 rdd2 <- rdrobust(y = df2$mortes_violentas,
                  x = df2$distancia_fronteira_terrestre,
                  c = 150000)
@@ -108,6 +156,34 @@ rdd2 <- rdrobust(y = df2$mortes_violentas,
                  c = 150000)
 summary(rdd2)
 
+
+```
+
+```{r}
+seguranca_vars2 <- c("valor_2010", "valor_2011", "valor_2012", "valor_2013", "valor_2014", "valor_2015", "valor_2016", "valor_2017", "valor_2018", "valor_2019")
+
+# Loop para rodar o modelo com cada variável de segurança
+for (var in seguranca_vars2) {
+  cat("\n\n### Resultados para a variável:", var, "\n")
+  
+  # Executar o modelo com bandwidth padrão
+  rd_est <- rdrobust(y = df2[[var]], x = df2$distancia_fronteira_terrestre, c = 150000, covs = all)
+  print(summary(rd_est))
+}
+```
+
+```{r}
+# Lista de variáveis de segurança
+seguranca_vars <- c("feminicidio", "hom_doloso", "lesao", "mandado", "transito", "esclarecer", "latrocinio", "tentativa_hom")
+
+# Loop para rodar o modelo com cada variável de segurança
+for (var in seguranca_vars) {
+  cat("\n\n### Resultados para a variável:", var, "\n")
+  
+  # Executar o modelo com bandwidth padrão
+  rd_est <- rdrobust(y = df2[[var]], x = df2$distancia_fronteira_terrestre, c = 150000, covs = all)
+  print(summary(rd_est))
+}
 
 ```
  
@@ -126,6 +202,15 @@ geograficas <- cbind(df3$dummy_arco_central, df3$dummy_arco_norte ,df3$dummy_arc
 
 all <- cbind(df3$taxa_analfabetismo, df3$taxa_desemprego, df3$gini, df3$pibpc,df3$taxa_renda_pobre, df3$taxa_trab_infantil, df3$taxa_homens_jovens, df3$dummy_arco_central, df3$dummy_arco_norte ,df3$dummy_arco_sul, df3$latitude, df3$longitude)
 
+rdplot(df3$mortes_violentas, (df3$distancia_fronteira_terrestre)/1000, c = 150, nbins = 50,
+       title = "", 
+       y.label = "Mortes violentas por 100 mil hab.", 
+       x.label = "Distância (km)")
+
+```
+
+
+```{r}
 rdd3 <- rdrobust(y = df3$mortes_violentas,
                  x = df3$distancia_fronteira_terrestre,
                  c = 150000)
@@ -149,6 +234,34 @@ rdd3 <- rdrobust(y = df3$mortes_violentas,
                  covs = all,  
                  c = 150000)
 summary(rdd3)
+```
+
+```{r}
+seguranca_vars2 <- c("valor_2010", "valor_2011", "valor_2012", "valor_2013", "valor_2014", "valor_2015", "valor_2016", "valor_2017", "valor_2018", "valor_2019")
+
+# Loop para rodar o modelo com cada variável de segurança
+for (var in seguranca_vars2) {
+  cat("\n\n### Resultados para a variável:", var, "\n")
+  
+  # Executar o modelo com bandwidth padrão
+  rd_est <- rdrobust(y = df3[[var]], x = df3$distancia_fronteira_terrestre, c = 150000, covs = all)
+  print(summary(rd_est))
+}
+```
+
+```{r}
+# Lista de variáveis de segurança
+seguranca_vars <- c("feminicidio", "hom_doloso", "lesao", "mandado", "transito", "esclarecer", "latrocinio", "tentativa_hom")
+
+# Loop para rodar o modelo com cada variável de segurança
+for (var in seguranca_vars) {
+  cat("\n\n### Resultados para a variável:", var, "\n")
+  
+  # Executar o modelo com bandwidth padrão
+  rd_est <- rdrobust(y = df3[[var]], x = df3$distancia_fronteira_terrestre, c = 150000, covs = all)
+  print(summary(rd_est))
+}
+
 ```
 
 Municípios na FdF (sem fronteira com outro país) vis a vis municípios fora da faixa de fronteira
@@ -166,6 +279,15 @@ geograficas <- cbind(df4$dummy_arco_central, df4$dummy_arco_norte ,df4$dummy_arc
 
 all <- cbind(df4$taxa_analfabetismo, df4$taxa_desemprego, df4$gini, df4$pibpc,df4$taxa_renda_pobre, df4$taxa_trab_infantil, df4$taxa_homens_jovens, df4$dummy_arco_central, df4$dummy_arco_norte ,df4$dummy_arco_sul, df4$latitude, df4$longitude)
 
+rdplot(df4$mortes_violentas, (df4$distancia_fronteira_terrestre)/1000, c = 150, nbins = 50,
+       title = "", 
+       y.label = "Mortes violentas por 100 mil hab.", 
+       x.label = "Distância (km)")
+
+```
+
+
+```{r}
 rdd4 <- rdrobust(y = df4$mortes_violentas,
                  x = df4$distancia_fronteira_terrestre,
                  c = 150000)
@@ -192,9 +314,105 @@ summary(rdd4)
 
 ```
 
+```{r}
+seguranca_vars2 <- c("valor_2010", "valor_2011", "valor_2012", "valor_2013", "valor_2014", "valor_2015", "valor_2016", "valor_2017", "valor_2018", "valor_2019")
+
+# Loop para rodar o modelo com cada variável de segurança
+for (var in seguranca_vars2) {
+  cat("\n\n### Resultados para a variável:", var, "\n")
+  
+  # Executar o modelo com bandwidth padrão
+  rd_est <- rdrobust(y = df4[[var]], x = df4$distancia_fronteira_terrestre, c = 150000, covs = all)
+  print(summary(rd_est))
+}
+```
+
+```{r}
+# Lista de variáveis de segurança
+seguranca_vars <- c("feminicidio", "hom_doloso", "lesao", "mandado", "transito", "esclarecer", "latrocinio", "tentativa_hom")
+
+# Loop para rodar o modelo com cada variável de segurança
+for (var in seguranca_vars) {
+  cat("\n\n### Resultados para a variável:", var, "\n")
+  
+  # Executar o modelo com bandwidth padrão
+  rd_est <- rdrobust(y = df4[[var]], x = df4$distancia_fronteira_terrestre, c = 150000, covs = all)
+  print(summary(rd_est))
+}
+
+```
+
 Distância dos municípios da divisão entre tratamento e controle
 
 ```{r}
+
+df5 <- df
+  
+socioecon <- cbind(df5$taxa_analfabetismo, df5$taxa_desemprego, df5$gini, df5$pibpc,df5$taxa_renda_pobre, df5$taxa_trab_infantil, df5$taxa_homens_jovens)
+
+geograficas <- cbind(df5$dummy_arco_central, df5$dummy_arco_norte ,df5$dummy_arco_sul, df5$latitude, df5$longitude)
+
+all <- cbind(df5$taxa_analfabetismo, df5$taxa_desemprego, df5$gini, df5$pibpc,df5$taxa_renda_pobre, df5$taxa_trab_infantil, df5$taxa_homens_jovens, df5$dummy_arco_central, df5$dummy_arco_norte ,df5$dummy_arco_sul, df5$latitude, df5$longitude)
+
+rdplot(df5$mortes_violentas, (df5$distancia_fronteira_interior)/1000, c = 0, nbins = 50,
+       title = "", 
+       y.label = "Mortes violentas por 100 mil hab.", 
+       x.label = "Distância (km)")
+
+```
+
+```{r}
+rdd5 <- rdrobust(y = df5$mortes_violentas,
+                 x = df5$distancia_fronteira_interior,
+                 c = 0)
+
+summary(rdd5)
+
+rdd5 <- rdrobust(y = df5$mortes_violentas,
+                 x = df5$distancia_fronteira_interior,
+                 covs = socioecon,  
+                 c = 0)
+summary(rdd5)
+
+rdd5 <- rdrobust(y = df5$mortes_violentas,
+                 x = df5$distancia_fronteira_interior,
+                 covs = geograficas,  
+                 c = 0)
+summary(rdd5)
+
+rdd5 <- rdrobust(y = df5$mortes_violentas,
+                 x = df5$distancia_fronteira_interior,
+                 covs = all,  
+                 c = 0)
+summary(rdd5)
+
+```
+
+```{r}
+seguranca_vars2 <- c("valor_2010", "valor_2011", "valor_2012", "valor_2013", "valor_2014", "valor_2015", "valor_2016", "valor_2017", "valor_2018", "valor_2019")
+
+# Loop para rodar o modelo com cada variável de segurança
+for (var in seguranca_vars2) {
+  cat("\n\n### Resultados para a variável:", var, "\n")
+  
+  # Executar o modelo com bandwidth padrão
+  rd_est <- rdrobust(y = df5[[var]], x = df5$distancia_fronteira_interior, c = 0, covs = all)
+  print(summary(rd_est))
+}
+```
+
+```{r}
+# Lista de variáveis de segurança
+seguranca_vars <- c("feminicidio", "hom_doloso", "lesao", "mandado", "transito", "esclarecer", "latrocinio", "tentativa_hom")
+
+# Loop para rodar o modelo com cada variável de segurança
+for (var in seguranca_vars) {
+  cat("\n\n### Resultados para a variável:", var, "\n")
+  
+  # Executar o modelo com bandwidth padrão
+  rd_est <- rdrobust(y = df5[[var]], x = df5$distancia_fronteira_interior, c = 0, covs = all)
+  print(summary(rd_est))
+}
 
 ```
 
