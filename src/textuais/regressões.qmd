@@ -1,0 +1,200 @@
+---
+title: "regressões"
+format: html
+---
+
+```{r}
+dropbox <- "c:/Users/victo/dropbox/DISSERTACAO"
+library(tidyverse)
+library(sf)
+library(rdrobust)
+```
+
+```{r}
+espaciais <- read_rds(file.path(dropbox, "dados_espaciais.rds"))
+violencia <- read_rds(file.path(dropbox, "municipal.rds"))
+violencia <- violencia |> 
+  filter(!is.na(id_municipio))
+
+df <- left_join(espaciais, violencia)
+df <- df |> 
+  mutate(taxa_homens_jovens = as.numeric(taxa_homens_jovens),
+         dummy_arco_central = if_else(arcos == "Arco Central", 1, 0),
+         dummy_arco_norte = if_else(arcos == "Arco Norte", 1, 0),
+         dummy_arco_sul = if_else(arcos == "Arco Sul", 1, 0))
+
+rm(espaciais, violencia)
+```
+
+```{r}
+
+
+```
+
+Municípios na faixa da fronteira (FdF) vis a vis municípios fora da FdF
+Tratamento definido por M100 ∪ M101 ∪ M110 ∪ M111 e controle por M000
+
+```{r}
+
+df1 <- df 
+  
+socioecon <- cbind(df1$taxa_analfabetismo, df1$taxa_desemprego, df1$gini, df1$pibpc,df1$taxa_renda_pobre, df1$taxa_trab_infantil, df1$taxa_homens_jovens)
+
+geograficas <- cbind(df1$dummy_arco_central, df1$dummy_arco_norte ,df1$dummy_arco_sul, df1$latitude, df1$longitude)
+
+all <- cbind(df1$taxa_analfabetismo, df1$taxa_desemprego, df1$gini, df1$pibpc,df1$taxa_renda_pobre, df1$taxa_trab_infantil, df1$taxa_homens_jovens, df1$dummy_arco_central, df1$dummy_arco_norte ,df1$dummy_arco_sul, df1$latitude, df1$longitude)
+
+rdd1 <- rdrobust(y = df1$mortes_violentas,
+                 x = df1$distancia_fronteira_terrestre,
+                 c = 150000)
+
+summary(rdd1)
+
+rdd1 <- rdrobust(y = df1$mortes_violentas,
+                 x = df1$distancia_fronteira_terrestre,
+                 covs = socioecon,  
+                 c = 150000)
+summary(rdd1)
+
+rdd1 <- rdrobust(y = df1$mortes_violentas,
+                 x = df1$distancia_fronteira_terrestre,
+                 covs = geograficas,  
+                 c = 150000)
+summary(rdd1)
+
+rdd1 <- rdrobust(y = df1$mortes_violentas,
+                 x = df1$distancia_fronteira_terrestre,
+                 covs = all,  
+                 c = 150000)
+summary(rdd1)
+
+```
+
+ 
+Municípios na FdF (com sede dentro da FdF) vis a vis municípios fora da FdF
+Tratamento definido por M101 ∪ M111 e controle por M000
+
+```{r}
+df2 <- df |> 
+  filter(label %in% c("101", "111", "000"))
+  
+socioecon <- cbind(df2$taxa_analfabetismo, df2$taxa_desemprego, df2$gini, df2$pibpc,df2$taxa_renda_pobre, df2$taxa_trab_infantil, df2$taxa_homens_jovens)
+
+geograficas <- cbind(df2$dummy_arco_central, df2$dummy_arco_norte ,df2$dummy_arco_sul, df2$latitude, df2$longitude)
+
+all <- cbind(df2$taxa_analfabetismo, df2$taxa_desemprego, df2$gini, df2$pibpc,df2$taxa_renda_pobre, df2$taxa_trab_infantil, df2$taxa_homens_jovens, df2$dummy_arco_central, df2$dummy_arco_norte ,df2$dummy_arco_sul, df2$latitude, df2$longitude)
+
+rdd2 <- rdrobust(y = df2$mortes_violentas,
+                 x = df2$distancia_fronteira_terrestre,
+                 c = 150000)
+
+summary(rdd2)
+
+rdd2 <- rdrobust(y = df2$mortes_violentas,
+                 x = df2$distancia_fronteira_terrestre,
+                 covs = socioecon,  
+                 c = 150000)
+summary(rdd2)
+
+rdd2 <- rdrobust(y = df2$mortes_violentas,
+                 x = df2$distancia_fronteira_terrestre,
+                 covs = geograficas,  
+                 c = 150000)
+summary(rdd2)
+
+rdd2 <- rdrobust(y = df2$mortes_violentas,
+                 x = df2$distancia_fronteira_terrestre,
+                 covs = all,  
+                 c = 150000)
+summary(rdd2)
+
+
+```
+ 
+Municípios na FdF (com fronteira com outro país) vis a vis Municípios na FdF (sem fronteira com outro país)
+“Efeito Fronteira”
+Tratamento e controle são atendidos pelas forças armadas, porém o controle não faz fronteira com outro país
+Tratamento definido por M110 ∪ M111 e controle por M100 ∪ M101
+ 
+```{r}
+df3 <- df |> 
+  filter(label %in% c("101", "111", "100", "101"))
+  
+socioecon <- cbind(df3$taxa_analfabetismo, df3$taxa_desemprego, df3$gini, df3$pibpc,df3$taxa_renda_pobre, df3$taxa_trab_infantil, df3$taxa_homens_jovens)
+
+geograficas <- cbind(df3$dummy_arco_central, df3$dummy_arco_norte ,df3$dummy_arco_sul, df3$latitude, df3$longitude)
+
+all <- cbind(df3$taxa_analfabetismo, df3$taxa_desemprego, df3$gini, df3$pibpc,df3$taxa_renda_pobre, df3$taxa_trab_infantil, df3$taxa_homens_jovens, df3$dummy_arco_central, df3$dummy_arco_norte ,df3$dummy_arco_sul, df3$latitude, df3$longitude)
+
+rdd3 <- rdrobust(y = df3$mortes_violentas,
+                 x = df3$distancia_fronteira_terrestre,
+                 c = 150000)
+
+summary(rdd3)
+
+rdd3 <- rdrobust(y = df3$mortes_violentas,
+                 x = df3$distancia_fronteira_terrestre,
+                 covs = socioecon,  
+                 c = 150000)
+summary(rdd3)
+
+rdd3 <- rdrobust(y = df3$mortes_violentas,
+                 x = df3$distancia_fronteira_terrestre,
+                 covs = geograficas,  
+                 c = 150000)
+summary(rdd3)
+
+rdd3 <- rdrobust(y = df3$mortes_violentas,
+                 x = df3$distancia_fronteira_terrestre,
+                 covs = all,  
+                 c = 150000)
+summary(rdd3)
+```
+
+Municípios na FdF (sem fronteira com outro país) vis a vis municípios fora da faixa de fronteira
+“Efeito Forças Armadas”
+Tratamento e controle não fazem fronteira com outro país, porém, o tratamento recebe as “forças” armadas e o controle não recebe
+Tratamento definido por M100 ∪ M101 e controle por M000
+
+```{r}
+df4 <- df |> 
+  filter(label %in% c("100", "101", "000"))
+  
+socioecon <- cbind(df4$taxa_analfabetismo, df4$taxa_desemprego, df4$gini, df4$pibpc,df4$taxa_renda_pobre, df4$taxa_trab_infantil, df4$taxa_homens_jovens)
+
+geograficas <- cbind(df4$dummy_arco_central, df4$dummy_arco_norte ,df4$dummy_arco_sul, df4$latitude, df4$longitude)
+
+all <- cbind(df4$taxa_analfabetismo, df4$taxa_desemprego, df4$gini, df4$pibpc,df4$taxa_renda_pobre, df4$taxa_trab_infantil, df4$taxa_homens_jovens, df4$dummy_arco_central, df4$dummy_arco_norte ,df4$dummy_arco_sul, df4$latitude, df4$longitude)
+
+rdd4 <- rdrobust(y = df4$mortes_violentas,
+                 x = df4$distancia_fronteira_terrestre,
+                 c = 150000)
+
+summary(rdd4)
+
+rdd4 <- rdrobust(y = df4$mortes_violentas,
+                 x = df4$distancia_fronteira_terrestre,
+                 covs = socioecon,  
+                 c = 150000)
+summary(rdd4)
+
+rdd4 <- rdrobust(y = df4$mortes_violentas,
+                 x = df4$distancia_fronteira_terrestre,
+                 covs = geograficas,  
+                 c = 150000)
+summary(rdd4)
+
+rdd4 <- rdrobust(y = df4$mortes_violentas,
+                 x = df4$distancia_fronteira_terrestre,
+                 covs = all,  
+                 c = 150000)
+summary(rdd4)
+
+```
+
+Distância dos municípios da divisão entre tratamento e controle
+
+```{r}
+
+```
+
