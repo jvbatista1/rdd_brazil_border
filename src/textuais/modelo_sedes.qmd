@@ -148,6 +148,7 @@ rdd_ff <- rdrobust(y = df_ff$mortes_violentas,
                    c = 150000)
 
 summary(rdd_ff)
+
 ```
 
 \normalsize

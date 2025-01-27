@@ -60,7 +60,7 @@ municipios <- municipios %>%
 # Criar um indicador de qual universo o controle faz parte: 1 é contíguo a um município da FF, 2 está dentro da região de 300 km, que é o original
 municipios_fronteira_union = st_union(municipios_fronteira)
 
-municipios$contiguo <-  st_is_within_distance(municipios, municipios_fronteira_union, dist = 1, sparse = F)
+municipios$contiguidade <-  st_is_within_distance(municipios, municipios_fronteira_union, dist = 1, sparse = F)
 
 # Cria tratamento e controle
 df <- municipios |>
@@ -69,14 +69,14 @@ df <- municipios |>
   # cria o grupo de tratamento e controle
   mutate(treated = ifelse(id_municipio %in% municipios_fronteira$id_municipio, 1, 0),
          groups = ifelse(treated == 1, "treatment", "control"),
-         contiguo = ifelse(fronteira==0 & contiguo == TRUE, TRUE, FALSE),
+         contiguo = ifelse(fronteira==0 & contiguidade == TRUE, 1, 0),
          # cria os arcos
          arcos = case_when(sigla_uf %in% c("AP", "PA", "AM", "AC", "RR") ~ "Arco Norte",
                            sigla_uf %in% c("RO", "MS", "MT") ~ "Arco Central",
                            sigla_uf %in% c("PR", "SC", "RS") ~ "Arco Sul",
                            sigla_uf %in% c("SP") ~ "Arco Sudeste")) |> 
   # exclui a variável classificatória. as recém criadas a substituem
-  dplyr::select(-inter, -fronteira, -treated) 
+  dplyr::select(-inter, -fronteira, -treated, -contiguidade)
   
 
 
@@ -91,9 +91,9 @@ st_geometry(t) <- NULL
 # realiza o join
 df <- dplyr::left_join(df, t, by = "id_municipio")
 
-df
 rm(t)
 
+#########################################
 #Carrega o sf dos países da América do Sul
 america <- st_read(file.path(dropbox,"America/South_America.shp")) %>% 
   st_transform("WGS84")
@@ -105,11 +105,10 @@ brasil <- america %>%
 # Remove regiões sem fronteira com o br
 america <- america %>%
   filter(COUNTRY %in% c("French Guiana (France)", "Suriname", "Guyana", "Venezuela", 
-                        "Colombia", "Peru", "Bolivia", "Paraguay", "Argentina", "Uruguay")) |> 
-  st_buffer(dist = 5000)
+                        "Colombia", "Peru", "Bolivia", "Paraguay", "Argentina", "Uruguay"))
   
 # verifica interseções
-a <- st_intersects(df, america, sparse = FALSE)
+a <- st_is_within_distance(df, america, dist= 5000, sparse = FALSE)
 
 # renomeia colunas e cria variáveis dummy
 a <- as.data.frame(a) |> 
@@ -154,8 +153,6 @@ sede_municipios <- sede_municipios %>%
   mutate(longitude = st_coordinates(.)[, 1],
          latitude = st_coordinates(.)[, 2])
 
-#st_drop_geometry()  # Remove a coluna de geometria, se não for mais necessária
-
 t <- select(df, id_municipio)
 st_geometry(t) <- NULL
 
@@ -165,32 +162,53 @@ sede_municipios <- sede_municipios |>
 rm(t)
 
 # Definir a linha da fronteira terrestre do Brasil com base nesse buffer
-fronteira_terrestre <- st_intersection(brasil, america)
+linhas_brasil <- st_boundary(brasil)
+linhas_america <- st_boundary(america)
+fronteira_terrestre <- st_intersection(linhas_brasil, linhas_america)
+
+rm(linhas_brasil, linhas_america)
 
 # Converter a fronteira terrestre em uma linha (apenas a borda do Brasil que faz fronteira terrestre)
-fronteira_linha <- st_boundary(fronteira_terrestre) |> 
+fronteira_terrestre <- fronteira_terrestre|> 
   group_by(COUNTRY) |> 
   summarise()
 
 # Calcular a distância entre as sedes municipais e a linha da fronteira terrestre
-distancias_terrestres <- st_distance(sede_municipios, fronteira_linha)
+distancias_terrestres <- st_distance(sede_municipios, fronteira_terrestre)
 
 # Adicionar a distância calculada ao dataframe de sede_municipio
 sede_municipios$distancia_fronteira_terrestre <- as.numeric(distancias_terrestres)
+rm(distancias_terrestres)
 
 #### limite da faixa de fronteira. Definimos como fronteira interior o limite integral dos municípios pertencentes à FF
 # Esse limite é irregular, pois não acompanha os 150 km da fronteira terrestre.
 # Sedes municipais da atual faixa de fronteira (tratamento) tem distâncias negativas, enquanto o controle tem distâncias positivas.
-faixa <- st_read(file.path(dropbox,"Municipios_Fronteira/Municipios_Faixa_Fronteira_2022.shp")) %>%
-  st_transform("WGS84") |> 
-  mutate(pais = "BR") |>  
-  group_by(pais) |> 
-  summarise()
+#faixa <- st_read(file.path(dropbox,"Municipios_Fronteira/Municipios_Faixa_Fronteira_2022.shp")) %>%
+  #st_transform("WGS84") |> 
+  #mutate(pais = "BR") |>  
+  #group_by(pais) |> 
+  #summarise()
 
-faixa_linha <- st_boundary(faixa)
+#linha_faixa <- st_boundary(faixa)
+
+tratamento <- df |> 
+  filter(groups == "treatment") |> 
+  select(groups)
+
+controle <- df |> 
+  filter(groups == "control") |> 
+  select(groups)
+
+tratamento <- st_union(tratamento)
+tratamento <- st_boundary(tratamento)
+controle <- st_union(controle)
+controle <- st_boundary(controle)
+
+fronteira_interior <- st_intersection(tratamento, controle)
+plot(fronteira_terrestre, add=T)
 
 # Criar um buffer de 5 km ao redor da linha de fronteira
-buffer_fronteira <- st_buffer(fronteira_linha, dist = 5000) |> 
+buffer_fronteira <- st_buffer(fronteira_terrestre, dist = 5000) |> 
   st_union()
 
 # Definir a faixa de fronteira interior do Brasil como a exclusão desse buffer

@@ -196,5 +196,37 @@ Distância dos municípios da divisão entre tratamento e controle
 
 ```{r}
 
+df5 <- df
+  
+socioecon <- cbind(df5$taxa_analfabetismo, df5$taxa_desemprego, df5$gini, df5$pibpc,df5$taxa_renda_pobre, df5$taxa_trab_infantil, df5$taxa_homens_jovens)
+
+geograficas <- cbind(df5$dummy_arco_central, df5$dummy_arco_norte ,df5$dummy_arco_sul, df5$latitude, df5$longitude)
+
+all <- cbind(df5$taxa_analfabetismo, df5$taxa_desemprego, df5$gini, df5$pibpc,df5$taxa_renda_pobre, df5$taxa_trab_infantil, df5$taxa_homens_jovens, df5$dummy_arco_central, df5$dummy_arco_norte ,df5$dummy_arco_sul, df5$latitude, df5$longitude)
+
+rdd5 <- rdrobust(y = df5$mortes_violentas,
+                 x = df5$distancia_fronteira_interior,
+                 c = 0)
+
+summary(rdd5)
+
+rdd5 <- rdrobust(y = df5$mortes_violentas,
+                 x = df5$distancia_fronteira_interior,
+                 covs = socioecon,  
+                 c = 0)
+summary(rdd5)
+
+rdd5 <- rdrobust(y = df5$mortes_violentas,
+                 x = df5$distancia_fronteira_interior,
+                 covs = geograficas,  
+                 c = 0)
+summary(rdd5)
+
+rdd5 <- rdrobust(y = df5$mortes_violentas,
+                 x = df5$distancia_fronteira_interior,
+                 covs = all,  
+                 c = 0)
+summary(rdd5)
+
 ```
 
