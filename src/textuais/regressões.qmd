@@ -385,7 +385,6 @@ rdd5 <- rdrobust(y = df5$mortes_violentas,
                  covs = all,  
                  c = 0)
 summary(rdd5)
-
 ```
 
 ```{r}
