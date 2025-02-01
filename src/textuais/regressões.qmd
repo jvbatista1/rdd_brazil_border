@@ -27,10 +27,43 @@ rm(espaciais, violencia)
 ```
 
 ```{r}
-df |> 
+
+list1 <- list("100" = "tratamento",  "101" = "tratamento", "110" = "tratamento", "111" = "tratamento", "000" = "controle")
+list2 <- list("100" = "controle",  "101" = "controle", "110" = "tratamento", "111" = "tratamento", "000" = "controle")
+
+classificar <- function(x){purrr::pluck(list1, x)}
+classificar2 <- function(x){purrr::pluck(list2, x)}
+
+df$Grupos <- purrr::map_chr(df$label, classificar)
+df$Grupo <- purrr::map_chr(df$label, classificar2)
+
+df |>  
   ggplot()+
-  geom_sf(aes(fill=label))+
+  geom_sf(aes(fill=Grupos), stroke = 0.1)+
   theme_minimal()
+ggsave("grupo1.png",height = 20, width = 20, units = "cm")
+
+df |> 
+  filter(label %in% c("101", "111", "000")) |> 
+  ggplot()+
+  geom_sf(aes(fill=Grupos), stroke = 0.1)+
+  theme_minimal()
+ggsave("grupo2.png",height = 20, width = 20, units = "cm")
+
+df |> 
+  filter(label %in% c("101", "111", "100", "110")) |> 
+  ggplot()+
+  geom_sf(aes(fill=Grupo), stroke = 0.1)+
+  theme_minimal()
+ggsave("grupo3.png",height = 20, width = 20, units = "cm")
+
+
+df |> 
+  filter(label %in% c("100", "101", "000")) |> 
+  ggplot()+
+  geom_sf(aes(fill=Grupos), stroke = 0.1)+
+  theme_minimal()
+ggsave("grupo4.png",height = 20, width = 20, units = "cm")
 
 ```
 
@@ -43,9 +76,9 @@ df1 <- df
   
 socioecon <- cbind(df1$taxa_analfabetismo, df1$taxa_desemprego, df1$gini, df1$pibpc,df1$taxa_renda_pobre, df1$taxa_trab_infantil, df1$taxa_homens_jovens)
 
-geograficas <- cbind(df1$dummy_arco_central, df1$dummy_arco_norte ,df1$dummy_arco_sul, df1$latitude, df1$longitude)
+geograficas <- cbind(df1$dummy_arco_central, df1$dummy_arco_norte, df1$latitude, df1$longitude)
 
-all <- cbind(df1$taxa_analfabetismo, df1$taxa_desemprego, df1$gini, df1$pibpc,df1$taxa_renda_pobre, df1$taxa_trab_infantil, df1$taxa_homens_jovens, df1$dummy_arco_central, df1$dummy_arco_norte ,df1$dummy_arco_sul, df1$latitude, df1$longitude)
+all <- cbind(df1$taxa_analfabetismo, df1$taxa_desemprego, df1$gini, df1$pibpc,df1$taxa_renda_pobre, df1$taxa_trab_infantil, df1$taxa_homens_jovens, df1$dummy_arco_central, df1$dummy_arco_norte, df1$latitude, df1$longitude)
 
 rdplot(df1$mortes_violentas, (df1$distancia_fronteira_terrestre)/1000, c = 150, nbins = 50,
        title = "", 
@@ -119,9 +152,9 @@ df2 <- df |>
   
 socioecon <- cbind(df2$taxa_analfabetismo, df2$taxa_desemprego, df2$gini, df2$pibpc,df2$taxa_renda_pobre, df2$taxa_trab_infantil, df2$taxa_homens_jovens)
 
-geograficas <- cbind(df2$dummy_arco_central, df2$dummy_arco_norte ,df2$dummy_arco_sul, df2$latitude, df2$longitude)
+geograficas <- cbind(df2$dummy_arco_central, df2$dummy_arco_norte, df2$latitude, df2$longitude)
 
-all <- cbind(df2$taxa_analfabetismo, df2$taxa_desemprego, df2$gini, df2$pibpc,df2$taxa_renda_pobre, df2$taxa_trab_infantil, df2$taxa_homens_jovens, df2$dummy_arco_central, df2$dummy_arco_norte ,df2$dummy_arco_sul, df2$latitude, df2$longitude)
+all <- cbind(df2$taxa_analfabetismo, df2$taxa_desemprego, df2$gini, df2$pibpc,df2$taxa_renda_pobre, df2$taxa_trab_infantil, df2$taxa_homens_jovens, df2$dummy_arco_central, df2$dummy_arco_norte, df2$latitude, df2$longitude)
 
 rdplot(df2$mortes_violentas, (df2$distancia_fronteira_terrestre)/1000, c = 150, nbins = 50,
        title = "", 
@@ -198,9 +231,9 @@ df3 <- df |>
   
 socioecon <- cbind(df3$taxa_analfabetismo, df3$taxa_desemprego, df3$gini, df3$pibpc,df3$taxa_renda_pobre, df3$taxa_trab_infantil, df3$taxa_homens_jovens)
 
-geograficas <- cbind(df3$dummy_arco_central, df3$dummy_arco_norte ,df3$dummy_arco_sul, df3$latitude, df3$longitude)
+geograficas <- cbind(df3$dummy_arco_central, df3$dummy_arco_norte, df3$latitude, df3$longitude)
 
-all <- cbind(df3$taxa_analfabetismo, df3$taxa_desemprego, df3$gini, df3$pibpc,df3$taxa_renda_pobre, df3$taxa_trab_infantil, df3$taxa_homens_jovens, df3$dummy_arco_central, df3$dummy_arco_norte ,df3$dummy_arco_sul, df3$latitude, df3$longitude)
+all <- cbind(df3$taxa_analfabetismo, df3$taxa_desemprego, df3$gini, df3$pibpc,df3$taxa_renda_pobre, df3$taxa_trab_infantil, df3$taxa_homens_jovens, df3$dummy_arco_central, df3$dummy_arco_norte, df3$latitude, df3$longitude)
 
 rdplot(df3$mortes_violentas, (df3$distancia_fronteira_terrestre)/1000, c = 150, nbins = 50,
        title = "", 
@@ -275,9 +308,9 @@ df4 <- df |>
   
 socioecon <- cbind(df4$taxa_analfabetismo, df4$taxa_desemprego, df4$gini, df4$pibpc,df4$taxa_renda_pobre, df4$taxa_trab_infantil, df4$taxa_homens_jovens)
 
-geograficas <- cbind(df4$dummy_arco_central, df4$dummy_arco_norte ,df4$dummy_arco_sul, df4$latitude, df4$longitude)
+geograficas <- cbind(df4$dummy_arco_central, df4$dummy_arco_norte, df4$latitude, df4$longitude)
 
-all <- cbind(df4$taxa_analfabetismo, df4$taxa_desemprego, df4$gini, df4$pibpc,df4$taxa_renda_pobre, df4$taxa_trab_infantil, df4$taxa_homens_jovens, df4$dummy_arco_central, df4$dummy_arco_norte ,df4$dummy_arco_sul, df4$latitude, df4$longitude)
+all <- cbind(df4$taxa_analfabetismo, df4$taxa_desemprego, df4$gini, df4$pibpc,df4$taxa_renda_pobre, df4$taxa_trab_infantil, df4$taxa_homens_jovens, df4$dummy_arco_central, df4$dummy_arco_norte, df4$latitude, df4$longitude)
 
 rdplot(df4$mortes_violentas, (df4$distancia_fronteira_terrestre)/1000, c = 150, nbins = 50,
        title = "", 
@@ -350,9 +383,9 @@ df5 <- df
   
 socioecon <- cbind(df5$taxa_analfabetismo, df5$taxa_desemprego, df5$gini, df5$pibpc,df5$taxa_renda_pobre, df5$taxa_trab_infantil, df5$taxa_homens_jovens)
 
-geograficas <- cbind(df5$dummy_arco_central, df5$dummy_arco_norte ,df5$dummy_arco_sul, df5$latitude, df5$longitude)
+geograficas <- cbind(df5$dummy_arco_central, df5$dummy_arco_norte, df5$latitude, df5$longitude)
 
-all <- cbind(df5$taxa_analfabetismo, df5$taxa_desemprego, df5$gini, df5$pibpc,df5$taxa_renda_pobre, df5$taxa_trab_infantil, df5$taxa_homens_jovens, df5$dummy_arco_central, df5$dummy_arco_norte ,df5$dummy_arco_sul, df5$latitude, df5$longitude)
+all <- cbind(df5$taxa_analfabetismo, df5$taxa_desemprego, df5$gini, df5$pibpc,df5$taxa_renda_pobre, df5$taxa_trab_infantil, df5$taxa_homens_jovens, df5$dummy_arco_central, df5$dummy_arco_norte, df5$latitude, df5$longitude)
 
 rdplot(df5$mortes_violentas, (df5$distancia_fronteira_interior)/1000, c = 0, nbins = 50,
        title = "", 
