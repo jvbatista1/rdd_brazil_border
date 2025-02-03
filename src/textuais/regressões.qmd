@@ -4,7 +4,7 @@ format: html
 ---
 
 ```{r}
-dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
+dropbox <- "c:/Users/victo/dropbox/DISSERTACAO"
 library(tidyverse)
 library(sf)
 library(rdrobust)
@@ -88,61 +88,92 @@ rdplot(df1$mortes_violentas, (df1$distancia_fronteira_terrestre)/1000, c = 150, 
 ```
 
 ```{r}
-rdd1 <- rdrobust(y = df1$mortes_violentas,
+mortes_violentas1 <- rdrobust(y = df1$mortes_violentas,
                  x = df1$distancia_fronteira_terrestre,
                  c = 150000)
 
-summary(rdd1)
-
-rdd1 <- rdrobust(y = df1$mortes_violentas,
+mortes_violentas2 <- rdrobust(y = df1$mortes_violentas,
                  x = df1$distancia_fronteira_terrestre,
                  covs = socioecon,  
                  c = 150000)
-summary(rdd1)
 
-rdd1 <- rdrobust(y = df1$mortes_violentas,
+mortes_violentas3 <- rdrobust(y = df1$mortes_violentas,
                  x = df1$distancia_fronteira_terrestre,
                  covs = geograficas,  
                  c = 150000)
-summary(rdd1)
 
-rdd1 <- rdrobust(y = df1$mortes_violentas,
+mortes_violentas4 <- rdrobust(y = df1$mortes_violentas,
                  x = df1$distancia_fronteira_terrestre,
                  covs = all,  
                  c = 150000)
-summary(rdd1)
 
 ```
 
 ```{r}
-seguranca_vars2 <- c("valor_2010", "valor_2011", "valor_2012", "valor_2013", "valor_2014", "valor_2015", "valor_2016", "valor_2017", "valor_2018", "valor_2019")
-
-# Loop para rodar o modelo com cada variável de segurança
-for (var in seguranca_vars2) {
-  cat("\n\n### Resultados para a variável:", var, "\n")
-  
-  # Executar o modelo com bandwidth padrão
-  rd_est <- rdrobust(y = df1[[var]], x = df1$distancia_fronteira_terrestre, c = 150000, covs = all)
-  print(summary(rd_est))
+# add custom functions to extract estimates (tidy) and goodness-of-fit (glance) information
+tidy.rdrobust <- function(x, ...) {
+    ret <- data.frame(
+      term      = "distância fronteira",
+      estimate  = x$coef["Conventional", ],
+      std.error  = x$se["Conventional", ],
+      p.value = x$pv["Conventional", ])
+    ret
 }
+
+glance.rdrobust <- function(x, ...) {
+    ret <- data.frame(
+      N_obs_treated = x$N[1],
+      N_obs_control   = x$N[2])
+    ret
+}
+
+# summarize the model
+modelsummary::modelsummary(list("Mortes violentas" = mortes_violentas1, 
+                                "Mortes violentas \n (cov. socioecon.)" = mortes_violentas2, 
+                                "Mortes violentas\n (cov. geográficas)" = mortes_violentas3, 
+                                "Mortes violentas \n (todas as cov.)" = mortes_violentas4),
+                           statistic = 'std.error',
+                           stars = T ,
+                           output = "latex")
+```
+
+
+```{r}
+anos1 <- list(
+  "ano 2010" = rdrobust(y = df1$valor_2010, x = df1$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2011" = rdrobust(y = df1$valor_2011, x = df1$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2012" = rdrobust(y = df1$valor_2012, x = df1$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2013" = rdrobust(y = df1$valor_2013, x = df1$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2014" = rdrobust(y = df1$valor_2014, x = df1$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2015" = rdrobust(y = df1$valor_2015, x = df1$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2016" = rdrobust(y = df1$valor_2016, x = df1$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2017" = rdrobust(y = df1$valor_2017, x = df1$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2018" = rdrobust(y = df1$valor_2018, x = df1$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2019" = rdrobust(y = df1$valor_2019, x = df1$distancia_fronteira_terrestre, c = 150000, covs = all))
+
+modelsummary::modelsummary(anos1,
+                           statistic = 'std.error',
+                           stars = T,
+                           output = "latex")
 ```
 
 ```{r}
-# Lista de variáveis de segurança
-seguranca_vars <- c("feminicidio", "hom_doloso", "lesao", "mandado", "transito", "esclarecer", "latrocinio", "tentativa_hom")
+crimes1 <- list(
+  "feminicidio" = rdrobust(y = df1$feminicidio, x = df1$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "hom_doloso" = rdrobust(y = df1$hom_doloso, x = df1$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "lesao" = rdrobust(y = df1$lesao, x = df1$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "mandado" = rdrobust(y = df1$mandado, x = df1$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "transito" = rdrobust(y = df1$transito, x = df1$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "esclarecer" = rdrobust(y = df1$esclarecer, x = df1$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "latrocinio" = rdrobust(y = df1$latrocinio, x = df1$distancia_fronteira_terrestre, c = 150000, covs = all))
 
-# Loop para rodar o modelo com cada variável de segurança
-for (var in seguranca_vars) {
-  cat("\n\n### Resultados para a variável:", var, "\n")
-  
-  # Executar o modelo com bandwidth padrão
-  rd_est <- rdrobust(y = df1[[var]], x = df1$distancia_fronteira_terrestre, c = 150000, covs = all)
-  print(summary(rd_est))
-}
+modelsummary::modelsummary(crimes1,
+                           statistic = 'std.error',
+                           stars = T,
+                           output = "latex")
 
 ```
 
- 
 Municípios na FdF (com sede dentro da FdF) vis a vis municípios fora da FdF
 Tratamento definido por M101 ∪ M111 e controle por M000
 
@@ -164,59 +195,70 @@ rdplot(df2$mortes_violentas, (df2$distancia_fronteira_terrestre)/1000, c = 150, 
 ```
 
 ```{r}
-
-rdd2 <- rdrobust(y = df2$mortes_violentas,
+mortes_violentas1 <- rdrobust(y = df2$mortes_violentas,
                  x = df2$distancia_fronteira_terrestre,
                  c = 150000)
 
-summary(rdd2)
-
-rdd2 <- rdrobust(y = df2$mortes_violentas,
+mortes_violentas2 <- rdrobust(y = df2$mortes_violentas,
                  x = df2$distancia_fronteira_terrestre,
                  covs = socioecon,  
                  c = 150000)
-summary(rdd2)
 
-rdd2 <- rdrobust(y = df2$mortes_violentas,
+mortes_violentas3 <- rdrobust(y = df2$mortes_violentas,
                  x = df2$distancia_fronteira_terrestre,
                  covs = geograficas,  
                  c = 150000)
-summary(rdd2)
 
-rdd2 <- rdrobust(y = df2$mortes_violentas,
+mortes_violentas4 <- rdrobust(y = df2$mortes_violentas,
                  x = df2$distancia_fronteira_terrestre,
                  covs = all,  
                  c = 150000)
-summary(rdd2)
 
 
+# summarize the model
+modelsummary::modelsummary(list("Mortes violentas" = mortes_violentas1, 
+                                "Mortes violentas \n (cov. socioecon.)" = mortes_violentas2, 
+                                "Mortes violentas\n (cov. geográficas)" = mortes_violentas3, 
+                                "Mortes violentas \n (todas as cov.)" = mortes_violentas4),
+                           statistic = 'std.error',
+                           stars = T ,
+                           output = "latex")
+```
+
+
+```{r}
+anos2 <- list(
+  "ano 2010" = rdrobust(y = df2$valor_2010, x = df2$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2011" = rdrobust(y = df2$valor_2011, x = df2$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2012" = rdrobust(y = df2$valor_2012, x = df2$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2013" = rdrobust(y = df2$valor_2013, x = df2$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2014" = rdrobust(y = df2$valor_2014, x = df2$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2015" = rdrobust(y = df2$valor_2015, x = df2$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2016" = rdrobust(y = df2$valor_2016, x = df2$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2017" = rdrobust(y = df2$valor_2017, x = df2$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2018" = rdrobust(y = df2$valor_2018, x = df2$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2019" = rdrobust(y = df2$valor_2019, x = df2$distancia_fronteira_terrestre, c = 150000, covs = all))
+
+modelsummary::modelsummary(anos2,
+                           statistic = 'std.error',
+                           stars = T,
+                           output = "latex")
 ```
 
 ```{r}
-seguranca_vars2 <- c("valor_2010", "valor_2011", "valor_2012", "valor_2013", "valor_2014", "valor_2015", "valor_2016", "valor_2017", "valor_2018", "valor_2019")
+crimes2 <- list(
+  "feminicidio" = rdrobust(y = df2$feminicidio, x = df2$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "hom_doloso" = rdrobust(y = df2$hom_doloso, x = df2$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "lesao" = rdrobust(y = df2$lesao, x = df2$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "mandado" = rdrobust(y = df2$mandado, x = df2$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "transito" = rdrobust(y = df2$transito, x = df2$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "esclarecer" = rdrobust(y = df2$esclarecer, x = df2$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "latrocinio" = rdrobust(y = df2$latrocinio, x = df2$distancia_fronteira_terrestre, c = 150000, covs = all))
 
-# Loop para rodar o modelo com cada variável de segurança
-for (var in seguranca_vars2) {
-  cat("\n\n### Resultados para a variável:", var, "\n")
-  
-  # Executar o modelo com bandwidth padrão
-  rd_est <- rdrobust(y = df2[[var]], x = df2$distancia_fronteira_terrestre, c = 150000, covs = all)
-  print(summary(rd_est))
-}
-```
-
-```{r}
-# Lista de variáveis de segurança
-seguranca_vars <- c("feminicidio", "hom_doloso", "lesao", "mandado", "transito", "esclarecer", "latrocinio", "tentativa_hom")
-
-# Loop para rodar o modelo com cada variável de segurança
-for (var in seguranca_vars) {
-  cat("\n\n### Resultados para a variável:", var, "\n")
-  
-  # Executar o modelo com bandwidth padrão
-  rd_est <- rdrobust(y = df2[[var]], x = df2$distancia_fronteira_terrestre, c = 150000, covs = all)
-  print(summary(rd_est))
-}
+modelsummary::modelsummary(crimes2,
+                           statistic = 'std.error',
+                           stars = T,
+                           output = "latex")
 
 ```
  
@@ -244,56 +286,70 @@ rdplot(df3$mortes_violentas, (df3$distancia_fronteira_terrestre)/1000, c = 150, 
 
 
 ```{r}
-rdd3 <- rdrobust(y = df3$mortes_violentas,
+mortes_violentas1 <- rdrobust(y = df3$mortes_violentas,
                  x = df3$distancia_fronteira_terrestre,
                  c = 150000)
 
-summary(rdd3)
-
-rdd3 <- rdrobust(y = df3$mortes_violentas,
+mortes_violentas2 <- rdrobust(y = df3$mortes_violentas,
                  x = df3$distancia_fronteira_terrestre,
                  covs = socioecon,  
                  c = 150000)
-summary(rdd3)
 
-rdd3 <- rdrobust(y = df3$mortes_violentas,
+mortes_violentas3 <- rdrobust(y = df3$mortes_violentas,
                  x = df3$distancia_fronteira_terrestre,
                  covs = geograficas,  
                  c = 150000)
-summary(rdd3)
 
-rdd3 <- rdrobust(y = df3$mortes_violentas,
+mortes_violentas4 <- rdrobust(y = df3$mortes_violentas,
                  x = df3$distancia_fronteira_terrestre,
                  covs = all,  
                  c = 150000)
-summary(rdd3)
+
+
+# summarize the model
+modelsummary::modelsummary(list("Mortes violentas" = mortes_violentas1, 
+                                "Mortes violentas \n (cov. socioecon.)" = mortes_violentas2, 
+                                "Mortes violentas\n (cov. geográficas)" = mortes_violentas3, 
+                                "Mortes violentas \n (todas as cov.)" = mortes_violentas4),
+                           statistic = 'std.error',
+                           stars = T ,
+                           output = "latex")
+```
+
+
+```{r}
+anos3 <- list(
+  "ano 2010" = rdrobust(y = df3$valor_2010, x = df3$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2011" = rdrobust(y = df3$valor_2011, x = df3$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2012" = rdrobust(y = df3$valor_2012, x = df3$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2013" = rdrobust(y = df3$valor_2013, x = df3$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2014" = rdrobust(y = df3$valor_2014, x = df3$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2015" = rdrobust(y = df3$valor_2015, x = df3$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2016" = rdrobust(y = df3$valor_2016, x = df3$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2017" = rdrobust(y = df3$valor_2017, x = df3$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2018" = rdrobust(y = df3$valor_2018, x = df3$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2019" = rdrobust(y = df3$valor_2019, x = df3$distancia_fronteira_terrestre, c = 150000, covs = all))
+
+modelsummary::modelsummary(anos3,
+                           statistic = 'std.error',
+                           stars = T,
+                           output = "latex")
 ```
 
 ```{r}
-seguranca_vars2 <- c("valor_2010", "valor_2011", "valor_2012", "valor_2013", "valor_2014", "valor_2015", "valor_2016", "valor_2017", "valor_2018", "valor_2019")
+crimes3 <- list(
+  "feminicidio" = rdrobust(y = df3$feminicidio, x = df3$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "hom_doloso" = rdrobust(y = df3$hom_doloso, x = df3$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "lesao" = rdrobust(y = df3$lesao, x = df3$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "mandado" = rdrobust(y = df3$mandado, x = df3$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "transito" = rdrobust(y = df3$transito, x = df3$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "esclarecer" = rdrobust(y = df3$esclarecer, x = df3$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "latrocinio" = rdrobust(y = df3$latrocinio, x = df3$distancia_fronteira_terrestre, c = 150000, covs = all))
 
-# Loop para rodar o modelo com cada variável de segurança
-for (var in seguranca_vars2) {
-  cat("\n\n### Resultados para a variável:", var, "\n")
-  
-  # Executar o modelo com bandwidth padrão
-  rd_est <- rdrobust(y = df3[[var]], x = df3$distancia_fronteira_terrestre, c = 150000, covs = all)
-  print(summary(rd_est))
-}
-```
-
-```{r}
-# Lista de variáveis de segurança
-seguranca_vars <- c("feminicidio", "hom_doloso", "lesao", "mandado", "transito", "esclarecer", "latrocinio", "tentativa_hom")
-
-# Loop para rodar o modelo com cada variável de segurança
-for (var in seguranca_vars) {
-  cat("\n\n### Resultados para a variável:", var, "\n")
-  
-  # Executar o modelo com bandwidth padrão
-  rd_est <- rdrobust(y = df3[[var]], x = df3$distancia_fronteira_terrestre, c = 150000, covs = all)
-  print(summary(rd_est))
-}
+modelsummary::modelsummary(crimes3,
+                           statistic = 'std.error',
+                           stars = T,
+                           output = "latex")
 
 ```
 
@@ -321,57 +377,70 @@ rdplot(df4$mortes_violentas, (df4$distancia_fronteira_terrestre)/1000, c = 150, 
 
 
 ```{r}
-rdd4 <- rdrobust(y = df4$mortes_violentas,
+mortes_violentas1 <- rdrobust(y = df4$mortes_violentas,
                  x = df4$distancia_fronteira_terrestre,
                  c = 150000)
 
-summary(rdd4)
-
-rdd4 <- rdrobust(y = df4$mortes_violentas,
+mortes_violentas2 <- rdrobust(y = df4$mortes_violentas,
                  x = df4$distancia_fronteira_terrestre,
                  covs = socioecon,  
                  c = 150000)
-summary(rdd4)
 
-rdd4 <- rdrobust(y = df4$mortes_violentas,
+mortes_violentas3 <- rdrobust(y = df4$mortes_violentas,
                  x = df4$distancia_fronteira_terrestre,
                  covs = geograficas,  
                  c = 150000)
-summary(rdd4)
 
-rdd4 <- rdrobust(y = df4$mortes_violentas,
+mortes_violentas4 <- rdrobust(y = df4$mortes_violentas,
                  x = df4$distancia_fronteira_terrestre,
                  covs = all,  
                  c = 150000)
-summary(rdd4)
 
+
+# summarize the model
+modelsummary::modelsummary(list("Mortes violentas" = mortes_violentas1, 
+                                "Mortes violentas \n (cov. socioecon.)" = mortes_violentas2, 
+                                "Mortes violentas\n (cov. geográficas)" = mortes_violentas3, 
+                                "Mortes violentas \n (todas as cov.)" = mortes_violentas4),
+                           statistic = 'std.error',
+                           stars = T ,
+                           output = "latex")
+```
+
+
+```{r}
+anos4 <- list(
+  "ano 2010" = rdrobust(y = df4$valor_2010, x = df4$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2011" = rdrobust(y = df4$valor_2011, x = df4$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2012" = rdrobust(y = df4$valor_2012, x = df4$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2013" = rdrobust(y = df4$valor_2013, x = df4$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2014" = rdrobust(y = df4$valor_2014, x = df4$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2015" = rdrobust(y = df4$valor_2015, x = df4$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2016" = rdrobust(y = df4$valor_2016, x = df4$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2017" = rdrobust(y = df4$valor_2017, x = df4$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2018" = rdrobust(y = df4$valor_2018, x = df4$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2019" = rdrobust(y = df4$valor_2019, x = df4$distancia_fronteira_terrestre, c = 150000, covs = all))
+
+modelsummary::modelsummary(anos4,
+                           statistic = 'std.error',
+                           stars = T,
+                           output = "latex")
 ```
 
 ```{r}
-seguranca_vars2 <- c("valor_2010", "valor_2011", "valor_2012", "valor_2013", "valor_2014", "valor_2015", "valor_2016", "valor_2017", "valor_2018", "valor_2019")
+crimes4 <- list(
+  "feminicidio" = rdrobust(y = df4$feminicidio, x = df4$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "hom_doloso" = rdrobust(y = df4$hom_doloso, x = df4$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "lesao" = rdrobust(y = df4$lesao, x = df4$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "mandado" = rdrobust(y = df4$mandado, x = df4$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "transito" = rdrobust(y = df4$transito, x = df4$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "esclarecer" = rdrobust(y = df4$esclarecer, x = df4$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "latrocinio" = rdrobust(y = df4$latrocinio, x = df4$distancia_fronteira_terrestre, c = 150000, covs = all))
 
-# Loop para rodar o modelo com cada variável de segurança
-for (var in seguranca_vars2) {
-  cat("\n\n### Resultados para a variável:", var, "\n")
-  
-  # Executar o modelo com bandwidth padrão
-  rd_est <- rdrobust(y = df4[[var]], x = df4$distancia_fronteira_terrestre, c = 150000, covs = all)
-  print(summary(rd_est))
-}
-```
-
-```{r}
-# Lista de variáveis de segurança
-seguranca_vars <- c("feminicidio", "hom_doloso", "lesao", "mandado", "transito", "esclarecer", "latrocinio", "tentativa_hom")
-
-# Loop para rodar o modelo com cada variável de segurança
-for (var in seguranca_vars) {
-  cat("\n\n### Resultados para a variável:", var, "\n")
-  
-  # Executar o modelo com bandwidth padrão
-  rd_est <- rdrobust(y = df4[[var]], x = df4$distancia_fronteira_terrestre, c = 150000, covs = all)
-  print(summary(rd_est))
-}
+modelsummary::modelsummary(crimes4,
+                           statistic = 'std.error',
+                           stars = T,
+                           output = "latex")
 
 ```
 
@@ -395,56 +464,79 @@ rdplot(df5$mortes_violentas, (df5$distancia_fronteira_interior)/1000, c = 0, nbi
 ```
 
 ```{r}
-rdd5 <- rdrobust(y = df5$mortes_violentas,
+mortes_violentas1 <- rdrobust(y = df5$mortes_violentas,
                  x = df5$distancia_fronteira_interior,
                  c = 0)
 
-summary(rdd5)
-
-rdd5 <- rdrobust(y = df5$mortes_violentas,
+mortes_violentas2 <- rdrobust(y = df5$mortes_violentas,
                  x = df5$distancia_fronteira_interior,
                  covs = socioecon,  
                  c = 0)
-summary(rdd5)
 
-rdd5 <- rdrobust(y = df5$mortes_violentas,
+mortes_violentas3 <- rdrobust(y = df5$mortes_violentas,
                  x = df5$distancia_fronteira_interior,
                  covs = geograficas,  
                  c = 0)
-summary(rdd5)
 
-rdd5 <- rdrobust(y = df5$mortes_violentas,
+mortes_violentas4 <- rdrobust(y = df5$mortes_violentas,
                  x = df5$distancia_fronteira_interior,
                  covs = all,  
                  c = 0)
-summary(rdd5)
+
+tidy.rdrobust <- function(x, ...) {
+    ret <- data.frame(
+      term      = "distância fronteira interna",
+      estimate  = x$coef["Conventional", ],
+      std.error  = x$se["Conventional", ],
+      p.value = x$pv["Conventional", ])
+    ret
+}
+
+# summarize the model
+modelsummary::modelsummary(list("Mortes violentas" = mortes_violentas1, 
+                                "Mortes violentas \n (cov. socioecon.)" = mortes_violentas2, 
+                                "Mortes violentas\n (cov. geográficas)" = mortes_violentas3, 
+                                "Mortes violentas \n (todas as cov.)" = mortes_violentas4),
+                           statistic = 'std.error',
+                           stars = T ,
+                           output = "latex")
+```
+
+
+```{r}
+anos5 <- list(
+  "ano 2010" = rdrobust(y = df5$valor_2010, x = df5$distancia_fronteira_interior, c = 0, covs = all),
+  "ano 2011" = rdrobust(y = df5$valor_2011, x = df5$distancia_fronteira_interior, c = 0, covs = all),
+  "ano 2012" = rdrobust(y = df5$valor_2012, x = df5$distancia_fronteira_interior, c = 0, covs = all),
+  "ano 2013" = rdrobust(y = df5$valor_2013, x = df5$distancia_fronteira_interior, c = 0, covs = all),
+  "ano 2014" = rdrobust(y = df5$valor_2014, x = df5$distancia_fronteira_interior, c = 0, covs = all),
+  "ano 2015" = rdrobust(y = df5$valor_2015, x = df5$distancia_fronteira_interior, c = 0, covs = all),
+  "ano 2016" = rdrobust(y = df5$valor_2016, x = df5$distancia_fronteira_interior, c = 0, covs = all),
+  "ano 2017" = rdrobust(y = df5$valor_2017, x = df5$distancia_fronteira_interior, c = 0, covs = all),
+  "ano 2018" = rdrobust(y = df5$valor_2018, x = df5$distancia_fronteira_interior, c = 0, covs = all),
+  "ano 2019" = rdrobust(y = df5$valor_2019, x = df5$distancia_fronteira_interior, c = 0, covs = all))
+
+modelsummary::modelsummary(anos5,
+                           statistic = 'std.error',
+                           stars = T,
+                           output = "latex")
 ```
 
 ```{r}
-seguranca_vars2 <- c("valor_2010", "valor_2011", "valor_2012", "valor_2013", "valor_2014", "valor_2015", "valor_2016", "valor_2017", "valor_2018", "valor_2019")
+crimes5 <- list(
+  "feminicidio" = rdrobust(y = df5$feminicidio, x = df5$distancia_fronteira_interior, c = 0, covs = all),
+  "hom_doloso" = rdrobust(y = df5$hom_doloso, x = df5$distancia_fronteira_interior, c = 0, covs = all),
+  "lesao" = rdrobust(y = df5$lesao, x = df5$distancia_fronteira_interior, c = 0, covs = all),
+  "mandado" = rdrobust(y = df5$mandado, x = df5$distancia_fronteira_interior, c = 0, covs = all),
+  "transito" = rdrobust(y = df5$transito, x = df5$distancia_fronteira_interior, c = 0, covs = all),
+  "esclarecer" = rdrobust(y = df5$esclarecer, x = df5$distancia_fronteira_interior, c = 0, covs = all),
+  "latrocinio" = rdrobust(y = df5$latrocinio, x = df5$distancia_fronteira_interior, c = 0, covs = all))
 
-# Loop para rodar o modelo com cada variável de segurança
-for (var in seguranca_vars2) {
-  cat("\n\n### Resultados para a variável:", var, "\n")
-  
-  # Executar o modelo com bandwidth padrão
-  rd_est <- rdrobust(y = df5[[var]], x = df5$distancia_fronteira_interior, c = 0, covs = all)
-  print(summary(rd_est))
-}
-```
-
-```{r}
-# Lista de variáveis de segurança
-seguranca_vars <- c("feminicidio", "hom_doloso", "lesao", "mandado", "transito", "esclarecer", "latrocinio", "tentativa_hom")
-
-# Loop para rodar o modelo com cada variável de segurança
-for (var in seguranca_vars) {
-  cat("\n\n### Resultados para a variável:", var, "\n")
-  
-  # Executar o modelo com bandwidth padrão
-  rd_est <- rdrobust(y = df5[[var]], x = df5$distancia_fronteira_interior, c = 0, covs = all)
-  print(summary(rd_est))
-}
+modelsummary::modelsummary(crimes5,
+                           statistic = 'std.error',
+                           stars = T,
+                           output = "latex")
 
 ```
+
 
