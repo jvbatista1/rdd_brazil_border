@@ -1,0 +1,35 @@
+---
+title: "eda"
+format: html
+---
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(sf)
+```
+
+```{r}
+espaciais <- read_rds(file.path(dropbox, "dados_espaciais.rds"))
+violencia <- read_rds(file.path(dropbox, "municipal.rds"))
+violencia <- violencia |> 
+  filter(!is.na(id_municipio))
+
+df <- left_join(espaciais, violencia)
+df <- df |> 
+  mutate(taxa_homens_jovens = as.numeric(taxa_homens_jovens),
+         dummy_arco_central = if_else(arcos == "Arco Central", 1, 0),
+         dummy_arco_norte = if_else(arcos == "Arco Norte", 1, 0),
+         dummy_arco_sul = if_else(arcos == "Arco Sul", 1, 0))
+
+rm(espaciais, violencia)
+```
+
+
+```{r}
+df |> 
+  filter(arcos != "Arco Sudeste") |> 
+  ggplot(aes(x=mortes_violentas, color = arcos))+
+  geom_freqpoly(stat = "density")
+```
+

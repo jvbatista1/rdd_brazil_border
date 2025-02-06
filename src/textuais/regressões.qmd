@@ -90,22 +90,28 @@ rdplot(df1$mortes_violentas, (df1$distancia_fronteira_terrestre)/1000, c = 150, 
 ```{r}
 mortes_violentas1 <- rdrobust(y = df1$mortes_violentas,
                  x = df1$distancia_fronteira_terrestre,
-                 c = 150000)
+                 c = 150000,
+                 fuzzy = T)
+
+summary(mortes_violentas1)
 
 mortes_violentas2 <- rdrobust(y = df1$mortes_violentas,
                  x = df1$distancia_fronteira_terrestre,
                  covs = socioecon,  
-                 c = 150000)
+                 c = 150000,
+                 fuzzy = T)
 
 mortes_violentas3 <- rdrobust(y = df1$mortes_violentas,
                  x = df1$distancia_fronteira_terrestre,
                  covs = geograficas,  
-                 c = 150000)
+                 c = 150000,
+                 fuzzy = T)
 
 mortes_violentas4 <- rdrobust(y = df1$mortes_violentas,
                  x = df1$distancia_fronteira_terrestre,
                  covs = all,  
-                 c = 150000)
+                 c = 150000,
+                 fuzzy = T)
 
 ```
 
@@ -144,7 +150,14 @@ anos1 <- list(
   "ano 2011" = rdrobust(y = df1$valor_2011, x = df1$distancia_fronteira_terrestre, c = 150000, covs = all),
   "ano 2012" = rdrobust(y = df1$valor_2012, x = df1$distancia_fronteira_terrestre, c = 150000, covs = all),
   "ano 2013" = rdrobust(y = df1$valor_2013, x = df1$distancia_fronteira_terrestre, c = 150000, covs = all),
-  "ano 2014" = rdrobust(y = df1$valor_2014, x = df1$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2014" = rdrobust(y = df1$valor_2014, x = df1$distancia_fronteira_terrestre, c = 150000, covs = all))
+
+modelsummary::modelsummary(anos1,
+                           statistic = 'std.error',
+                           stars = T,
+                           output = "latex")
+
+anos1 <- list(
   "ano 2015" = rdrobust(y = df1$valor_2015, x = df1$distancia_fronteira_terrestre, c = 150000, covs = all),
   "ano 2016" = rdrobust(y = df1$valor_2016, x = df1$distancia_fronteira_terrestre, c = 150000, covs = all),
   "ano 2017" = rdrobust(y = df1$valor_2017, x = df1$distancia_fronteira_terrestre, c = 150000, covs = all),
@@ -232,7 +245,14 @@ anos2 <- list(
   "ano 2011" = rdrobust(y = df2$valor_2011, x = df2$distancia_fronteira_terrestre, c = 150000, covs = all),
   "ano 2012" = rdrobust(y = df2$valor_2012, x = df2$distancia_fronteira_terrestre, c = 150000, covs = all),
   "ano 2013" = rdrobust(y = df2$valor_2013, x = df2$distancia_fronteira_terrestre, c = 150000, covs = all),
-  "ano 2014" = rdrobust(y = df2$valor_2014, x = df2$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2014" = rdrobust(y = df2$valor_2014, x = df2$distancia_fronteira_terrestre, c = 150000, covs = all))
+
+modelsummary::modelsummary(anos2,
+                           statistic = 'std.error',
+                           stars = T,
+                           output = "latex")
+
+anos2 <- list(
   "ano 2015" = rdrobust(y = df2$valor_2015, x = df2$distancia_fronteira_terrestre, c = 150000, covs = all),
   "ano 2016" = rdrobust(y = df2$valor_2016, x = df2$distancia_fronteira_terrestre, c = 150000, covs = all),
   "ano 2017" = rdrobust(y = df2$valor_2017, x = df2$distancia_fronteira_terrestre, c = 150000, covs = all),
@@ -323,7 +343,14 @@ anos3 <- list(
   "ano 2011" = rdrobust(y = df3$valor_2011, x = df3$distancia_fronteira_terrestre, c = 150000, covs = all),
   "ano 2012" = rdrobust(y = df3$valor_2012, x = df3$distancia_fronteira_terrestre, c = 150000, covs = all),
   "ano 2013" = rdrobust(y = df3$valor_2013, x = df3$distancia_fronteira_terrestre, c = 150000, covs = all),
-  "ano 2014" = rdrobust(y = df3$valor_2014, x = df3$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2014" = rdrobust(y = df3$valor_2014, x = df3$distancia_fronteira_terrestre, c = 150000, covs = all))
+
+modelsummary::modelsummary(anos3,
+                           statistic = 'std.error',
+                           stars = T,
+                           output = "latex")
+
+anos3 <- list(
   "ano 2015" = rdrobust(y = df3$valor_2015, x = df3$distancia_fronteira_terrestre, c = 150000, covs = all),
   "ano 2016" = rdrobust(y = df3$valor_2016, x = df3$distancia_fronteira_terrestre, c = 150000, covs = all),
   "ano 2017" = rdrobust(y = df3$valor_2017, x = df3$distancia_fronteira_terrestre, c = 150000, covs = all),
@@ -414,7 +441,14 @@ anos4 <- list(
   "ano 2011" = rdrobust(y = df4$valor_2011, x = df4$distancia_fronteira_terrestre, c = 150000, covs = all),
   "ano 2012" = rdrobust(y = df4$valor_2012, x = df4$distancia_fronteira_terrestre, c = 150000, covs = all),
   "ano 2013" = rdrobust(y = df4$valor_2013, x = df4$distancia_fronteira_terrestre, c = 150000, covs = all),
-  "ano 2014" = rdrobust(y = df4$valor_2014, x = df4$distancia_fronteira_terrestre, c = 150000, covs = all),
+  "ano 2014" = rdrobust(y = df4$valor_2014, x = df4$distancia_fronteira_terrestre, c = 150000, covs = all))
+
+modelsummary::modelsummary(anos4,
+                           statistic = 'std.error',
+                           stars = T,
+                           output = "latex")
+
+anos4 <- list(
   "ano 2015" = rdrobust(y = df4$valor_2015, x = df4$distancia_fronteira_terrestre, c = 150000, covs = all),
   "ano 2016" = rdrobust(y = df4$valor_2016, x = df4$distancia_fronteira_terrestre, c = 150000, covs = all),
   "ano 2017" = rdrobust(y = df4$valor_2017, x = df4$distancia_fronteira_terrestre, c = 150000, covs = all),
@@ -509,7 +543,14 @@ anos5 <- list(
   "ano 2011" = rdrobust(y = df5$valor_2011, x = df5$distancia_fronteira_interior, c = 0, covs = all),
   "ano 2012" = rdrobust(y = df5$valor_2012, x = df5$distancia_fronteira_interior, c = 0, covs = all),
   "ano 2013" = rdrobust(y = df5$valor_2013, x = df5$distancia_fronteira_interior, c = 0, covs = all),
-  "ano 2014" = rdrobust(y = df5$valor_2014, x = df5$distancia_fronteira_interior, c = 0, covs = all),
+  "ano 2014" = rdrobust(y = df5$valor_2014, x = df5$distancia_fronteira_interior, c = 0, covs = all))
+
+modelsummary::modelsummary(anos5,
+                           statistic = 'std.error',
+                           stars = T,
+                           output = "latex")
+
+anos5 <- list(
   "ano 2015" = rdrobust(y = df5$valor_2015, x = df5$distancia_fronteira_interior, c = 0, covs = all),
   "ano 2016" = rdrobust(y = df5$valor_2016, x = df5$distancia_fronteira_interior, c = 0, covs = all),
   "ano 2017" = rdrobust(y = df5$valor_2017, x = df5$distancia_fronteira_interior, c = 0, covs = all),

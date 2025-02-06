@@ -1,10 +1,33 @@
-dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
+dropbox <- "c:/Users/victo/dropbox/DISSERTACAO"
 library(tidyverse)
 
 # Base do Sistema de Informações sobre Mortalidade (SIM)
 library(basedosdados)
-query <- bdplyr("basedosdados.br_ms_sim.municipio_causa")
-sim <- bd_collect(query)
+set_billing_id("rapid-pact-400813")
+
+# Para carregar o dado direto no R
+query <- "
+SELECT
+    dados.ano as ano,
+    dados.sigla_uf AS sigla_uf,
+    diretorio_sigla_uf.nome AS sigla_uf_nome,
+    dados.id_municipio AS id_municipio,
+    diretorio_id_municipio.nome AS id_municipio_nome,
+    dados.causa_basica AS causa_basica,
+    diretorio_causa_basica.descricao_subcategoria AS causa_basica_descricao_subcategoria,
+    diretorio_causa_basica.descricao_categoria AS causa_basica_descricao_categoria,
+    diretorio_causa_basica.descricao_capitulo AS causa_basica_descricao_capitulo,
+    dados.numero_obitos as numero_obitos
+FROM `basedosdados.br_ms_sim.municipio_causa` AS dados
+LEFT JOIN (SELECT DISTINCT sigla,nome  FROM `basedosdados.br_bd_diretorios_brasil.uf`) AS diretorio_sigla_uf
+    ON dados.sigla_uf = diretorio_sigla_uf.sigla
+LEFT JOIN (SELECT DISTINCT id_municipio,nome  FROM `basedosdados.br_bd_diretorios_brasil.municipio`) AS diretorio_id_municipio
+    ON dados.id_municipio = diretorio_id_municipio.id_municipio
+LEFT JOIN (SELECT DISTINCT subcategoria,descricao_subcategoria,descricao_categoria,descricao_capitulo  FROM `basedosdados.br_bd_diretorios_brasil.cid_10`) AS diretorio_causa_basica
+    ON dados.causa_basica = diretorio_causa_basica.subcategoria
+"
+
+sim <- read_sql(query, billing_project_id = get_billing_id())
 
 #### Analisando mortes violentas em 2019 #####
 # Vetor de prefixos para as causas violentas
@@ -22,7 +45,7 @@ library(stringr)
 sim <- sim %>%
   filter(str_detect(causa_basica, paste0("^", prefixos, collapse = "|"))) |> 
   filter(ano == 2019) |> 
-  count(id_municipio, name = "mortes_violentas")
+  count(id_municipio, wt = numero_obitos, name = "mortes_violentas")
 
 df <- df |> 
   left_join(sim, by="id_municipio")
@@ -118,8 +141,17 @@ library("basedosdados")
 # Defina o seu projeto no Google Cloud
 set_billing_id("rapid-pact-400813")
 # Para carregar o dado direto no R
-query <- bdplyr("br_bd_diretorios_brasil.municipio")
-codigos <- bd_collect(query)
+# Para carregar o dado direto no R
+query <- "
+SELECT
+    dados.id_municipio as id_municipio,
+    dados.id_municipio_6 as id_municipio_6,
+    dados.nome as nome,
+    dados.sigla_uf as sigla_uf
+FROM `basedosdados.br_bd_diretorios_brasil.municipio` AS dados
+"
+
+codigos <- read_sql(query, billing_project_id = get_billing_id())
 
 # Transformar os nomes dos municípios na tabela 'codigos' para maiúsculas
 codigos <- codigos %>%
@@ -130,7 +162,7 @@ municipal_table <- municipal_table %>%
   left_join(codigos, by = c("nome" = "nome_upper", "sigla_uf"))
 
 municipal_table <- municipal_table |> 
-  select(-nome, -(id_municipio_6:id_municipio_bcb), -(capital_uf:centroide)) |> 
+  select(-nome, -id_municipio_6) |> 
   rename("nome"="nome.y") |> 
   relocate(id_municipio:nome, sigla_uf)
 
@@ -139,8 +171,19 @@ municipal_table <- municipal_table |>
 
 #### POPULACAO ####
 # Calcular em função da população
-query <- bdplyr("br_ibge_populacao.municipio")
-populacao <- bd_collect(query)
+query <- "
+SELECT
+    dados.ano as ano,
+    dados.sigla_uf AS sigla_uf,
+    dados.id_municipio AS id_municipio,
+    dados.populacao as populacao
+FROM `basedosdados.br_ibge_populacao.municipio` AS dados
+LEFT JOIN (SELECT DISTINCT sigla,nome  FROM `basedosdados.br_bd_diretorios_brasil.uf`) AS diretorio_sigla_uf
+    ON dados.sigla_uf = diretorio_sigla_uf.sigla
+LEFT JOIN (SELECT DISTINCT id_municipio,nome  FROM `basedosdados.br_bd_diretorios_brasil.municipio`) AS diretorio_id_municipio
+    ON dados.id_municipio = diretorio_id_municipio.id_municipio
+"
+populacao <- read_sql(query, billing_project_id = get_billing_id())
 
 municipal_table <- municipal_table |> 
   left_join(populacao |>
