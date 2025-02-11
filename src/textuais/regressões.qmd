@@ -4,7 +4,7 @@ format: html
 ---
 
 ```{r}
-dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
+dropbox <- "c:/Users/victo/dropbox/DISSERTACAO"
 library(tidyverse)
 library(sf)
 library(rdrobust)
@@ -481,7 +481,6 @@ modelsummary::modelsummary(crimes4,
 Distância dos municípios da divisão entre tratamento e controle
 
 ```{r}
-
 df5 <- df
   
 socioecon <- cbind(df5$taxa_analfabetismo, df5$taxa_desemprego, df5$gini, df5$pibpc,df5$taxa_renda_pobre, df5$taxa_trab_infantil, df5$taxa_homens_jovens)

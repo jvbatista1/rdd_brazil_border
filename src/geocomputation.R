@@ -1,4 +1,4 @@
-dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
+dropbox <- "c:/Users/victo/dropbox/DISSERTACAO"
 
 #### Meu exemplo
 library(sf)
@@ -173,6 +173,8 @@ fronteira_terrestre <- fronteira_terrestre|>
   group_by(COUNTRY) |> 
   summarise()
 
+write_rds(fronteira_terrestre, file.path(dropbox, "fronteira_terrestre.rds"))
+
 # Calcular a distância entre as sedes municipais e a linha da fronteira terrestre
 distancias_terrestres <- st_distance(sede_municipios, fronteira_terrestre)
 
@@ -199,6 +201,8 @@ controle <- simpler_map |>
 tratamento <- st_buffer(tratamento, dist = 1)
 
 fronteira_interior <- st_intersection(tratamento, controle)
+
+write_rds(fronteira_interior, file.path(dropbox, "fronteira_interior.rds"))
 
 rm(simpler_map, tratamento, controle)
 
