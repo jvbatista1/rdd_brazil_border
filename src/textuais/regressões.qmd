@@ -4,7 +4,7 @@ format: html
 ---
 
 ```{r}
-dropbox <- "c:/Users/victo/dropbox/DISSERTACAO"
+dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
 library(tidyverse)
 library(sf)
 library(rdrobust)
@@ -90,28 +90,24 @@ rdplot(df1$mortes_violentas, (df1$distancia_fronteira_terrestre)/1000, c = 150, 
 ```{r}
 mortes_violentas1 <- rdrobust(y = df1$mortes_violentas,
                  x = df1$distancia_fronteira_terrestre,
-                 c = 150000,
-                 fuzzy = T)
+                 c = 150000)
 
-summary(mortes_violentas1)
+aux <- summary(mortes_violentas1)
 
 mortes_violentas2 <- rdrobust(y = df1$mortes_violentas,
                  x = df1$distancia_fronteira_terrestre,
                  covs = socioecon,  
-                 c = 150000,
-                 fuzzy = T)
+                 c = 150000)
 
 mortes_violentas3 <- rdrobust(y = df1$mortes_violentas,
                  x = df1$distancia_fronteira_terrestre,
                  covs = geograficas,  
-                 c = 150000,
-                 fuzzy = T)
+                 c = 150000)
 
 mortes_violentas4 <- rdrobust(y = df1$mortes_violentas,
                  x = df1$distancia_fronteira_terrestre,
                  covs = all,  
-                 c = 150000,
-                 fuzzy = T)
+                 c = 150000)
 
 ```
 
@@ -490,7 +486,37 @@ geograficas <- cbind(df5$dummy_arco_central, df5$dummy_arco_norte, df5$latitude,
 
 all <- cbind(df5$taxa_analfabetismo, df5$taxa_desemprego, df5$gini, df5$pibpc,df5$taxa_renda_pobre, df5$taxa_trab_infantil, df5$taxa_homens_jovens, df5$dummy_arco_central, df5$dummy_arco_norte, df5$latitude, df5$longitude)
 
+df5_norte <- df5 |> 
+  filter(arcos == "Arco Norte")
+  
+df5_central <- df5 |> 
+  filter(arcos == "Arco Central")
+
+df5_sul <- df5 |> 
+  filter(arcos == "Arco Sul")
+
+all_norte <- cbind(df5_norte$taxa_analfabetismo, df5_norte$taxa_desemprego, df5_norte$gini, df5_norte$pibpc,df5_norte$taxa_renda_pobre, df5_norte$taxa_trab_infantil, df5_norte$taxa_homens_jovens, df5_norte$latitude, df5_norte$longitude)
+
+all_central <- cbind(df5_central$taxa_analfabetismo, df5_central$taxa_desemprego, df5_central$gini, df5_central$pibpc,df5_central$taxa_renda_pobre, df5_central$taxa_trab_infantil, df5_central$taxa_homens_jovens, df5_central$latitude, df5_central$longitude)
+
+all_sul <- cbind(df5_sul$taxa_analfabetismo, df5_sul$taxa_desemprego, df5_sul$gini, df5_sul$pibpc,df5_sul$taxa_renda_pobre, df5_sul$taxa_trab_infantil, df5_sul$taxa_homens_jovens, df5_sul$latitude, df5_sul$longitude)
+
 rdplot(df5$mortes_violentas, (df5$distancia_fronteira_interior)/1000, c = 0, nbins = 50,
+       title = "", 
+       y.label = "Mortes violentas por 100 mil hab.", 
+       x.label = "Distância (km)")
+
+rdplot(df5_norte$mortes_violentas, (df5_norte$distancia_fronteira_interior)/1000, c = 0, nbins = 50,
+       title = "", 
+       y.label = "Mortes violentas por 100 mil hab.", 
+       x.label = "Distância (km)")
+
+rdplot(df5_central$mortes_violentas, (df5_central$distancia_fronteira_interior)/1000, c = 0, nbins = 50,
+       title = "", 
+       y.label = "Mortes violentas por 100 mil hab.", 
+       x.label = "Distância (km)")
+
+rdplot(df5_sul$mortes_violentas, (df5_sul$distancia_fronteira_interior)/1000, c = 0, nbins = 50,
        title = "", 
        y.label = "Mortes violentas por 100 mil hab.", 
        x.label = "Distância (km)")
@@ -562,6 +588,79 @@ modelsummary::modelsummary(anos5,
                            stars = T,
                            output = "latex")
 ```
+
+```{r}
+anos5 <- list(
+  "ano 2010" = rdrobust(y = df5_norte$valor_2010, x = df5_norte$distancia_fronteira_interior, c = 0, covs = all_norte),
+  "ano 2011" = rdrobust(y = df5_norte$valor_2011, x = df5_norte$distancia_fronteira_interior, c = 0, covs = all_norte),
+  "ano 2012" = rdrobust(y = df5_norte$valor_2012, x = df5_norte$distancia_fronteira_interior, c = 0, covs = all_norte),
+  "ano 2013" = rdrobust(y = df5_norte$valor_2013, x = df5_norte$distancia_fronteira_interior, c = 0, covs = all_norte),
+  "ano 2014" = rdrobust(y = df5_norte$valor_2014, x = df5_norte$distancia_fronteira_interior, c = 0, covs = all_norte))
+
+modelsummary::modelsummary(anos5,
+                           statistic = 'std.error',
+                           stars = T)
+
+anos5 <- list(
+  "ano 2015" = rdrobust(y = df5_norte$valor_2015, x = df5_norte$distancia_fronteira_interior, c = 0, covs = all_norte),
+  "ano 2016" = rdrobust(y = df5_norte$valor_2016, x = df5_norte$distancia_fronteira_interior, c = 0, covs = all_norte),
+  "ano 2017" = rdrobust(y = df5_norte$valor_2017, x = df5_norte$distancia_fronteira_interior, c = 0, covs = all_norte),
+  "ano 2018" = rdrobust(y = df5_norte$valor_2018, x = df5_norte$distancia_fronteira_interior, c = 0, covs = all_norte),
+  "ano 2019" = rdrobust(y = df5_norte$valor_2019, x = df5_norte$distancia_fronteira_interior, c = 0, covs = all_norte))
+
+modelsummary::modelsummary(anos5,
+                           statistic = 'std.error',
+                           stars = T)
+```
+
+```{r}
+anos5 <- list(
+  "ano 2010" = rdrobust(y = df5_central$valor_2010, x = df5_central$distancia_fronteira_interior, c = 0, covs = all_central),
+  "ano 2011" = rdrobust(y = df5_central$valor_2011, x = df5_central$distancia_fronteira_interior, c = 0, covs = all_central),
+  "ano 2012" = rdrobust(y = df5_central$valor_2012, x = df5_central$distancia_fronteira_interior, c = 0, covs = all_central),
+  "ano 2013" = rdrobust(y = df5_central$valor_2013, x = df5_central$distancia_fronteira_interior, c = 0, covs = all_central),
+  "ano 2014" = rdrobust(y = df5_central$valor_2014, x = df5_central$distancia_fronteira_interior, c = 0, covs = all_central))
+
+modelsummary::modelsummary(anos5,
+                           statistic = 'std.error',
+                           stars = T)
+
+anos5 <- list(
+  "ano 2015" = rdrobust(y = df5_central$valor_2015, x = df5_central$distancia_fronteira_interior, c = 0, covs = all_central),
+  "ano 2016" = rdrobust(y = df5_central$valor_2016, x = df5_central$distancia_fronteira_interior, c = 0, covs = all_central),
+  "ano 2017" = rdrobust(y = df5_central$valor_2017, x = df5_central$distancia_fronteira_interior, c = 0, covs = all_central),
+  "ano 2018" = rdrobust(y = df5_central$valor_2018, x = df5_central$distancia_fronteira_interior, c = 0, covs = all_central),
+  "ano 2019" = rdrobust(y = df5_central$valor_2019, x = df5_central$distancia_fronteira_interior, c = 0, covs = all_central))
+
+modelsummary::modelsummary(anos5,
+                           statistic = 'std.error',
+                           stars = T)
+```
+
+```{r}
+anos5 <- list(
+  "ano 2010" = rdrobust(y = df5_sul$valor_2010, x = df5_sul$distancia_fronteira_interior, c = 0, covs = all_sul),
+  "ano 2011" = rdrobust(y = df5_sul$valor_2011, x = df5_sul$distancia_fronteira_interior, c = 0, covs = all_sul),
+  "ano 2012" = rdrobust(y = df5_sul$valor_2012, x = df5_sul$distancia_fronteira_interior, c = 0, covs = all_sul),
+  "ano 2013" = rdrobust(y = df5_sul$valor_2013, x = df5_sul$distancia_fronteira_interior, c = 0, covs = all_sul),
+  "ano 2014" = rdrobust(y = df5_sul$valor_2014, x = df5_sul$distancia_fronteira_interior, c = 0, covs = all_sul))
+
+modelsummary::modelsummary(anos5,
+                           statistic = 'std.error',
+                           stars = T)
+
+anos5 <- list(
+  "ano 2015" = rdrobust(y = df5_sul$valor_2015, x = df5_sul$distancia_fronteira_interior, c = 0, covs = all_sul),
+  "ano 2016" = rdrobust(y = df5_sul$valor_2016, x = df5_sul$distancia_fronteira_interior, c = 0, covs = all_sul),
+  "ano 2017" = rdrobust(y = df5_sul$valor_2017, x = df5_sul$distancia_fronteira_interior, c = 0, covs = all_sul),
+  "ano 2018" = rdrobust(y = df5_sul$valor_2018, x = df5_sul$distancia_fronteira_interior, c = 0, covs = all_sul),
+  "ano 2019" = rdrobust(y = df5_sul$valor_2019, x = df5_sul$distancia_fronteira_interior, c = 0, covs = all_sul))
+
+modelsummary::modelsummary(anos5,
+                           statistic = 'std.error',
+                           stars = T)
+```
+
 
 ```{r}
 crimes5 <- list(
