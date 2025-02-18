@@ -4,7 +4,7 @@ format: html
 ---
 
 ```{r}
-dropbox <- "c:/Users/victo/dropbox/DISSERTACAO"
+dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
 library(tidyverse)
 library(sf)
 library(rdrobust)
@@ -19,11 +19,18 @@ violencia <- violencia |>
 df <- left_join(espaciais, violencia)
 df <- df |> 
   mutate(taxa_homens_jovens = as.numeric(taxa_homens_jovens),
-         dummy_arco_central = if_else(arcos == "Arco Central", 1, 0),
-         dummy_arco_norte = if_else(arcos == "Arco Norte", 1, 0),
-         dummy_arco_sul = if_else(arcos == "Arco Sul", 1, 0))
+         arcos = forcats::as_factor(arcos))
 
 rm(espaciais, violencia)
+
+teste <- df |> 
+  group_by(arcos, groups) |>  
+  summarise(
+    count = n(),
+    .groups = "drop") |> 
+  mutate(proportion = count/sum(count)) |> 
+  sf::st_drop_geometry()
+
 ```
 
 ```{r}

@@ -4,7 +4,7 @@ format: html
 ---
 
 ```{r}
-dropbox <- "c:/Users/victo/dropbox/DISSERTACAO"
+dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
 library(tidyverse)
 library(sf)
 library(rdrobust)
@@ -40,38 +40,6 @@ classificar2 <- function(x){purrr::pluck(list2, x)}
 
 df$Grupos <- purrr::map_chr(df$label, classificar)
 df$Grupo <- purrr::map_chr(df$label, classificar2)
-
-df |>  
-  ggplot()+
-  geom_sf(aes(fill=Grupos), stroke = 0.1)+
-  geom_sf(data=fronteira_interior, aes(color = "fronteira_interior"), size = 0.3, linetype = "solid")+
-  theme_minimal()
-ggsave("grupo1.png",height = 20, width = 20, units = "cm")
-
-df |> 
-  filter(label %in% c("101", "111", "000")) |> 
-  ggplot()+
-  geom_sf(aes(fill=Grupos), stroke = 0.1)+
-  geom_sf(data=fronteira_terrestre, color = "gray", size = 0.3, linetype = "solid")+
-  theme_minimal()
-ggsave("grupo2.png",height = 20, width = 20, units = "cm")
-
-df |> 
-  filter(label %in% c("101", "111", "100", "110")) |> 
-  ggplot()+
-  geom_sf(aes(fill=Grupo), stroke = 0.1)+
-  theme_minimal()
-ggsave("grupo3.png",height = 20, width = 20, units = "cm")
-
-
-df |> 
-  filter(label %in% c("100", "101", "000")) |> 
-  ggplot()+
-  geom_sf(aes(fill=Grupos), stroke = 0.1)+
-  geom_sf(data=fronteira_terrestre, color = "gray", size = 0.3, linetype = "solid")+
-  theme_minimal()
-ggsave("grupo4.png",height = 20, width = 20, units = "cm")
-
 
 ```
 
@@ -240,6 +208,143 @@ anos5 <- list(
 
 modelsummary::modelsummary(anos5,
                            statistic = 'std.error',
+                           stars = T,
+                           output = "latex")
+```
+
+```{r}
+anos5 <- list(
+  "ano 2010" = rdrobust(y = df5$valor_2010, x = df5$distancia_fronteira_interior, c = 0, p=2,  covs = all),
+  "ano 2011" = rdrobust(y = df5$valor_2011, x = df5$distancia_fronteira_interior, c = 0, p=2,  covs = all),
+  "ano 2012" = rdrobust(y = df5$valor_2012, x = df5$distancia_fronteira_interior, c = 0, p=2,  covs = all),
+  "ano 2013" = rdrobust(y = df5$valor_2013, x = df5$distancia_fronteira_interior, c = 0, p=2,  covs = all),
+  "ano 2014" = rdrobust(y = df5$valor_2014, x = df5$distancia_fronteira_interior, c = 0, p=2,  covs = all))
+
+modelsummary::modelsummary(anos5,
+                           statistic = 'std.error',
+                           stars = T,
+                           output = "latex")
+
+anos5 <- list(
+  "ano 2015" = rdrobust(y = df5$valor_2015, x = df5$distancia_fronteira_interior, c = 0, p=2,  covs = all),
+  "ano 2016" = rdrobust(y = df5$valor_2016, x = df5$distancia_fronteira_interior, c = 0, p=2,  covs = all),
+  "ano 2017" = rdrobust(y = df5$valor_2017, x = df5$distancia_fronteira_interior, c = 0, p=2,  covs = all),
+  "ano 2018" = rdrobust(y = df5$valor_2018, x = df5$distancia_fronteira_interior, c = 0, p=2,  covs = all),
+  "ano 2019" = rdrobust(y = df5$valor_2019, x = df5$distancia_fronteira_interior, c = 0, p=2,  covs = all))
+
+modelsummary::modelsummary(anos5,
+                           statistic = 'std.error',
+                           stars = T,
+                           output = "latex")
+```
+
+```{r}
+anos5 <- list(
+  "ano 2010" = rdrobust(y = df5_norte$valor_2010, x = df5_norte$distancia_fronteira_interior, c = 0, p=2,  covs = all_norte),
+  "ano 2011" = rdrobust(y = df5_norte$valor_2011, x = df5_norte$distancia_fronteira_interior, c = 0, p=2,  covs = all_norte),
+  "ano 2012" = rdrobust(y = df5_norte$valor_2012, x = df5_norte$distancia_fronteira_interior, c = 0, p=2,  covs = all_norte),
+  "ano 2013" = rdrobust(y = df5_norte$valor_2013, x = df5_norte$distancia_fronteira_interior, c = 0, p=2,  covs = all_norte),
+  "ano 2014" = rdrobust(y = df5_norte$valor_2014, x = df5_norte$distancia_fronteira_interior, c = 0, p=2,  covs = all_norte))
+
+modelsummary::modelsummary(anos5,
+                           statistic = 'std.error',
+                           stars = T,
+                           output = "latex")
+
+anos5 <- list(
+  "ano 2015" = rdrobust(y = df5_norte$valor_2015, x = df5_norte$distancia_fronteira_interior, c = 0, p=2,  covs = all_norte),
+  "ano 2016" = rdrobust(y = df5_norte$valor_2016, x = df5_norte$distancia_fronteira_interior, c = 0, p=2,  covs = all_norte),
+  "ano 2017" = rdrobust(y = df5_norte$valor_2017, x = df5_norte$distancia_fronteira_interior, c = 0, p=2,  covs = all_norte),
+  "ano 2018" = rdrobust(y = df5_norte$valor_2018, x = df5_norte$distancia_fronteira_interior, c = 0, p=2,  covs = all_norte),
+  "ano 2019" = rdrobust(y = df5_norte$valor_2019, x = df5_norte$distancia_fronteira_interior, c = 0, p=2,  covs = all_norte))
+
+modelsummary::modelsummary(anos5,
+                           statistic = 'std.error',
+                           stars = T,
+                           output = "latex")
+```
+
+```{r}
+anos5 <- list(
+  "ano 2010" = rdrobust(y = df5_central$valor_2010, x = df5_central$distancia_fronteira_interior, c = 0, p=2,  covs = all_central),
+  "ano 2011" = rdrobust(y = df5_central$valor_2011, x = df5_central$distancia_fronteira_interior, c = 0, p=2,  covs = all_central),
+  "ano 2012" = rdrobust(y = df5_central$valor_2012, x = df5_central$distancia_fronteira_interior, c = 0, p=2,  covs = all_central),
+  "ano 2013" = rdrobust(y = df5_central$valor_2013, x = df5_central$distancia_fronteira_interior, c = 0, p=2,  covs = all_central),
+  "ano 2014" = rdrobust(y = df5_central$valor_2014, x = df5_central$distancia_fronteira_interior, c = 0, p=2,  covs = all_central))
+
+modelsummary::modelsummary(anos5,
+                           statistic = 'std.error',
+                           stars = T,
+                           output = "latex")
+
+anos5 <- list(
+  "ano 2015" = rdrobust(y = df5_central$valor_2015, x = df5_central$distancia_fronteira_interior, c = 0, p=2,  covs = all_central),
+  "ano 2016" = rdrobust(y = df5_central$valor_2016, x = df5_central$distancia_fronteira_interior, c = 0, p=2,  covs = all_central),
+  "ano 2017" = rdrobust(y = df5_central$valor_2017, x = df5_central$distancia_fronteira_interior, c = 0, p=2,  covs = all_central),
+  "ano 2018" = rdrobust(y = df5_central$valor_2018, x = df5_central$distancia_fronteira_interior, c = 0, p=2,  covs = all_central),
+  "ano 2019" = rdrobust(y = df5_central$valor_2019, x = df5_central$distancia_fronteira_interior, c = 0, p=2,  covs = all_central))
+
+modelsummary::modelsummary(anos5,
+                           statistic = 'std.error',
+                           stars = T,
+                           output = "latex")
+```
+
+```{r}
+anos5 <- list(
+  "ano 2010" = rdrobust(y = df5_sul$valor_2010, x = df5_sul$distancia_fronteira_interior, c = 0, p=2,  covs = all_sul),
+  "ano 2011" = rdrobust(y = df5_sul$valor_2011, x = df5_sul$distancia_fronteira_interior, c = 0, p=2,  covs = all_sul),
+  "ano 2012" = rdrobust(y = df5_sul$valor_2012, x = df5_sul$distancia_fronteira_interior, c = 0, p=2,  covs = all_sul),
+  "ano 2013" = rdrobust(y = df5_sul$valor_2013, x = df5_sul$distancia_fronteira_interior, c = 0, p=2,  covs = all_sul),
+  "ano 2014" = rdrobust(y = df5_sul$valor_2014, x = df5_sul$distancia_fronteira_interior, c = 0, p=2,  covs = all_sul))
+
+modelsummary::modelsummary(anos5,
+                           statistic = 'std.error',
+                           stars = T,
+                           output = "latex")
+
+anos5 <- list(
+  "ano 2015" = rdrobust(y = df5_sul$valor_2015, x = df5_sul$distancia_fronteira_interior, c = 0, p=2,  covs = all_sul),
+  "ano 2016" = rdrobust(y = df5_sul$valor_2016, x = df5_sul$distancia_fronteira_interior, c = 0, p=2,  covs = all_sul),
+  "ano 2017" = rdrobust(y = df5_sul$valor_2017, x = df5_sul$distancia_fronteira_interior, c = 0, p=2,  covs = all_sul),
+  "ano 2018" = rdrobust(y = df5_sul$valor_2018, x = df5_sul$distancia_fronteira_interior, c = 0, p=2,  covs = all_sul),
+  "ano 2019" = rdrobust(y = df5_sul$valor_2019, x = df5_sul$distancia_fronteira_interior, c = 0, p=2,  covs = all_sul))
+
+modelsummary::modelsummary(anos5,
+                           statistic = 'std.error',
+                           stars = T,
+                           output = "latex")
+```
+
+```{r}
+df2 <- df |> 
+  filter(label %in% c("101", "111", "000"))
+
+modelo2 <- lm(valor_2017 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude + arcos, data = df2)
+
+modelsummary::modelsummary(modelo2,
+                           stars = T)
+```
+
+```{r}
+df3 <- df |> 
+  filter(label %in% c("101", "111", "100", "101"))
+
+modelo3 <- lm(valor_2017 ~ Grupo + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude + arcos, data = df3)
+
+modelsummary::modelsummary(modelo3,
+                           stars = T)
+```
+
+```{r}
+df4 <- df |> 
+  filter(label %in% c("100", "101", "000"))
+
+modelo4 <- lm(valor_2017 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude + arcos, data = df4)
+
+modelsummary::modelsummary(list("exclui sedes fora da FF" = modelo2,
+                                "efeito fronteira" = modelo3,
+                                "efeito forças armadas" = modelo4),
                            stars = T,
                            output = "latex")
 ```
