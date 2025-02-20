@@ -4,7 +4,7 @@ format: html
 ---
 
 ```{r}
-dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
+dropbox <- "c:/Users/victo/dropbox/DISSERTACAO"
 library(tidyverse)
 library(sf)
 library(rdrobust)
@@ -61,6 +61,71 @@ glance.rdrobust <- function(x, ...) {
     ret
 }
 ```
+
+Gráficos
+```{r}
+g2010 <- rdplot(df$valor_2010, (df$distancia_fronteira_interior)/1000, c=0, p=1,
+     title = "2010", 
+     y.label = "Homicídios por 100 mil hab.", 
+     x.label = "Distância (km)")
+ggsave("g2010.png",height = 10, width = 10, units = "cm")
+  
+g2011 <- rdplot(df$valor_2011, (df$distancia_fronteira_interior)/1000, c=0, p=1,
+     title = "2011", 
+     y.label = "Homicídios por 100 mil hab.", 
+     x.label = "Distância (km)")
+ggsave("g2011.png",height = 10, width = 10, units = "cm")
+
+g2012 <- rdplot(df$valor_2012, (df$distancia_fronteira_interior)/1000, c=0, p=1,
+     title = "2012", 
+     y.label = "Homicídios por 100 mil hab.", 
+     x.label = "Distância (km)")
+ggsave("g2012.png",height = 10, width = 10, units = "cm")
+
+g2013 <- rdplot(df$valor_2013, (df$distancia_fronteira_interior)/1000, c=0, p=1,
+     title = "2013", 
+     y.label = "Homicídios por 100 mil hab.", 
+     x.label = "Distância (km)")
+ggsave("g2013.png",height = 10, width = 10, units = "cm")
+
+g2014 <- rdplot(df$valor_2014, (df$distancia_fronteira_interior)/1000, c=0, p=1,
+     title = "2014", 
+     y.label = "Homicídios por 100 mil hab.", 
+     x.label = "Distância (km)")
+ggsave("g2014.png",height = 10, width = 10, units = "cm")
+
+g2015 <- rdplot(df$valor_2015, (df$distancia_fronteira_interior)/1000, c=0, p=1,
+     title = "2015", 
+     y.label = "Homicídios por 100 mil hab.", 
+     x.label = "Distância (km)")
+ggsave("g2015.png",height = 10, width = 10, units = "cm")
+
+g2016 <- rdplot(df$valor_2016, (df$distancia_fronteira_interior)/1000, c=0, p=1,
+     title = "2016", 
+     y.label = "Homicídios por 100 mil hab.", 
+     x.label = "Distância (km)")
+ggsave("g2016.png",height = 10, width = 10, units = "cm")
+
+g2017 <- rdplot(df$valor_2017, (df$distancia_fronteira_interior)/1000, c=0, p=1,
+     title = "2017", 
+     y.label = "Homicídios por 100 mil hab.", 
+     x.label = "Distância (km)")
+ggsave("g2017.png",height = 10, width = 10, units = "cm")
+
+g2018 <- rdplot(df$valor_2018, (df$distancia_fronteira_interior)/1000, c=0, p=1,
+     title = "2018", 
+     y.label = "Homicídios por 100 mil hab.", 
+     x.label = "Distância (km)")
+ggsave("g2018.png",height = 10, width = 10, units = "cm")
+
+g2019 <- rdplot(df$valor_2019, (df$distancia_fronteira_interior)/1000, c=0, p=1,
+     title = "2019", 
+     y.label = "Homicídios por 100 mil hab.", 
+     x.label = "Distância (km)")
+ggsave("g2019.png",height = 10, width = 10, units = "cm")
+
+```
+
 
 Distância dos municípios da divisão entre tratamento e controle
 
