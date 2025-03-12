@@ -4,7 +4,7 @@ format: html
 ---
 
 ```{r}
-dropbox <- "c:/Users/victo/dropbox/DISSERTACAO"
+dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
 library(tidyverse)
 library(sf)
 library(rdrobust)
@@ -385,7 +385,7 @@ modelsummary::modelsummary(anos5,
 df2 <- df |> 
   filter(label %in% c("101", "111", "000"))
 
-modelo2 <- lm(valor_2017 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude + arcos, data = df2)
+modelo2 <- lm(valor_2019 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude + arcos, data = df2)
 
 modelsummary::modelsummary(modelo2,
                            stars = T)
@@ -395,7 +395,7 @@ modelsummary::modelsummary(modelo2,
 df3 <- df |> 
   filter(label %in% c("101", "111", "100", "101"))
 
-modelo3 <- lm(valor_2017 ~ Grupo + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude + arcos, data = df3)
+modelo3 <- lm(valor_2019 ~ Grupo + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude + arcos, data = df3)
 
 modelsummary::modelsummary(modelo3,
                            stars = T)
@@ -405,12 +405,18 @@ modelsummary::modelsummary(modelo3,
 df4 <- df |> 
   filter(label %in% c("100", "101", "000"))
 
-modelo4 <- lm(valor_2017 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude + arcos, data = df4)
+modelo4 <- lm(valor_2019 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude + arcos, data = df4)
 
+modelsummary::modelsummary(modelo4,
+                           stars = T)
+```
+
+```{r}
 modelsummary::modelsummary(list("exclui sedes fora da FF" = modelo2,
                                 "efeito fronteira" = modelo3,
                                 "efeito forças armadas" = modelo4),
                            stars = T,
                            output = "latex")
 ```
+
 

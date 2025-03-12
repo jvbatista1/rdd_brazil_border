@@ -1,8 +1,10 @@
-dropbox <- "c:/Users/victo/dropbox/DISSERTACAO"
+dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
 
 #### Meu exemplo
 library(sf)
 library(dplyr)
+library(ggplot2)
+
 fronteira <- read_sf(file.path(dropbox,"Fronteira/Faixa_de_Fronteira_por_UF_2022.shp")) %>%
   st_transform("WGS84") |> 
   rename("id_uf" = "CD_UF",
@@ -173,7 +175,7 @@ fronteira_terrestre <- fronteira_terrestre|>
   group_by(COUNTRY) |> 
   summarise()
 
-write_rds(fronteira_terrestre, file.path(dropbox, "fronteira_terrestre.rds"))
+#readr::write_rds(fronteira_terrestre, file.path(dropbox, "fronteira_terrestre.rds"))
 
 # Calcular a distância entre as sedes municipais e a linha da fronteira terrestre
 distancias_terrestres <- st_distance(sede_municipios, fronteira_terrestre)
@@ -202,7 +204,7 @@ tratamento <- st_buffer(tratamento, dist = 1)
 
 fronteira_interior <- st_intersection(tratamento, controle)
 
-write_rds(fronteira_interior, file.path(dropbox, "fronteira_interior.rds"))
+#readr::write_rds(fronteira_interior, file.path(dropbox, "fronteira_interior.rds"))
 
 rm(simpler_map, tratamento, controle)
 
@@ -245,7 +247,7 @@ ggplot()+
   # Tema e título
   theme_minimal()
 
-ggsave("municipioslabel.png",height = 16, width = 24, units = "cm")
+ggsave("municipioslabel.png",height = 20, width = 20, units = "cm")
 
 df |> 
   count(label)
