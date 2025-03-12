@@ -126,6 +126,35 @@ ggsave("g2019.png",height = 10, width = 10, units = "cm")
 
 ```
 
+```{r}
+
+MinMax <- function(x) paste0('[', min(x, na.rm = TRUE), ', ', max(x, na.rm = TRUE), ']')
+
+library(modelsummary)
+
+datasummary(taxa_analfabetismo+taxa_desemprego+gini+pibpc+taxa_renda_pobre+taxa_trab_infantil+taxa_homens_jovens ~ groups*(Mean + SD+MinMax),
+            data = df,
+            output = "latex")
+
+datasummary(taxa_analfabetismo+taxa_desemprego+gini+pibpc+taxa_renda_pobre+taxa_trab_infantil+taxa_homens_jovens ~ arcos*(Mean + SD+MinMax),
+            data = df,
+            output = "latex")
+
+datasummary(valor_2010+valor_2011+valor_2012+valor_2013+valor_2014+valor_2015+valor_2016+valor_2017+valor_2018+valor_2019 ~ groups*(Mean +SD+MinMax),
+            data = df,
+            output = "latex")
+
+datasummary(valor_2010+valor_2011+valor_2012+valor_2013+valor_2014+valor_2015+valor_2016+valor_2017+valor_2018+valor_2019 ~ arcos*(Mean +SD+MinMax),
+            data = df,
+            output = "latex")
+
+
+
+```
+
+
+
+
 
 Distância dos municípios da divisão entre tratamento e controle
 
@@ -183,8 +212,7 @@ anos5 <- list(
 
 modelsummary::modelsummary(anos5,
                            statistic = 'std.error',
-                           stars = T,
-                           output = "latex")
+                           stars = T)
 
 anos5 <- list(
   "ano 2015" = rdrobust(y = df5$valor_2015, x = df5$distancia_fronteira_interior, c = 0, covs = all),
@@ -195,8 +223,8 @@ anos5 <- list(
 
 modelsummary::modelsummary(anos5,
                            statistic = 'std.error',
-                           stars = T,
-                           output = "latex")
+                           stars = T
+                           )
 ```
 
 ```{r}

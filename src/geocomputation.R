@@ -221,7 +221,7 @@ st_geometry(t) <- NULL
 df <- df |> 
   left_join(t, by = "id_municipio") |> 
   #torna as distâncias da faixa de fronteira original negativas
-  mutate(distancia_fronteira_interior = ifelse(groups == "treatment", 
+  mutate(distancia_fronteira_interior = ifelse(groups == "control", 
                                                 -distancia_fronteira_interior, 
                                                 distancia_fronteira_interior))
 
