@@ -1,0 +1,77 @@
+---
+title: "spatialrdd"
+format: html
+---
+
+```{r}
+dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
+library(SpatialRDD)
+library(tidyverse)
+library(sf)
+library(modelsummary)
+library(geobr)
+```
+
+```{r}
+espaciais <- read_rds(file.path(dropbox, "dados_espaciais.rds"))
+violencia <- read_rds(file.path(dropbox, "municipal.rds"))
+violencia <- violencia |> 
+  filter(!is.na(id_municipio))
+
+df <- left_join(espaciais, violencia)
+df <- df |> 
+  mutate(taxa_homens_jovens = as.numeric(taxa_homens_jovens),
+         dummy_arco_central = if_else(arcos == "Arco Central", 1, 0),
+         dummy_arco_norte = if_else(arcos == "Arco Norte", 1, 0),
+         dummy_arco_sul = if_else(arcos == "Arco Sul", 1, 0))
+
+rm(violencia)
+
+fronteira_terrestre <- read_rds(file.path(dropbox, "fronteira_terrestre.rds"))
+
+fronteira_interior <- read_rds(file.path(dropbox, "fronteira_interior.rds"))
+```
+
+```{r}
+espaciais <- read_rds(file.path(dropbox, "dados_espaciais.rds"))
+ 
+full <- st_union(espaciais)
+treated <- st_union(filter(espaciais, groups == "treatment"))
+
+plot(treated)
+
+library(tmap)
+
+tm_shape(full) + tm_polygons() + 
+  tm_shape(treated) + tm_polygons(col = "grey") + 
+  tm_shape(fronteira_interior) + tm_lines(col = "red")
+
+```
+```{r}
+
+points <- read_municipal_seat(year=2010, showProgress = T) %>%
+  st_transform("WGS84") |> 
+  rename("id_municipio" = "code_muni",
+         "nome" = "name_muni",
+         "id_uf" = "code_state",
+         'sigla_uf' = "abbrev_state",
+         "nome_regiao" = "name_region",
+         "id_regiao" = "code_region",
+         "ano" = "year") |> 
+  mutate(id_municipio = as.character(id_municipio))
+
+t <- select(espaciais, id_municipio)
+st_geometry(t) <- NULL
+
+points <- points |> 
+  semi_join(t, by="id_municipio")
+
+rm(t)
+
+tm_shape(points) + tm_dots() + tm_shape(fronteira_interior) + tm_lines(col = "red")
+```
+```{r}
+points$treated <- assign_treated(points, treated, id = "id_municipio")
+tm_shape(points_samp.sf) + tm_dots("treated", palette = "Set1") + tm_shape(cut_off) + tm_lines(col = "red")
+```
+
