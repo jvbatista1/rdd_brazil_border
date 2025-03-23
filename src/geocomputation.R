@@ -59,11 +59,6 @@ municipios$inter <- st_intersects(municipios, linha_fronteira_300km, sparse = F)
 municipios <- municipios %>%
   mutate(fronteira = ifelse(id_municipio %in% municipios_fronteira$id_municipio, 1, 0))
 
-# Criar um indicador de qual universo o controle faz parte: 1 é contíguo a um município da FF, 2 está dentro da região de 300 km, que é o original
-municipios_fronteira_union = st_union(municipios_fronteira)
-
-municipios$contiguidade <-  st_is_within_distance(municipios, municipios_fronteira_union, dist = 1, sparse = F)
-
 # Cria tratamento e controle
 df <- municipios |>
   #filtra os municípios na nova faixa
@@ -71,14 +66,12 @@ df <- municipios |>
   # cria o grupo de tratamento e controle
   mutate(treated = ifelse(id_municipio %in% municipios_fronteira$id_municipio, 1, 0),
          groups = ifelse(treated == 1, "treatment", "control"),
-         contiguo = ifelse(fronteira==0 & contiguidade == TRUE, 1, 0),
          # cria os arcos
          arcos = case_when(sigla_uf %in% c("AP", "PA", "AM", "AC", "RR") ~ "Arco Norte",
-                           sigla_uf %in% c("RO", "MS", "MT") ~ "Arco Central",
-                           sigla_uf %in% c("PR", "SC", "RS") ~ "Arco Sul",
-                           sigla_uf %in% c("SP") ~ "Arco Sudeste")) |> 
+                           sigla_uf %in% c("RO", "MS", "MT", "SP") ~ "Arco Central",
+                           sigla_uf %in% c("PR", "SC", "RS") ~ "Arco Sul")) |> 
   # exclui a variável classificatória. as recém criadas a substituem
-  dplyr::select(-inter, -fronteira, -treated, -contiguidade)
+  dplyr::select(-inter, -fronteira, -treated)
   
 
 
@@ -248,9 +241,6 @@ ggplot()+
   theme_minimal()
 
 ggsave("municipioslabel.png",height = 20, width = 20, units = "cm")
-
-df |> 
-  count(label)
 
 library(readr)
 write_rds(df, file.path(dropbox, "dados_espaciais.rds"))

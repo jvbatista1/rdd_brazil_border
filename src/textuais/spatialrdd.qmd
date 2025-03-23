@@ -10,6 +10,9 @@ library(tidyverse)
 library(sf)
 library(modelsummary)
 library(geobr)
+library(nngeo)
+library(palettetown)
+
 ```
 
 ```{r}
@@ -20,10 +23,7 @@ violencia <- violencia |>
 
 df <- left_join(espaciais, violencia)
 df <- df |> 
-  mutate(taxa_homens_jovens = as.numeric(taxa_homens_jovens),
-         dummy_arco_central = if_else(arcos == "Arco Central", 1, 0),
-         dummy_arco_norte = if_else(arcos == "Arco Norte", 1, 0),
-         dummy_arco_sul = if_else(arcos == "Arco Sul", 1, 0))
+  mutate(taxa_homens_jovens = as.numeric(taxa_homens_jovens))
 
 rm(violencia)
 
@@ -36,17 +36,14 @@ fronteira_interior <- read_rds(file.path(dropbox, "fronteira_interior.rds"))
 espaciais <- read_rds(file.path(dropbox, "dados_espaciais.rds"))
  
 full <- st_union(espaciais)
+
+full <- st_remove_holes(full)
+
 treated <- st_union(filter(espaciais, groups == "treatment"))
-
-plot(treated)
-
-library(tmap)
-
-tm_shape(full) + tm_polygons() + 
-  tm_shape(treated) + tm_polygons(col = "grey") + 
-  tm_shape(fronteira_interior) + tm_lines(col = "red")
-
+treated <- st_sf(treated)
+treated <- st_remove_holes(treated)
 ```
+
 ```{r}
 
 points <- read_municipal_seat(year=2010, showProgress = T) %>%
@@ -60,18 +57,46 @@ points <- read_municipal_seat(year=2010, showProgress = T) %>%
          "ano" = "year") |> 
   mutate(id_municipio = as.character(id_municipio))
 
-t <- select(espaciais, id_municipio)
+t <- select(espaciais, id_municipio, groups)
 st_geometry(t) <- NULL
 
 points <- points |> 
-  semi_join(t, by="id_municipio")
+  right_join(t, by="id_municipio")
 
 rm(t)
+```
 
-tm_shape(points) + tm_dots() + tm_shape(fronteira_interior) + tm_lines(col = "red")
-```
+
 ```{r}
-points$treated <- assign_treated(points, treated, id = "id_municipio")
-tm_shape(points_samp.sf) + tm_dots("treated", palette = "Set1") + tm_shape(cut_off) + tm_lines(col = "red")
+ggplot()+
+  geom_sf(data = full, fill = "lightgray")+
+  geom_sf(data =  treated, , fill = "gray")+
+  geom_sf(data = fronteira_interior, color = "red")+
+  geom_sf(data = points, mapping = aes(colour = groups), size = 0.1) +
+  scale_color_poke(pokemon = 'charizard', spread = 2, name = "Grupo", labels = c("Controle", "Tratamento"))+
+  theme_minimal()
+
+ggsave("sedes_municipais.png",height = 20, width = 20, units = "cm")
 ```
+
+```{r}
+ggplot()+
+  geom_sf(data = espaciais, aes(fill = arcos))+
+  scale_fill_poke(pokemon = 'charizard', spread = 3, name = "Arcos", labels = c("Central", "Norte", "Sul"))+
+  theme_minimal()
+
+ggsave("arcos.png",height = 20, width = 20, units = "cm")
+```
+
+
+
+```{r}
+
+points <- points |> 
+  left_join(violencia |> select(id_municipio, valor_2010:valor_2019))
+
+list("2010"=lm(valor_2010 ~ treated, data = points)) |> 
+  modelsummary(stars = T)
+```
+
 
