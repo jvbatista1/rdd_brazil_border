@@ -15,6 +15,14 @@ fronteira <- read_sf(file.path(dropbox,"Fronteira/Faixa_de_Fronteira_por_UF_2022
          "area_integrada" = "AREA_INT",
          "porcentagem_integrada" = "PORC_INT")
 
+t <- fronteira
+st_geometry(t) <- NULL
+
+t |> 
+  select(nome_uf, porcentagem_integrada) |> 
+  arrange(desc(porcentagem_integrada)) |> 
+  kableExtra::kable("latex")
+
 #Uniformiza a faixa de fronteira como uma única região
 linha_fronteira <- fronteira %>%
   mutate(pais = "BR") %>% 
