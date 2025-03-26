@@ -4,7 +4,7 @@ format: html
 ---
 
 ```{r}
-dropbox <- "c:/Users/victo/dropbox/DISSERTACAO"
+dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
 library(tidyverse)
 library(sf)
 library(rdrobust)
@@ -151,10 +151,6 @@ datasummary(valor_2010+valor_2011+valor_2012+valor_2013+valor_2014+valor_2015+va
 
 
 ```
-
-
-
-
 
 Distância dos municípios da divisão entre tratamento e controle
 
@@ -447,4 +443,92 @@ modelsummary::modelsummary(list("exclui sedes fora da FF" = modelo2,
                            output = "latex")
 ```
 
+```{r}
+modelo1 <- function(df, arco){
+  aux <- df |> 
+  filter(arcos == arco) |> 
+  filter(label %in% c("101", "111", "000")) 
 
+  
+  anos = list(
+  "ano_2010" =  lm(valor_2010 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2011" =  lm(valor_2011 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2012" =  lm(valor_2012 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2013" =  lm(valor_2013 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2014" =  lm(valor_2014 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2015" =  lm(valor_2015 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2016" =  lm(valor_2016 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2017" =  lm(valor_2017 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2018" =  lm(valor_2018 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2019" =  lm(valor_2019 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux))
+  
+  modelsummary::modelsummary(anos, stars = T)
+  
+}
+
+modelo2 <- function(df, arco){
+  aux <- df |> 
+  filter(arcos == arco) |> 
+  filter(label %in% c("101", "111", "100", "101"))
+
+  
+  anos = list(
+  "ano_2010" =  lm(valor_2010 ~ Grupo + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2011" =  lm(valor_2011 ~ Grupo + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2012" =  lm(valor_2012 ~ Grupo + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2013" =  lm(valor_2013 ~ Grupo + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2014" =  lm(valor_2014 ~ Grupo + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2015" =  lm(valor_2015 ~ Grupo + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2016" =  lm(valor_2016 ~ Grupo + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2017" =  lm(valor_2017 ~ Grupo + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2018" =  lm(valor_2018 ~ Grupo + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2019" =  lm(valor_2019 ~ Grupo + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux))
+  
+  modelsummary::modelsummary(anos, stars = T)
+  
+}
+
+modelo3 <- function(df, arco){
+  aux <- df |> 
+  filter(arcos == arco) |> 
+  filter(label %in% c("100", "101", "000"))
+
+  
+  anos = list(
+  "ano_2010" =  lm(valor_2010 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2011" =  lm(valor_2011 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2012" =  lm(valor_2012 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2013" =  lm(valor_2013 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2014" =  lm(valor_2014 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2015" =  lm(valor_2015 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2016" =  lm(valor_2016 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2017" =  lm(valor_2017 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2018" =  lm(valor_2018 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux),
+  "ano_2019" =  lm(valor_2019 ~ Grupos + taxa_analfabetismo + taxa_desemprego + gini + pibpc + taxa_renda_pobre + taxa_trab_infantil + taxa_homens_jovens + latitude + longitude, data = aux))
+  
+  modelsummary::modelsummary(anos, stars = T)
+  
+}
+
+```
+
+```{r}
+modelo1(df, "Arco Norte")
+modelo1(df, "Arco Central")
+modelo1(df, "Arco Sul")
+
+```
+
+```{r}
+modelo2(df, "Arco Norte")
+modelo2(df, "Arco Central")
+modelo2(df, "Arco Sul")
+
+```
+
+```{r}
+modelo3(df, "Arco Norte")
+modelo3(df, "Arco Central")
+modelo3(df, "Arco Sul")
+
+```
