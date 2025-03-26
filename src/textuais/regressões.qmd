@@ -8,6 +8,7 @@ dropbox <- "c:/Users/victor/dropbox/DISSERTACAO"
 library(tidyverse)
 library(sf)
 library(rdrobust)
+library(palettetown)
 ```
 
 ```{r}
@@ -46,7 +47,8 @@ df$Grupo <- purrr::map_chr(df$label, classificar2)
 
 df |>  
   ggplot()+
-  geom_sf(aes(fill=Grupos), stroke = 0.1)+
+  geom_sf(aes(fill=Grupos), stroke = 0.01)+
+  scale_fill_poke(pokemon = 'charizard', spread = 2, name = "Grupo", labels = c("Controle", "Tratamento"))+
   theme_minimal()
 ggsave("grupo1.png",height = 20, width = 20, units = "cm")
 
@@ -54,6 +56,7 @@ df |>
   filter(label %in% c("101", "111", "000")) |> 
   ggplot()+
   geom_sf(aes(fill=Grupos), stroke = 0.1)+
+  scale_fill_poke(pokemon = 'charizard', spread = 2, name = "Grupo", labels = c("Controle", "Tratamento"))+
   theme_minimal()
 ggsave("grupo2.png",height = 20, width = 20, units = "cm")
 
@@ -61,6 +64,7 @@ df |>
   filter(label %in% c("101", "111", "100", "110")) |> 
   ggplot()+
   geom_sf(aes(fill=Grupo), stroke = 0.1)+
+  scale_fill_poke(pokemon = 'charizard', spread = 2, name = "Grupo", labels = c("Controle", "Tratamento"))+
   theme_minimal()
 ggsave("grupo3.png",height = 20, width = 20, units = "cm")
 
@@ -69,6 +73,7 @@ df |>
   filter(label %in% c("100", "101", "000")) |> 
   ggplot()+
   geom_sf(aes(fill=Grupos), stroke = 0.1)+
+  scale_fill_poke(pokemon = 'charizard', spread = 2, name = "Grupo", labels = c("Controle", "Tratamento"))+
   theme_minimal()
 ggsave("grupo4.png",height = 20, width = 20, units = "cm")
 
