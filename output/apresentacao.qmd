@@ -1,5 +1,23 @@
 ---
-title: "apresentacao"
+title: "The brazilian armed forces and the public security on the border: a spatial regression discontinuity design approach"
+author:
+  - Victor Batista
+  - José Raimundo Carvalho
 format: html
 ---
 
+# Definição
+
+# Arcos
+
+# Motivação
+
+# Forças armadas
+
+# Objetivos
+
+# Revisão de literatura
+
+# Tratamento e controle
+
+# Conclusão
