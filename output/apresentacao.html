@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Victor Batista">
+<meta name="author" content="João Victor Batista">
 <meta name="author" content="José Raimundo Carvalho">
 
 <title>The brazilian armed forces and the public security on the border: a spatial regression discontinuity design approach</title>
@@ -22,6 +22,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -36,6 +70,35 @@ ul.task-list li input[type="checkbox"] {
 <link href="apresentacao_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="apresentacao_files/libs/bootstrap/bootstrap-5bdc1ec511977dd36301403cf8f4f68d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -51,17 +114,28 @@ ul.task-list li input[type="checkbox"] {
 </div>
 
 
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Authors</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">João Victor Batista </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            CAEN - Programa de Pós-Graduação em Economia da UFC
+          </p>
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">José Raimundo Carvalho </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+      </div>
+  </div>
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Authors</div>
-    <div class="quarto-title-meta-contents">
-             <p>Victor Batista </p>
-             <p>José Raimundo Carvalho </p>
-          </div>
-  </div>
-    
+      
   
     
   </div>
@@ -71,20 +145,33 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="definição" class="level1">
-<h1>Definição</h1>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p><img src="graficos/noticia.png" class="img-fluid"></p>
+<section id="definição" class="level2">
+<h2 class="anchored" data-anchor-id="definição">Definição:</h2>
+<p><img src="graficos/mapa_ibge.png" class="img-fluid"></p>
+<p>A Faixa de Fronteira ocupa 27% do território Brasileiro</p>
+<p>588 municípios, 11 estados, 16.886 km de fronteira</p>
+<p>Arcos da Faixa de Fronteira Arco Norte (AP, PA, RR, AM, AC) Arco Central (RO, MT, MS) Arco Sul (PR, SC, RS)</p>
+</section>
 </section>
 <section id="arcos" class="level1">
 <h1>Arcos</h1>
-</section>
-<section id="motivação" class="level1">
-<h1>Motivação</h1>
+<p><img src="graficos/arcos.png" class="img-fluid"></p>
+<p>Arco Norte: Expansão do confronto entre facções (PCC e CV) Tráfico de drogas e crimes ambientais (extração de madeira, mineração) Rota de passagem para o crime transnacional Integração à economia local</p>
+<p>Arco Central: Avanço da fronteira econômica (principalmente agrícola) Apreensões de drogas e grande corredores por onde passam o tráfico Tráfico formiga</p>
+<p>Arco Sul: Desempenho urbano e econômico Maior presença das forças de segurança, Fronteira altamente regulada Alto grau de integração: Aumento do contrabando e do tráfico</p>
 </section>
 <section id="forças-armadas" class="level1">
 <h1>Forças armadas</h1>
+<p>National Defense: Defense of territory, sovereignty and national interests against threats</p>
+<p>National Security: Preservation of sovereignty and guarantee for citizens the exercise of constitutional rights and duties, with special attention to vigilance against illicit activities at the border</p>
+<p>Social and Regional Development: Provision of basic services to the population and development of the region’s infrastructure</p>
 </section>
 <section id="objetivos" class="level1">
 <h1>Objetivos</h1>
+
 </section>
 <section id="revisão-de-literatura" class="level1">
 <h1>Revisão de literatura</h1>
@@ -94,6 +181,80 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="conclusão" class="level1">
 <h1>Conclusão</h1>
+<p>No Arco Norte, a presença das Forças Armadas na Faixa de Fronteira está associada a uma redução na taxa de homicídios;</p>
+<p>No Arco Central, por outro lado, foi identificado um efeito contrário (contraintuitivo);</p>
+<p>No Arco Sul, não foram encontrados efeitos estatisticamente significativos;</p>
+<p>Conforme apresentado pela literatura, esses efeitos podem estar relacionados ao tamanho e à intensidade de operações de segurança em diferentes anos, como a Operação Ágata;</p>
+<p>Dentre as classificações alternativas, o efeito sede e efeito forças armadas apresentaram padrões semelhantes à análise principal</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">###############################</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="motivação-i" class="level1">
+<h1>Motivação I</h1>
+<p>Dinâmica da Violência e do Desenvolvimento Econômico na Faixa de Fronteira</p>
+<p>A Faixa de Fronteira ocupa 27% do território Brasileiro</p>
+<p>588 municípios, 11 estados, 16.886 km de fronteira</p>
+<p>Arcos da Faixa de Fronteira Arco Norte (AP, PA, RR, AM, AC) Arco Central (RO, MT, MS) Arco Sul (PR, SC, RS)</p>
+</section>
+<section id="motivação-ii" class="level1">
+<h1>Motivação II</h1>
+<p><img src="graficos/mapa_ibge.png" class="img-fluid"></p>
+</section>
+<section id="motivação-iii" class="level1">
+<h1>Motivação III</h1>
+<p>Arco Norte: Expansão do confronto entre facções (PCC e CV) Tráfico de drogas e crimes ambientais (extração de madeira, mineração) Rota de passagem para o crime transnacional Integração à economia local</p>
+<p>Arco Central: Avanço da fronteira econômica (principalmente agrícola) Apreensões de drogas e grande corredores por onde passam o tráfico Tráfico formiga</p>
+<p>Arco Sul: Desempenho urbano e econômico Maior presença das forças de segurança, Fronteira altamente regulada Alto grau de integração: Aumento do contrabando e do tráfico</p>
+</section>
+<section id="motivação-iv" class="level1">
+<h1>Motivação IV</h1>
+<p><img src="graficos/rotas_trafico.jpg" class="img-fluid"></p>
+</section>
+<section id="motivação-v" class="level1">
+<h1>Motivação V</h1>
+<pre><code>Forças Armadas e Segurança na Faixa de Fronteira </code></pre>
+<p>Políticas de Defesa Programa Calha Norte (PCN)Sistema de Monitoramento Integrado de Monitoramento de Fronteira (SISFRON)Operação Ágata, Política Nacional de Defesa (PND) e a Estratégia Nacional de Defesa (END)</p>
+<p>Políticas de SegurançaEstratégia Nacional de Segurança Pública nas Fronteiras (Enafron)Projeto Unidades Especializadas de Fronteiras (Pefron, 2008)Plano Estratégico de Fronteiras (PEF, 2011)Programa de Proteção Integrada de</p>
+<p>Objetivos</p>
+<p>O objetivo geral deste estudo é avaliar o impacto das políticas aplicadas na Faixa de Fronteira sobre a segurança pública, com especial atenção à atuação das Forças Armadas.</p>
+<p>Quanto aos objetivos específicos: Analisar os efeitos da descontinuidade geográfica gerada pela Faixa de Fronteira sobre as taxas de homicídio; Investigar heterogeneidades nos efeitos da Faixa de Fronteira sobre a violência, considerando diferenças nos fatores socioeconômicos, arcos e períodos. Avaliar a robustez dos resultados utilizando diferentes configurações de amostra que isolam efeitos específicos</p>
+</section>
+<section id="design-de-regressão-descontínua" class="level1">
+<h1>Design de Regressão Descontínua</h1>
+<p>##Revisão de Literatura I: Design de Regressão Descontínua Configuração básica de um modelo RD: Thistlethwaite e Campbell: impacto de prêmios de mérito escolar no futuro acadêmico dos estudantes. Prêmios eram atribuídos com base em uma determinada nota: estudantes cuja pontuação <span class="math inline">\(X\)</span> atingisse ou excedesse um valor de corte <span class="math inline">\(c\)</span> eram agraciados, enquanto aqueles com pontuação inferior não eram contemplados. Esse mecanismo gera uma no tratamento como função da nota. Seja a recepção do tratamento representada por <span class="math inline">\(D \in {0,1}\)</span>, temos então <span class="math inline">\(D=1\)</span> se <span class="math inline">\(X\geq c\)</span> e <span class="math inline">\(D=0\)</span> se <span class="math inline">\(X&lt;c\)</span> \end{itemize} <span class="math display">\[\begin{equation}
+        Y = \alpha + D\tau + X\beta + \varepsilon
+    \end{equation}\]</span></p>
+<section id="revisão-de-literatura-ii" class="level2">
+<h2 class="anchored" data-anchor-id="revisão-de-literatura-ii">Revisão de Literatura II}</h2>
+<p><img src="graficos/images/thistlethwaite.png" class="img-fluid"></p>
+<p>Essa regressão é estimada em uma subamostra dos dados que é estatisticamente otimizada perto do valor do ponto de corte. A razão pela qual todos os dados disponíveis não são utilizados deve-se ao trade-off entre variância e viés Três elementos importantes para lidar com RD Variável de corte (Running variable) Ponto de corte (Cutoff) Janela, ou largura de banda (Bandwidth)</p>
+</section>
+</section>
+<section id="revisão-de-literatura-iii-design-de-regressão-descontínua-espacial" class="level1">
+<h1>Revisão de literatura III: Design de Regressão Descontínua Espacial</h1>
+<p>Uma das principais limitações do RD tradicional em dados espaciais é sua dependência de um ponto de corte unidimensional.Enquanto o RD tradicional utiliza uma variável contínua para definir o cutoff, em contextos espaciais, a fronteira é bidimensional, frequentemente representada por coordenadas geográficas. Isso exige métodos que possam lidar com a natureza multidimensional das fronteiras geográficas.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="graficos/zimmert.png" class="img-fluid figure-img"></p>
+<figcaption>Exemplo de cálculo da runnig variable em RD espacial</figcaption>
+</figure>
+</div>
+<p>%% ————————————————————————— # Metodologia</p>
+<p><img src="graficos/impactos.png" class="img-fluid"></p>
+</section>
+<section id="metodologia-ii" class="level1">
+<h1>Metodologia II</h1>
+<p>Definição dos grupos de tratamento e controle</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="graficos/sedes_municipais.png" class="img-fluid figure-img"></p>
+<figcaption>Classificação 1: Amostra completa</figcaption>
+</figure>
+</div>
+%
+%% ————————————————————————— % Reference frames
+%% ————————————————————————— % Final frame
 </section>
 
 </main>
