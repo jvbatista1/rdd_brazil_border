@@ -15,7 +15,6 @@ format:
     embed-resources: true
     transition: slide
     background-transition: fade
-    
 ---
 
 # Motivação
