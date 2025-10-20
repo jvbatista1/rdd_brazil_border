@@ -248,7 +248,7 @@ ggplot()+
   # Tema e título
   theme_minimal()
 
-ggsave("municipioslabel.png",height = 20, width = 20, units = "cm")
+ggsave("./output/graficos/municipioslabel.png",height = 20, width = 20, units = "cm")
 
 library(readr)
 write_rds(df, file.path(dropbox, "dados_espaciais.rds"))
