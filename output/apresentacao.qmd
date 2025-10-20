@@ -1,9 +1,11 @@
 ---
-title: "The brazilian armed forces and the public security on the border: a spatial regression discontinuity design approach"
+title: "The brazilian armed forces and the public security on the border:"
+subtitle: "a spatial regression discontinuity design approach"
 author:
-  - João Victor Batista
-  - José Raimundo Carvalho
-institute: "CAEN - Programa de Pós-Graduação em Economia da UFC"
+  - name: João Victor Batista
+    affiliation: CAEN - UFC
+  - name: José Raimundo Carvalho
+    affiliation: CAEN - UFC
 format: 
   revealjs:
     logo: graficos/ufc.png
@@ -15,6 +17,7 @@ format:
     embed-resources: true
     transition: slide
     background-transition: fade
+    css: style/custom.scss
 ---
 
 # Motivação
