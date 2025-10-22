@@ -79,7 +79,6 @@ Quanto aos objetivos específicos:
 
 - Analisar os efeitos da descontinuidade geográfica gerada pela Faixa de Fronteira sobre as taxas de homicídio;
 - Investigar heterogeneidades nos efeitos da Faixa de Fronteira sobre a violência, considerando diferenças nos fatores socioeconômicos, arcos e períodos.
-- Avaliar a robustez dos resultados utilizando diferentes configurações de amostra que isolam efeitos específicos
     
 # Revisão de literatura
 
